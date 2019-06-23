@@ -1,15 +1,30 @@
 package com.gtt.app.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.aware.WifiAwareManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +33,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.gtt.app.R;
 import com.gtt.app.base.BaseActivity;
 import com.gtt.app.model.ActivateSimResponse;
@@ -40,11 +62,20 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.NumberFormat;
+import java.util.Enumeration;
 import java.util.Random;
 
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-public class mPayment extends BaseActivity {
+
+public class mPayment extends BaseActivity implements
+        ConnectionCallbacks,
+        OnConnectionFailedListener,
+        LocationListener {
 
     Button payPalPaymentButton, modifyButton;
     TextView m_response;
@@ -67,7 +98,13 @@ public class mPayment extends BaseActivity {
     Random random = new Random();
     String updateFundID = "";
     String sessionTxnID = "";
-
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private double currentLatitude;
+    private double currentLongitude;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private SharedPreferences permissionStatus;
     @Override
     protected int getLayout() {
         return R.layout.activity_m_payment;
@@ -88,13 +125,37 @@ public class mPayment extends BaseActivity {
             }
         }
     }
-
+    private boolean sentToSettings = false;
+    String IPaddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
+
+        //location and permission
+        launchActivity();
+        check();
+        checkPlayServices();
+        NetwordDetect();
+        permissionStatus = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000);
+        //location and permission ends here
+
         addFundsApp = new AddFundsApp();
         Bundle extras = getIntent().getExtras();
         authenticationPresenter = new AuthenticationPresenter(this);
@@ -225,52 +286,54 @@ public class mPayment extends BaseActivity {
         try {
 
             Deduction = Double.parseDouble(extras.getString("AmountCharged"));
-            if ((Deduction > 0)) {
+            if ((Deduction >0)) {
+
                 UserDetails userDetails = new UserDetails(this);
                 String paypalTxnNumber = String.format("%06d", random.nextInt(1000000));
                 sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
                 addFundsApp.setAmountCharged(String.valueOf(Deduction));
                 addFundsApp.setDealerID("0");
-                addFundsApp.setIMEI("1");
-                addFundsApp.setLatitude("");
-                addFundsApp.setLongitude("");
+                addFundsApp.setIMEI(getDeviceIMEI());
+                addFundsApp.setLatitude(String.valueOf(currentLatitude));
+                addFundsApp.setLongitude(String.valueOf(currentLongitude));
                 addFundsApp.setMacID("");
                 addFundsApp.setPayPalRefNo("");
                 addFundsApp.setPaymentMode("2");
                 addFundsApp.setRemarks("Payment From Android APP");
                 addFundsApp.setRequestedDevice("Mobile");
-                addFundsApp.setRequestedIP("");
+                addFundsApp.setRequestedIP(IPaddress);
                 addFundsApp.setRequestedOS("Android");
                 addFundsApp.setServiceCharge("0");
                 addFundsApp.setTokenID(userDetails.getTokenID());
                 addFundsApp.setTransactionReferenceID(sessionTxnID);
                 addFundsApp.setTransactionType("0");
-                try {
-                    authenticationPresenter.AddFundsAPI(addFundsApp);
-                }
-                catch (Exception e)
-                {
-                    showToast(e.toString());
-                }
-            } else if (Deduction == 0) {
-                newActivationRequest = new NewActivationRequest();
-                UserDetails userDetails = new UserDetails(this);
-                newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
-                newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
-                newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
-                newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-                newActivationRequest.setToken(userDetails.getTokenID());
-                newActivationRequest.setRefNo(extras.getString("RefNo"));
-                newActivationRequest.setRequestedDevice(extras.getString("RequestedDevice"));
-                newActivationRequest.setRequestedIP(extras.getString("RequestedIP"));
-                newActivationRequest.setRequestedOS(extras.getString("RequestedOS"));
-                try {
-                    authenticationPresenter.activateSim(newActivationRequest);
-                }
-                catch (Exception e)
-                {
-                    showToast(e.toString());
-                }
+//                try {
+//                    authenticationPresenter.AddFundsAPI(addFundsApp);
+//                }
+//                catch (Exception e)
+//                {
+//                    showToast(e.toString());
+//                }
+            }
+            else if (Deduction == 0) {
+//                newActivationRequest = new NewActivationRequest();
+//                UserDetails userDetails = new UserDetails(this);
+//                newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
+//                newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
+//                newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
+//                newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
+//                newActivationRequest.setToken(userDetails.getTokenID());
+//                newActivationRequest.setRefNo(extras.getString("RefNo"));
+//                newActivationRequest.setRequestedDevice(extras.getString("RequestedDevice"));
+//                newActivationRequest.setRequestedIP(extras.getString("RequestedIP"));
+//                newActivationRequest.setRequestedOS(extras.getString("RequestedOS"));
+//                try {
+//                    authenticationPresenter.activateSim(newActivationRequest);
+//                }
+//                catch (Exception e)
+//                {
+//                    showToast(e.toString());
+//                }
 
             }
 
@@ -364,6 +427,344 @@ public class mPayment extends BaseActivity {
     public void backToactivation(View view){
         finish();
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
 
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
+            } else {
+                finish();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void  check(){
+        LocationManager lm = (LocationManager)mPayment.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mPayment.this);
+            dialog.setMessage("Gps is not enabled");
+            dialog.setPositiveButton("Open Setting", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mPayment.this.startActivity(myIntent);
+                    //get gps
+                }
+            });
+            dialog.setNegativeButton("if you cancel your app will be closed", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    finish();
+
+                }
+            });
+            dialog.show();
+        }
+    }
+
+
+    private static final int PERMISSION_CALLBACK_CONSTANT = 100;
+    String[] permissionsRequired = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE
+            };
+    private void launchActivity() {
+        if (ActivityCompat.checkSelfPermission(mPayment.this, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(mPayment.this, permissionsRequired[1]) != PackageManager.PERMISSION_GRANTED
+                ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mPayment.this, permissionsRequired[0])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(mPayment.this, permissionsRequired[1])
+                ) {
+                //Show Information about why you need the permission
+                AlertDialog.Builder builder = new AlertDialog.Builder(mPayment.this);
+                builder.setTitle("Need Multiple Permissions");
+                builder.setMessage("This app needs Location permissions.");
+                builder.setPositiveButton("Grant/अनुदान", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        ActivityCompat.requestPermissions(mPayment.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
+                    }
+                });
+                builder.setNegativeButton("Cancel/रद्द करना", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        finish();
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            } else if (permissionStatus.getBoolean(permissionsRequired[0], false)) {
+                //Previously Permission Request was cancelled with 'Dont Ask Again',
+                // Redirect to Settings after showing Information about why you need the permission
+                AlertDialog.Builder builder = new AlertDialog.Builder(mPayment.this);
+                builder.setTitle("Need Multiple Permissions");
+                builder.setMessage("This app needs Camera and Location permissions./\n" +
+                        "इस ऐप को कैमरा और स्थान अनुमतियों की आवश्यकता है।");
+                builder.setPositiveButton("Grant/अनुदान", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        sentToSettings = true;
+                        // Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        // Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        // intent.setData(uri);
+                        //startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
+                        Toast.makeText(getBaseContext(), "Go to Permissions to Grant  Camera and Location/\n" +
+                                "अनुदान कैमरा और स्थान पर अनुमतियों पर जाएं", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Cancel/रद्द करना", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            } else {
+                //just request the permission
+                ActivityCompat.requestPermissions(mPayment.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
+            }
+
+
+            SharedPreferences.Editor editor = permissionStatus.edit();
+            editor.putBoolean(permissionsRequired[0], true);
+            editor.commit();
+        } else {
+            //You already have the permission, just go ahead.
+
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Now lets connect to the API
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(this.getClass().getSimpleName(), "onPause()");
+
+        //Disconnect from API onPause()
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+
+
+    }
+
+    /**
+     * If connected get lat and long
+     *
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        } else {
+            //If everything went fine lets get latitude and longitude
+            currentLatitude = location.getLatitude();
+            currentLongitude = location.getLongitude();
+
+          //      Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
+
+    /**
+     * If locationChanges change lat and long
+     *
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLatitude = location.getLatitude();
+        currentLongitude = location.getLongitude();
+
+       //  Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+    }
+    public String getDeviceIMEI() {
+        String deviceUniqueIdentifier = null;
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        if (null != tm) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+            }else{
+                deviceUniqueIdentifier = tm.getDeviceId();
+
+            }
+            if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
+                deviceUniqueIdentifier = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+        }
+
+        return deviceUniqueIdentifier;
+    }
+    private void NetwordDetect() {
+
+        boolean WIFI = false;
+
+        boolean MOBILE = false;
+
+        ConnectivityManager CM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo[] networkInfo = CM.getAllNetworkInfo();
+
+        for (NetworkInfo netInfo : networkInfo) {
+
+            if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
+
+                if (netInfo.isConnected())
+
+                    WIFI = true;
+
+            if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
+
+                if (netInfo.isConnected())
+
+                    MOBILE = true;
+        }
+
+        if(WIFI == true)
+
+        {
+            IPaddress = GetDeviceipWiFiData();
+
+
+
+        }
+
+        if(MOBILE == true)
+        {
+
+            IPaddress = GetDeviceipMobileData();
+
+
+        }
+
+    }
+
+
+    public String GetDeviceipMobileData(){
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+                 en.hasMoreElements();) {
+                NetworkInterface networkinterface = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = networkinterface.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("Current IP", ex.toString());
+        }
+        return null;
+    }
+
+    public String GetDeviceipWiFiData()
+    {
+
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+
+        @SuppressWarnings("deprecation")
+
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+
+        return ip;
+
+    }
 }
 
