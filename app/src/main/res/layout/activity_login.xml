@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ui.activities.LoginActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:layout_width="308dp"
+            android:layout_height="43dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="29dp"
+            android:layout_marginTop="14dp"
+            android:fontFamily="@font/segoe_font_family"
+            android:text="@string/welcome_to_gtt"
+            android:textColor="#000000"
+            android:textSize="32dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="29dp"
+            android:fontFamily="@font/segoe_font_family"
+            android:text="Sign in with your social network"
+            android:textColor="#707070" />
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingTop="50dp"
+            android:id="@+id/FrameLayout1">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="309dp"
+                android:layout_height="66dp"
+                android:visibility="gone"
+                 />
+
+            <ImageButton
+                android:id="@+id/facebookCustom"
+                android:layout_width="309dp"
+                android:layout_height="66dp"
+                android:layout_gravity="center"
+                android:onClick="FacebookLoginButtton"
+                android:background="@drawable/facebook"
+                />
+        </FrameLayout>
+
+
+        <ImageButton
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="309dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center"
+            android:background="@drawable/google"
+            android:onClick="GmailLoginButton" />
+
+        <ImageButton
+            android:id="@+id/width"
+            android:layout_width="309dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center"
+
+            android:background="@drawable/linkedin"
+            android:textColor="#FFFFFF"
+            android:textSize="17dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:background="@color/grayLogin"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="281dp"
+            android:layout_height="57dp"
+            android:fontFamily="@font/segoe_font_family"
+            android:text="We will never login to Facebook, Google+ or LinkedIn without your permission."
+            android:textColor="#707070" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

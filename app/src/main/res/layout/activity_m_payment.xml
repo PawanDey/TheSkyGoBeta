@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gredientthankyou"
+    android:orientation="vertical"
+    tools:context=".ui.activities.mPayment">
+
+
+    <!--Apply coupons-->
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="75dp">-->
+
+
+    <!--<ImageView-->
+    <!--android:id="@+id/imageView5"-->
+    <!--android:layout_width="33dp"-->
+    <!--android:layout_height="21dp"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginStart="25dp"-->
+    <!--android:layout_marginLeft="25dp"-->
+    <!--android:layout_marginBottom="31dp"-->
+    <!--app:srcCompat="@drawable/couponicon" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/textView14"-->
+    <!--android:layout_width="261dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_marginStart="78dp"-->
+    <!--android:layout_marginLeft="78dp"-->
+    <!--android:layout_marginTop="23dp"-->
+    <!--android:gravity="left"-->
+    <!--android:text="Apply Coupon"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="15dp" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/imageView9"-->
+    <!--android:layout_width="7dp"-->
+    <!--android:layout_height="11dp"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginEnd="24dp"-->
+    <!--android:layout_marginRight="24dp"-->
+    <!--android:layout_marginBottom="36dp"-->
+    <!--app:srcCompat="@drawable/arrow" />-->
+    <!--</RelativeLayout>-->
+
+
+    <!--dashboard screen-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/shadow_black_outside">
+
+
+        <ImageView
+            android:id="@+id/button12"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:onClick="backToDashboardButton"
+            android:padding="17dp"
+            android:src="@drawable/arrowwhite" />
+
+
+        <TextView
+            android:id="@+id/notficationPayment"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="16"
+            android:fontFamily="@font/segoe_bold"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:text=" Payment"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+
+
+        <ImageView
+            android:id="@+id/button25"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/button25e"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:onClick="notificatioButton"
+            android:src="@drawable/notification" />
+
+
+    </LinearLayout>
+
+    <!--others-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/skygomap_map"
+        android:orientation="vertical"
+        android:padding="1dp">
+
+
+        <!--Paymnet Summary-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="15dp">
+
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="23dp"
+                android:layout_marginBottom="73dp"
+                android:fontFamily="@font/segoe_bold"
+                android:text="Payment Summary"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="18dp" />
+
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="25dp"
+                android:layout_height="14dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="23dp"
+                android:layout_marginBottom="42dp"
+                android:fontFamily="@font/segoe_bold"
+                android:text="SIM#"
+                android:textColor="#FFFFFF"
+                android:textSize="10dp" />
+
+
+            <TextView
+                android:id="@+id/simNumber"
+                android:layout_width="2500dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="23dp"
+                android:layout_marginBottom="22dp"
+                android:fontFamily="@font/segoe"
+                android:gravity="left"
+                android:hint="here is number"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#B2B2B2" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="117dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="#FFFFFF"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="23dp"
+                android:gravity="right"
+                android:hint="Amount"
+                android:text="$ 0.00" />
+        </RelativeLayout>
+
+        <!--Card Amount-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="93dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/segoe_bold"
+                android:gravity="left|center"
+                android:text="Cart Amount"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="right"
+                android:text="$ 0.00"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+        </RelativeLayout>
+
+        <!--Convenience Fee-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="182dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginBottom="22dp"
+
+                android:fontFamily="@font/segoe_bold"
+                android:text="Convenience Fee"
+
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="22dp"
+                android:fontFamily="@font/segoe_bold"
+                android:gravity="right"
+                android:text="$ 0.00"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+        </RelativeLayout>
+
+        <!--Amount Payable-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/segoe_bold"
+                android:gravity="left|center"
+                android:text="Amount Payable"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+
+            <!--<TextView-->
+                <!--android:id="@+id/dollerSign"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:layout_toStartOf="@+id/editAmount1"-->
+                <!--android:fontFamily="@font/segoe_bold"-->
+                <!--android:gravity="right"-->
+                <!--android:text="$ "-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20dp" />-->
+
+            <TextView
+                android:id="@+id/editAmount1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/segoe_bold"
+                android:gravity="left"
+                android:text="$ 0.0"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="25dp"
+                android:fontFamily="@font/segoe_bold"
+                android:text="Activation Details"
+                android:textColor="#FFFFFF"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="22dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="49dp"
+                android:fontFamily="@font/segoe"
+                android:text="Validity days - "
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="49dp"
+                android:layout_toEndOf="@+id/textView16"
+                android:layout_toRightOf="@+id/textView16"
+                android:fontFamily="@font/segoe"
+                android:text="31 Days"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="23dp"
+                android:layout_marginLeft="23dp"
+                android:layout_marginTop="76dp"
+                android:fontFamily="@font/segoe"
+                android:text="Activation from date - "
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="76dp"
+                android:layout_toEndOf="@+id/textView18"
+                android:layout_toRightOf="@+id/textView18"
+                android:fontFamily="@font/segoe"
+                android:text="25 September 2019"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/modifyButton"
+                android:layout_width="230dp"
+                android:layout_height="49dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="130dp"
+                android:background="@drawable/gredientmodify"
+                android:fontFamily="@font/segoe"
+                android:text="MODIFY"
+                android:onClick="backToactivation"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp" />
+
+            <Button
+                android:id="@+id/payPalPaymentActivityButton"
+                android:layout_width="230dp"
+                android:layout_height="49dp"
+                android:layout_alignBottom="@+id/modifyButton"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="-70dp"
+                android:background="@drawable/gredientmodify"
+                android:fontFamily="@font/segoe"
+                android:src="@drawable/paypallogo"
+                android:text="Proceed"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

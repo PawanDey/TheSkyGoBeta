@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GTT App</string>
+    <string name="welcome_to_gtt">Welcome to SkyGO</string>
+    <string name="default_notification_channel_id">gttAppNotificationChannel</string>
+    <string name="facebook_app_id">417781505734616</string>
+    <string name="fb_login_protocol_scheme">fb417781505734616</string>
+</resources>

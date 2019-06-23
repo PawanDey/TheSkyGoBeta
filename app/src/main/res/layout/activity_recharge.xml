@@ -1,0 +1,282 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".ui.activities.Recharge">
+
+    <!--Recharge-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/shadow"
+        android:baselineAligned="false">
+
+        <ImageView
+            android:id="@+id/button12"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:onClick="backToDashboardButton"
+            android:padding="17dp"
+            android:src="@drawable/arrowwhite" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="16"
+            android:fontFamily="@font/segoe_bold"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:text="Recharge"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/button25"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/button25e"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:onClick="notificatioButton"
+            android:src="@drawable/notification" />
+
+
+    </LinearLayout>
+
+
+    <!--other-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="356dp"
+        android:background="@drawable/dashboarddgredient5">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/txtMSISDN"
+                android:layout_width="154dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="13dp"
+                android:fontFamily="@font/roboto"
+                android:text="SIM #"
+                android:textColor="#888888" />
+
+            <EditText
+                android:id="@+id/edtMSISDN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="34dp"
+
+                android:layout_marginEnd="26dp"
+                android:fontFamily="@font/roboto_rugular"
+                android:hint="Mobile Number"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/txtDateRC"
+                android:layout_width="103dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtMSISDN"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="57dp"
+                android:fontFamily="@font/roboto"
+
+                android:text="Date"
+                android:textColor="#888888" />
+
+            <EditText
+                android:id="@+id/datePickerRecharge"
+                android:layout_width="232dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/txtDateRC"
+                android:layout_alignStart="@+id/editSerial"
+                android:layout_marginStart="20dp"
+                android:focusable="false"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/textNoOfDaysRC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtMSISDN"
+                android:layout_alignParentEnd="true"
+
+                android:layout_marginStart="151dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="26dp"
+                android:layout_toEndOf="@+id/txtDateRC"
+                android:fontFamily="@font/roboto"
+                android:gravity="right"
+                android:text="No. of days"
+                android:textColor="#888888" />
+
+            <EditText
+                android:id="@+id/txtnumberOfDaysRecharge"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:layout_below="@+id/txtDateRC"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:gravity="center|end"
+                android:hint="00"
+                android:textColor="#FC3E52"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_below="@+id/datePickerRecharge"
+                android:layout_alignStart="@+id/editSerial"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="59dp"
+                android:fontFamily="@font/segoe"
+                android:hint="Current Amount"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/totalAmountRecharge"
+                android:layout_width="159dp"
+                android:layout_height="19dp"
+                android:layout_below="@+id/textView"
+                android:layout_alignStart="@+id/editSerial"
+
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/segoe_bold"
+                android:hint="$ 0.00"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/MSISDNRecharge"
+                android:layout_width="176dp"
+                android:layout_height="49dp"
+                android:layout_below="@+id/txtnumberOfDaysRecharge"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="66dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/gredientmodify"
+                android:fontFamily="@font/segoe"
+                android:gravity="center"
+                android:onClick="btnValidateMSISDNClick"
+                android:text="  Buy Now   "
+                android:textColor="#FFFFFF"
+                android:textSize="15dp"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/BuyNowRecharge"
+                android:layout_width="176dp"
+                android:layout_height="49dp"
+                android:layout_below="@+id/txtnumberOfDaysRecharge"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="66dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/gredientmodify"
+                android:fontFamily="@font/segoe"
+                android:gravity="center"
+                android:onClick="btnBuyNowClick"
+                android:text="  Buy Now   "
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/validDateLeftRC"
+                android:layout_width="169dp"
+                android:layout_height="16dp"
+                android:layout_below="@+id/MSISDNRecharge"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="@font/segoe"
+                android:gravity="center"
+
+                android:text="Validity date "
+                android:textColor="#414141"
+                android:textSize="10dp" />
+
+            <!--<Button-->
+            <!--android:id="@+id/btnValidateSIM1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="250dp"-->
+            <!--android:layout_marginTop="90dp"-->
+            <!--android:onClick="btnValidateSIM1Click"-->
+            <!--android:text="Validate SIM" />-->
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--booking avaible soon scrren-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/imageView12233"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ring" />
+
+        <TextView
+            android:id="@+id/textView1111"
+            android:layout_width="254dp"
+            android:layout_height="48dp"
+            android:layout_weight="9"
+            android:fontFamily="@font/roboto"
+            android:gravity="center|left"
+            android:text="All type booking available soon !!"
+            android:textColor="#333232"
+            android:textSize="16dp"
+            android:textStyle="normal" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/uberAdd"
+        android:layout_width="match_parent"
+        android:layout_height="245dp"
+        android:cropToPadding="true"
+        android:src="@drawable/uber_add"
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="48dp" />
+
+</LinearLayout>

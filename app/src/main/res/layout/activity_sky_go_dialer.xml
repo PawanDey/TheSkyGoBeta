@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical"
+    tools:context=".ui.activities.SkyGoDialer">
+
+    <!--skyGo-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+
+        android:background="@drawable/shadow">
+
+        <ImageView
+            android:id="@+id/button12"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:onClick="backToDashboardButton"
+            android:padding="17dp"
+            android:src="@drawable/arrowwhite" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="16"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="SkyGo"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/button25"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/button25e"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:onClick="notificatioButton"
+            android:src="@drawable/notification" />
+
+
+    </LinearLayout>
+
+
+    <!--other-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/dialerLogo"
+            android:layout_width="241dp"
+            android:layout_height="241dp"
+            android:layout_gravity="center"
+            android:padding="23dp"
+            android:src="@drawable/dailerllogo" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/segoe"
+            android:text="‘Available Soon’"
+            android:textColor="#707070"
+
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView21"
+            android:layout_gravity="center"
+            android:fontFamily="@font/segoe"
+
+            android:gravity="center"
+            android:text="Voice over IP (VoIP) "
+            android:textColor="#707070"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView13"
+            android:layout_gravity="center"
+            android:fontFamily="@font/segoe"
+            android:text=" delivers phone "
+            android:textColor="#707070"
+            android:textSize="22dp" />
+
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/segoe"
+            android:gravity="center"
+            android:text="call messages"
+            android:textColor="#707070"
+            android:textSize="22dp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+

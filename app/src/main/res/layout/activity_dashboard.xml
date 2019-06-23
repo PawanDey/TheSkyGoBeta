@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".ui.activities.Dashboard">
+
+
+    <!--dashboard screen-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/shadow_black_outside">
+
+
+        <ImageView
+            android:id="@+id/button12"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:src="@drawable/threeline" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="20"
+            android:fontFamily="@font/segoe_bold"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:text="Dashboard"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/button25"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:onClick="hotspotButton"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/notificationButton"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="18dp"
+            android:onClick="notificationButton"
+            android:src="@drawable/notification" />
+
+
+    </LinearLayout>
+
+    <!--others-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <!--location screen-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:background="@drawable/dashboardgredient">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <ImageView
+                        android:id="@+id/locationimage"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="27dp"
+                        android:src="@drawable/location"
+                        android:textColor="#FFFFFF"
+                        android:textSize="70dp" />
+
+                    <ImageView
+                        android:id="@+id/LocationthreeDot"
+                        android:layout_width="12dp"
+                        android:layout_height="24dp"
+                        android:layout_alignEnd="@+id/hereIsLocation"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginEnd="-8dp"
+                        android:src="@drawable/threedot" />
+
+                    <TextView
+                        android:id="@+id/youArehere"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/LocationthreeDot"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="9dp"
+                        android:layout_marginEnd="27dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="You are here"
+                        android:textColor="#ffffff"
+                        android:textSize="26dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+
+                        android:id="@+id/hereIsLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/youArehere"
+                        android:layout_alignEnd="@+id/youArehere"
+                        android:layout_marginTop="1dp"
+                        android:fontFamily="@font/segoe"
+                        android:text="Here is Location"
+                        android:textColor="#ffffff"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--Activate Sim-->
+            <LinearLayout
+                android:id="@+id/ActivateSimLayout"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/dashboardgredient2"
+                android:onClick="btnActivateSIMClick"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/activateSimThreeDot"
+                        android:layout_width="12dp"
+                        android:layout_height="24dp"
+                        android:layout_alignEnd="@+id/hideActivationtext"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="17dp"
+                        android:layout_marginEnd="-8dp"
+                        android:src="@drawable/threedot"
+                        android:text="Button" />
+
+
+                    <ImageView
+                        android:id="@+id/activateSimLogo"
+                        android:layout_width="68dp"
+                        android:layout_height="71dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="30dp"
+                        android:background="@drawable/activatesim"
+                        android:padding="20dp" />
+
+                    <TextView
+                        android:id="@+id/activateSim"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/activateSimThreeDot"
+                        android:layout_alignEnd="@+id/hideActivationtext"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="0dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="right"
+                        android:onClick="btnActivateSIMClick"
+                        android:text="Activate SIM"
+                        android:textColor="#ffffff"
+                        android:textSize="27dp" />
+
+                    <TextView
+                        android:id="@+id/hideActivationtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/activateSimThreeDot"
+                        android:layout_alignBottom="@+id/activateSimLogo"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="36dp"
+                        android:layout_marginEnd="27dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="Activate your SIM number "
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txtProcessPendingStatus"
+                        android:layout_width="103dp"
+                        android:layout_height="17dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="50dp"
+                        android:background="@drawable/pending"
+                        android:text="Process Pending"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10dp"
+                        tools:visibility="invisible" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--Recent Activation-->
+            <LinearLayout
+                android:id="@+id/RecentActivateOnMobile"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/dashboardgredient2"
+                android:onClick="btnExtendMSISDNClick"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="19dp"
+                        android:fontFamily="@font/segoe_bold"
+                        android:text="Recent Activation on Mobile#"
+                        android:textColor="#A6FFFFFF"
+                        android:textSize="15dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="20dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="35dp"
+                        android:layout_marginTop="54dp"
+                        android:background="@drawable/phone" />
+
+                    <TextView
+                        android:id="@+id/txtMSISDN"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="68dp"
+                        android:layout_marginTop="58dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="+1-202-505-5685"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/txtValidityLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="68dp"
+                        android:layout_marginBottom="40dp"
+                        android:fontFamily="@font/segoe_font_family"
+                        android:text="12 Saturday, 2019 4:45 PMw"
+                        android:textColor="#A6FFFFFF"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="10dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="52dp"
+                        app:srcCompat="@drawable/arrow" />
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="42dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Validity ( 2 March to 4 August )"
+                        android:textColor="#A6FFFFFF"
+                        android:textSize="9dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--skyGo dialer scrren-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:layout_marginTop="17dp"
+                android:orientation="horizontal">
+
+                <!--skyGo dialer scrren-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="135dp"
+                    android:background="@drawable/dashboardgredient2">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="135dp"
+                        android:background="@drawable/skygomap_map"
+                        android:gravity="center"
+                        android:onClick="skyGoDailer">
+
+                        <ImageView
+                            android:id="@+id/skyGoDialer"
+                            android:layout_width="106dp"
+                            android:layout_height="86dp"
+                            android:layout_marginStart="46dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/skygodealer"
+                            android:text="Button" />
+
+                        <ImageView
+                            android:id="@+id/skyGoLogo"
+                            android:layout_width="95dp"
+                            android:layout_height="105dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="30dp"
+                            android:src="@drawable/go" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!--booking avaible soon scrren-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/dashboarddgredient3"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/imageView12233"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:paddingRight="5dp"
+                    app:srcCompat="@drawable/ring" />
+
+                <TextView
+                    android:id="@+id/textView1111"
+                    android:layout_width="254dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center|left"
+                    android:text="All type booking available soon !!"
+                    android:textSize="16dp"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/imageVi1ew"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/arrow2" />
+            </LinearLayout>
+
+
+            <!--grid layout logo-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/dashboarddgredient5"
+                android:baselineAligned="false">
+
+                <GridLayout
+                    android:id="@+id/gridLayoutFunction"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:columnCount="4"
+                    android:columnOrderPreserved="false"
+                    android:onClick="gridLayoutFunction"
+                    android:rowCount="2">
+
+                    <!--row1-->
+                    <!--colum 1-4-->
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/flight" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Flights"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/uber" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="UBER"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/fooddelivery" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Food Delivery"
+                                android:textColor="#333232"
+
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/hotel" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Hotels"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/movie" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Movie"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical"
+
+                            >
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/train" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Train Tickets"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical"
+
+                            >
+
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="44dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/googleplaystore" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Google Play"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="39dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/more" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="More"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                </GridLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

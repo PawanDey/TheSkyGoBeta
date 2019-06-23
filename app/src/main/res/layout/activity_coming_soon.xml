@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical"
+    tools:context=".ui.activities.ComingSoon">
+
+    <!--dashboard screen-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/shadow_black_outside">
+
+        <ImageView
+            android:id="@+id/button12"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2"
+            android:onClick="backToDashboardButton"
+            android:padding="17dp"
+            android:src="@drawable/arrowwhite" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="16"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:fontFamily="@font/segoe_bold"
+            android:text="Coming Soon"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/button25"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/button25e"
+            android:layout_width="23dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:onClick="notificationButton"
+            android:src="@drawable/notification" />
+
+    </LinearLayout>
+
+    <!--other-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="20dp"
+                app:srcCompat="@drawable/annoucement" />
+
+            <TextView
+                android:id="@+id/comingSoonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/segoe"
+                android:layout_toRightOf="@+id/imageView8"
+                android:text="  All type booking available soon !!"
+                android:textColor="#333232"
+                android:textSize="16dp" />
+
+
+            <ImageView
+                android:id="@+id/comingSoonImage"
+                android:layout_width="250dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+
+
+                app:srcCompat="@drawable/comingsoon" />
+
+            <TextView
+                android:id="@+id/comingSoonText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comingSoonImage"
+                android:layout_centerHorizontal="true"
+                android:text="Some Outstanding Features"
+                android:fontFamily="@font/segoe"
+                android:textSize="22dp" />
+
+            <TextView
+                android:id="@+id/comingSoontext2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comingSoonText1"
+
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="‘Coming Soon’"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/segoe_bold"
+                />
+
+            <TextView
+                android:id="@+id/comingSoontext3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comingSoontext2"
+                android:fontFamily="@font/segoe"
+
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="and "
+                android:textSize="22dp" />
+
+
+            <TextView
+                android:id="@+id/comingSoontext4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comingSoontext3"
+                android:layout_centerHorizontal="true"
+                android:text="‘Under Construction’"
+                android:textSize="22dp"
+                android:fontFamily="@font/segoe"
+
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

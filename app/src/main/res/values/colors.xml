@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6C18A4</color>
+    <color name="colorPrimaryDark">#442EB4</color>
+    <color name="colorAccent">#E51EAD</color>
+    <color name="lightGrey">#BBBBBB</color>
+    <color name="gray">#F5F5F5</color>
+    <color name="grayLogin">#F1F1F1</color>
+    <color name="datePickerColor">#4F58FF</color>
+
+</resources>

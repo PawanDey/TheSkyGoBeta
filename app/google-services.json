@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "878746053563",
+    "firebase_url": "https://gtt-app-242507.firebaseio.com",
+    "project_id": "gtt-app-242507",
+    "storage_bucket": "gtt-app-242507.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878746053563:android:39dc0b2ae66fe470",
+        "android_client_info": {
+          "package_name": "com.gtt.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878746053563-tea20ovq0m65leg8hokrej0905clcq5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ-i3llnsvWmagOOFLykCkgcGoO5a2bqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878746053563-tea20ovq0m65leg8hokrej0905clcq5o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
