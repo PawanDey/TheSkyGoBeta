@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:baselineAligned="false"
         android:background="@drawable/shadow_black_outside">
 
         <ImageView
@@ -31,10 +32,10 @@
             android:layout_height="53dp"
             android:layout_marginBottom="1dp"
             android:layout_weight="16"
+            android:fontFamily="@font/segoe_bold"
             android:gravity="center"
             android:paddingLeft="30dp"
-            android:fontFamily="@font/segoe_bold"
-            android:text="Coming Soon"
+            android:text="@string/textComingSoon"
             android:textColor="#ffffff"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -44,7 +45,7 @@
             android:layout_width="23dp"
             android:layout_height="18dp"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:src="@drawable/wifi" />
 
@@ -57,41 +58,50 @@
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:onClick="notificationButton"
-            android:src="@drawable/notification" />
+            android:src="@drawable/notification1" />
 
     </LinearLayout>
 
-    <!--other-->
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            app:srcCompat="@drawable/annoucement" />
+
+        <TextView
+            android:id="@+id/comingSoonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/imageView8"
+            android:fontFamily="@font/segoe"
+            android:text="@string/textAlltypebooking"
+            android:textColor="#333232"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <ImageView
-                android:id="@+id/imageView8"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="33dp"
-                android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/annoucement" />
-
-            <TextView
-                android:id="@+id/comingSoonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/segoe"
-                android:layout_toRightOf="@+id/imageView8"
-                android:text="  All type booking available soon !!"
-                android:textColor="#333232"
-                android:textSize="16dp" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+            <!--other-->
 
 
             <ImageView
@@ -110,8 +120,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comingSoonImage"
                 android:layout_centerHorizontal="true"
-                android:text="Some Outstanding Features"
                 android:fontFamily="@font/segoe"
+                android:gravity="center"
+                android:text="@string/textSomeOutstandingFeatures"
                 android:textSize="22dp" />
 
             <TextView
@@ -121,23 +132,22 @@
                 android:layout_below="@+id/comingSoonText1"
 
                 android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="‘Coming Soon’"
-                android:textSize="22dp"
-                android:textStyle="bold"
                 android:fontFamily="@font/segoe_bold"
-                />
+                android:gravity="center"
+                android:text="@string/textComingSoon"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/comingSoontext3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comingSoontext2"
-                android:fontFamily="@font/segoe"
-
                 android:layout_centerHorizontal="true"
+
+                android:fontFamily="@font/segoe"
                 android:gravity="center"
-                android:text="and "
+                android:text="@string/textAnd"
                 android:textSize="22dp" />
 
 
@@ -147,13 +157,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comingSoontext3"
                 android:layout_centerHorizontal="true"
-                android:text="‘Under Construction’"
-                android:textSize="22dp"
                 android:fontFamily="@font/segoe"
+                android:text="@string/textUnderConstruction"
+                android:textSize="22dp"
+                android:gravity="center"
 
                 android:textStyle="bold" />
 
-        </RelativeLayout>
-    </LinearLayout>
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

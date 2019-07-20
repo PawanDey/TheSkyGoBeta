@@ -4,54 +4,51 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.gtt.app.model.GetSIMStatus;
 import com.gtt.app.R;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import com.gtt.app.base.BaseActivity;
-import com.gtt.app.model.GetSIMStatus;
 import com.gtt.app.model.GetSubscriberResponse;
 import com.gtt.app.presenter.implementation.AuthenticationPresenter;
 import com.gtt.app.service.UserDetails;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 
 public class Dashboard extends BaseActivity {
 
     //for current location
-    private TextView currentLocation;
+    public static TextView currentLocation;
     private LocationManager locationManager;
     private double logitude;
     private double latitude;
     String token;
+    TextView validity;
+    ImageView skygoDialerLogo;
+    boolean doubleBackToExitPressedOnce;
+
 
     //end location
     AuthenticationPresenter authenticationPresenter;
+
 
     //end location
 
@@ -59,31 +56,40 @@ public class Dashboard extends BaseActivity {
     @Override
     protected int getLayout() {
 
-
         return R.layout.activity_dashboard;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 //        String TokenTest = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFiYyIsIm5iZiI6MTU2MTE1MTIxOCwiZXhwIjoxNTYxMTg3MjE4LCJpYXQiOjE1NjExNTEyMTh9.xJjXj1PkAq8PtQDcGvgxKizcVIGJLYZ7nvn5SIzDwNI";
+        UserDetails userDetails = new UserDetails(this);
+        Locale locale = new Locale(userDetails.getLanguageSelect());
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
         authenticationPresenter = new AuthenticationPresenter(this);
-        UserDetails userDetails = new UserDetails(Dashboard.this);
+        skygoDialerLogo = findViewById(R.id.skyGoDialer);
+        SelectLoginImage();
+        //UserDetails userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
+
         try {
             authenticationPresenter.GetSubscriber(userDetails.getTokenID());
-        }
-        catch (Exception e)
-        {
-            showToast("Please Check Your Internet Connection");
+        } catch (Exception e) {
+//            showToast(" "+R.string.textPleaseCheckYourInternetConnection);
+            Toast.makeText(Dashboard.this, R.string.textPleaseCheckYourInternetConnection, Toast.LENGTH_LONG).show();
         }
         TextView SimStatus = findViewById(R.id.txtProcessPendingStatus);
         SimStatus.setVisibility(View.INVISIBLE);
         LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
         LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
-
+        TextView MSISDN = findViewById(R.id.txtMSISDN);
+        TextView validityLeft = findViewById(R.id.txtValidityLeft);
+        validity = findViewById(R.id.validityDateOnDeshboard);
         try {
             //for location
             currentLocation = findViewById(R.id.hereIsLocation);
@@ -100,13 +106,20 @@ public class Dashboard extends BaseActivity {
             log_func(location);
 
         } catch (Exception e) {
-            showToast("Location Permission Not Enabled");
+            Toast.makeText(Dashboard.this, R.string.textLocationPermissionNotEnabled, Toast.LENGTH_LONG).show();
 
         }
-
+        try {
+            if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
+                MSISDN.setText(userDetails.getMSISDN());
+                validityLeft.setText(userDetails.getActivationDate());
+                ActivationLayout.setVisibility(View.GONE);
+                RecentExtensionLayout.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+        }
 
     }
-
 
 
     @Override
@@ -119,12 +132,16 @@ public class Dashboard extends BaseActivity {
         switch (method2) {
             case "GetSubscriber": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-                    showToast("Please Login again");
+//                    showToast(" "+R.string.textSorrySomethingwentwrong);
+                    Toast.makeText(Dashboard.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(Dashboard.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                } else
+                    break;
+                } else {
                     showToast(errorMessage);
+                    break;
+                }
             }
         }
     }
@@ -136,28 +153,34 @@ public class Dashboard extends BaseActivity {
                 UserDetails userDetails = new UserDetails(this);
                 TextView SimStatus = findViewById(R.id.activateSim);
                 TextView SIMSerialNumber = findViewById(R.id.hideActivationtext);
-                GetSIMStatus obj = (GetSIMStatus)response;
+                GetSIMStatus obj = (GetSIMStatus) response;
 
-                switch (obj.getmValue())
-                {
-                    case "1" :{SimStatus.setText("Status : Pending");
+                switch (obj.getmValue()) {
+                    case "1": {
+                        SimStatus.setText(R.string.textStatusPending);
                         SimStatus.setVisibility(View.VISIBLE);
-                        SIMSerialNumber.setText("For " +obj.getmSerialNumber());
+                        SIMSerialNumber.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
+                        userDetails.setRechargeStatus(0);
 
-                        break;}
-                    case "2" : {SimStatus.setText("Status : Under Processing");
+                        break;
+                    }
+                    case "2": {
+                        SimStatus.setText(R.string.textStatusUnderProcessing);
                         SimStatus.setVisibility(View.VISIBLE);
-                        SIMSerialNumber.setText("For " +obj.getmSerialNumber());
-                        break;}
+                        SIMSerialNumber.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
+                        userDetails.setRechargeStatus(0);
+                        break;
+                    }
                 }
 
                 break;
 
             }
-            case "GetSubscriber2" : {
+            case "GetSubscriber2": {
                 UserDetails userDetails = new UserDetails(this);
                 GetSubscriberResponse obj = (GetSubscriberResponse) response;
                 userDetails.setMSISDN(obj.getMSISDN());
+                userDetails.setActivationDate(obj.getActDate());
                 LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
                 LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
                 TextView MSISDN = findViewById(R.id.txtMSISDN);
@@ -165,7 +188,8 @@ public class Dashboard extends BaseActivity {
                 ActivationLayout.setVisibility(View.GONE);
                 RecentExtensionLayout.setVisibility(View.VISIBLE);
                 MSISDN.setText(obj.getMSISDN());
-                validityLeft.setText(obj.getGoodUntil());
+                validityLeft.setText(obj.getActDate());
+//                validity.setText(obj.getGoodUntil());
                 break;
             }
         }
@@ -177,10 +201,11 @@ public class Dashboard extends BaseActivity {
 
     public void btnActivateSIMClick(View view) {
         UserDetails userDetails = new UserDetails(this);
-       if (userDetails.getRechargeStatus()==1)
-       { Intent intent = new Intent(Dashboard.this, ActivateSim.class);
-           intent.putExtra("Token", token);
-           startActivity(intent);}
+        if (userDetails.getRechargeStatus() == 1) {
+            Intent intent = new Intent(Dashboard.this, ActivateSim.class);
+            intent.putExtra("Token", token);
+            startActivity(intent);
+        }
     }
 
     public void notificationButton(View view) {
@@ -206,10 +231,26 @@ public class Dashboard extends BaseActivity {
         latitude = location.getLatitude();
     }
 
-    public  void btnExtendMSISDNClick(View view)
-    {
+    public void btnExtendMSISDNClick(View view) {
         Intent intent = new Intent(Dashboard.this, Recharge.class);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.textClickBACKagaintoExit, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
     private void log_func(Location location) {
@@ -227,7 +268,11 @@ public class Dashboard extends BaseActivity {
             String adress4 = addresses.get(0).getSubLocality();
             String adress5 = addresses.get(0).getAddressLine(0);
             String adress6 = addresses.get(0).getPremises();
-            currentLocation.setText(city + ", " + adress1 + ", " + adress2);
+            UserDetails userDetails = new UserDetails(this);
+
+//            authenticationPresenter.TranslateAPI("en", userDetails.getLanguageSelect(), city + ", " + adress1 + ", " + country);
+            currentLocation.setText(city + ", " + adress1 + ", " + country);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,7 +285,7 @@ public class Dashboard extends BaseActivity {
     public void hotspotButton(View view) {
 
 
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
@@ -248,8 +293,6 @@ public class Dashboard extends BaseActivity {
 
                     @Override
                     public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
-                        super.onStarted(reservation);
-                        mReservation = reservation;
                     }
 
                     @Override
@@ -267,4 +310,69 @@ public class Dashboard extends BaseActivity {
             }
         }
     }
+
+//    public void btnRefresh(View view) {
+//        Intent refresh = new Intent(Dashboard.this, Dashboard.class);
+//        refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        startActivity(refresh);
+//    }
+
+    public void SelectLoginImage() {
+        UserDetails userDetails = new UserDetails(this);
+        try {
+            Locale locale = new Locale(userDetails.getLanguageSelect());
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String languageCode = userDetails.getLanguageSelect();
+        //eng
+        if (languageCode.equals("en")) {
+
+        }
+        //che
+        else if (languageCode.equals("zh")) {
+            try {
+                skygoDialerLogo.setImageResource(R.drawable.skygodialer_che);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (languageCode.equals("ja")) {
+            try {
+                skygoDialerLogo.setImageResource(R.drawable.skygodialer_jep);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+        //kor
+        else if (languageCode.equals("ko")) {
+            try {
+                skygoDialerLogo.setImageResource(R.drawable.skygodialer_kor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //es(spanish need to be added)
+        else if (languageCode.equals("es")) {
+            try {
+                skygoDialerLogo.setImageResource(R.drawable.skygo_es);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            showToast(" no logo select ");
+
+        }
+    }
+
+    public static void setLocation(String result) {
+        currentLocation.setText(result);
+    }
+
+
 }

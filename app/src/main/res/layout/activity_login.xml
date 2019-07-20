@@ -37,36 +37,34 @@
             android:layout_gravity="left"
             android:layout_marginStart="29dp"
             android:fontFamily="@font/segoe_font_family"
-            android:text="Sign in with your social network"
+            android:text="@string/textSigninwithyoursocialnetwork"
             android:textColor="#707070" />
 
 
         <FrameLayout
+            android:id="@+id/FrameLayout1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:paddingTop="50dp"
-            android:id="@+id/FrameLayout1">
+            android:paddingTop="50dp">
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_button"
                 android:layout_width="309dp"
                 android:layout_height="66dp"
-                android:visibility="gone"
-                 />
+                android:visibility="gone" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/facebookCustom"
                 android:layout_width="309dp"
                 android:layout_height="66dp"
                 android:layout_gravity="center"
-                android:onClick="FacebookLoginButtton"
                 android:background="@drawable/facebook"
-                />
+                android:onClick="FacebookLoginButtton" />
         </FrameLayout>
 
 
-        <ImageButton
+        <ImageView
             android:id="@+id/google_sign_in_button"
             android:layout_width="309dp"
             android:layout_height="66dp"
@@ -74,15 +72,13 @@
             android:background="@drawable/google"
             android:onClick="GmailLoginButton" />
 
-        <ImageButton
-            android:id="@+id/width"
+        <ImageView
+            android:id="@+id/linkedin_button"
             android:layout_width="309dp"
             android:layout_height="66dp"
+            android:visibility="gone"
             android:layout_gravity="center"
-
-            android:background="@drawable/linkedin"
-            android:textColor="#FFFFFF"
-            android:textSize="17dp" />
+            android:background="@drawable/linkedin" />
 
     </LinearLayout>
 
@@ -104,7 +100,7 @@
             android:layout_width="281dp"
             android:layout_height="57dp"
             android:fontFamily="@font/segoe_font_family"
-            android:text="We will never login to Facebook, Google+ or LinkedIn without your permission."
+            android:text="@string/textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission"
             android:textColor="#707070" />
     </LinearLayout>
 

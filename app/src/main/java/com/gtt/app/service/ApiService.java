@@ -2,9 +2,13 @@ package com.gtt.app.service;
 
 
 import com.gtt.app.model.AddFundsApp;
+import com.gtt.app.model.GetNotifications;
 import com.gtt.app.model.NewActivationRequest;
 import com.gtt.app.model.NewExtensionRequest;
 import com.gtt.app.model.UpdateFundReq;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,5 +49,8 @@ public interface ApiService {
 
     @GET("ListAlertMessage")
     Call<ResponseBody> ListNotifications(@Query("TokenID") String TokenID, @Query("Condition") String Condition);
+
+    @GET("translatorAPI.php")
+    Call<ResponseBody> TranslateAPI(@Query("inputlang") String inputlang, @Query("outputlang") String outputlang, @Query("text") String text);
 
 }

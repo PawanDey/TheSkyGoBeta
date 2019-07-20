@@ -36,8 +36,8 @@
         android:id="@+id/imageView4"
         android:layout_width="50dp"
         android:layout_height="75dp"
-        android:layout_marginTop="390dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginTop="390dp"
         app:srcCompat="@drawable/ballon" />
 
 

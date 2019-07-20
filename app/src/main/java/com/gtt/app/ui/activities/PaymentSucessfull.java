@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.gtt.app.R;
 
-public class paymentSucessfull extends AppCompatActivity {
+public class PaymentSucessfull extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,9 +16,11 @@ public class paymentSucessfull extends AppCompatActivity {
 
 
     }
-    public void backToHome (View view){
-        Intent i= new Intent(this,Dashboard.class);
-        startActivity(i);
+
+    public void backToHome(View view) {
+        Intent DashboardIntent = new Intent(this,Dashboard.class);
+        DashboardIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(DashboardIntent);
         finish();
     }
 }

@@ -3,6 +3,7 @@ package com.gtt.app.ui.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,14 +22,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
+import com.crashlytics.android.Crashlytics;
 import com.gtt.app.R;
 import com.gtt.app.model.LoginRequestTypeId;
 import com.gtt.app.model.LoginResponse;
 import com.gtt.app.presenter.implementation.AuthenticationPresenter;
 import com.gtt.app.service.UserDetails;
 
+import io.fabric.sdk.android.Fabric;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -41,6 +46,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_splash_screen);
 
         final UserDetails userDetails = new UserDetails(SplashScreen.this);
@@ -51,16 +57,25 @@ public class SplashScreen extends AppCompatActivity {
 
 //                authenticationPresenter.loginUser( userDetails.getUserName() ,LoginRequestTypeId.GOOGLE , "");
 
+                UserDetails userDetails = new UserDetails(SplashScreen.this);
+
+                Locale locale = new Locale(userDetails.getLanguageSelect());
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getBaseContext().getResources().updateConfiguration(config,
+                        getBaseContext().getResources().getDisplayMetrics());
 
                 if (userDetails.getTokenID() != "") //&& userDetails.getTokenID()==onCallTokenID
                 {
                     Intent intent = new Intent(SplashScreen.this, Dashboard.class);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                    Intent intent = new Intent(SplashScreen.this, LanguageSelect.class);
                     startActivity(intent);
                 }
             }
+
         }, 3000);
 
         image = findViewById(R.id.imageView4);
@@ -81,7 +96,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void moveAnimation() {
         Animation img = new TranslateAnimation(Animation.ABSOLUTE, 150, Animation.ABSOLUTE, Animation.ABSOLUTE);
-        img.setDuration(3000);
+        img.setDuration(2800);
         img.setFillAfter(true);
         image.startAnimation(img);
     }

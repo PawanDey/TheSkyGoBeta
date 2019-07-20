@@ -8,25 +8,24 @@ import android.view.ViewGroup;
 
 import com.gtt.app.R;
 import com.gtt.app.model.GetNotifications;
-
+import com.gtt.app.presenter.implementation.AuthenticationPresenter;
+import com.gtt.app.service.UserDetails;
 import java.util.Collections;
 import java.util.List;
 
-class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNotifications>
-{
-    List<GetNotifications> list = Collections.emptyList();
+class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNotifications> {
+
+    List<translatPassdata> list = Collections.emptyList();
     Context context;
 
-    public imageGalleryAdapterNotification(List<GetNotifications> list, Context context)
-    {
+    public imageGalleryAdapterNotification(List<translatPassdata> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
     @Override
     public viewHolderNotifications onCreateViewHolder(ViewGroup parent,
-                                                      int viewType)
-    {
+                                                      int viewType) {
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -41,8 +40,7 @@ class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNot
 
     @Override
     public void onBindViewHolder(final viewHolderNotifications viewHolder,
-                                 final int position)
-    {
+                                 final int position) {
 
         viewHolder.Name.setText(list.get(position).mDealerName);
         viewHolder.Date.setText(list.get(position).mMessage);
@@ -50,15 +48,13 @@ class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNot
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return list.size();
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView)
-    {
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
+//                    list.add(new imageGalleryAdapterNotification(getNotifications.setAlertTime(translateDone[i]);
 }

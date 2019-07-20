@@ -9,15 +9,16 @@
 
     <TextView
         android:id="@+id/dealerName"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="left|top"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/Pic"
+        android:layout_marginEnd="90dp"
         android:fontFamily="@font/segoe_semi_bold"
-        android:maxLines="1"
         android:text="Dealer Name"
         android:textColor="#5A5A5A"
         android:textSize="18sp" />
@@ -33,16 +34,18 @@
 
     <TextView
         android:id="@+id/dealerMessage"
-        android:layout_width="144dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dealerName"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
+        android:layout_toStartOf="@+id/dealerTimeAgo"
+        android:layout_toLeftOf="@+id/dealerTimeAgo"
         android:layout_toEndOf="@+id/Pic"
-        android:gravity="left"
-        android:textColor="#707070"
         android:fontFamily="@font/segoe"
+        android:gravity="left"
         android:text="here is message"
+        android:textColor="#707070"
         android:textSize="12sp" />
 
 
@@ -65,8 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_below="@+id/dealerMessage"
-        android:background="#808080"
         android:layout_margin="10dp"
+        android:background="#808080"
         android:backgroundTint="#48707070" />
 
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="105dp"
+    >
+
+
+    <TextView
+        android:layout_width="200dp"
+        android:id="@+id/Name"
+        android:textSize="16sp"
+        android:layout_marginStart="20dp"
+        android:text="First Exam"
+        android:textColor="@color/colorAccent"
+        android:layout_marginEnd="20dp"
+        android:maxLines="1"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/Pic"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/Name"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/userimage" />
+
+    <TextView
+        android:id="@+id/Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Name"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_toEndOf="@+id/Pic"
+        android:gravity="center"
+        android:text="May 23, 2015"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/Message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Date"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="-1dp"
+        android:layout_toEndOf="@+id/Pic"
+        android:gravity="center"
+        android:text="Best Of Luck"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/border1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_alignParentBottom="true"
+        android:background="#808080"/>
+
+
+</RelativeLayout>

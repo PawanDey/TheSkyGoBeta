@@ -1,10 +1,16 @@
 package com.gtt.app.ui.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -33,6 +39,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.gtt.app.R;
 import com.gtt.app.base.BaseActivity;
+import com.gtt.app.base.BaseView;
 import com.gtt.app.model.LoginRequestTypeId;
 import com.gtt.app.model.LoginResponse;
 import com.gtt.app.presenter.implementation.AuthenticationPresenter;
@@ -41,9 +48,10 @@ import com.gtt.app.service.UserDetails;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class LoginActivity extends BaseActivity {
-    ImageView fb;
+    ImageView fb, google, linkedin;
     LoginButton LoginButton;
     Button GooglesignInButton;
     GoogleSignInClient mGoogleSignInClient;
@@ -51,6 +59,7 @@ public class LoginActivity extends BaseActivity {
     CallbackManager callbackManager;
     AuthenticationPresenter authenticationPresenter;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    public BaseView baseView;
 
     @Override
     protected int getLayout() {
@@ -83,16 +92,17 @@ public class LoginActivity extends BaseActivity {
                     (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
 
+        check();
+
+
         callbackManager = CallbackManager.Factory.create();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         callbackManager = CallbackManager.Factory.create();
-        fb = findViewById(R.id.facebookCustom);
 
         return R.layout.activity_login;
     }
@@ -100,23 +110,28 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onViewReady() {
         super.onViewReady();
-
+        fb = findViewById(R.id.facebookCustom);
+        google = findViewById(R.id.google_sign_in_button);
+        linkedin = findViewById(R.id.linkedin_button);
         authenticationPresenter = new AuthenticationPresenter(this);
-
+        SelectLoginImage();
 
     }
 
     @Override
     public void onFailure() {
-        showToast("Sorry! Something went wrong");
-
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+            Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "loginUser": {
-                showToast("Login Successful");
+                Toast.makeText(LoginActivity.this, R.string.textLoginSuccessful, Toast.LENGTH_LONG).show();
                 LoginResponse obj = (LoginResponse) response;
                 UserDetails userDetails = new UserDetails(LoginActivity.this);
                 userDetails.setTokenID(obj.getTokenID());
@@ -148,60 +163,62 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onSuccess(final LoginResult loginResult) {
+                final Profile profile = Profile.getCurrentProfile();
                 Log.d("mylog", "Successful: " + loginResult.getAccessToken().toString());
-                Log.d("mylog", "User ID: " + Profile.getCurrentProfile().getId());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().getApplicationId());
-                Log.d("mylog", "EMAIL2;" + loginResult.getAccessToken().getToken());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().getUserId());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().describeContents());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().getLastRefresh());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().getDataAccessExpirationTime());
-                Log.d("mylog", "EMAIL;" + loginResult.getAccessToken().isExpired());
+                Log.d("mylog", "getApplicationId;" + loginResult.getAccessToken().getApplicationId());
+                Log.d("mylog", "getToken;" + loginResult.getAccessToken().getToken());
+                Log.d("mylog", "getUserId;" + loginResult.getAccessToken().getUserId());
+                Log.d("mylog", "describeContents;" + loginResult.getAccessToken().describeContents());
+                Log.d("mylog", "getLastRefresh;" + loginResult.getAccessToken().getLastRefresh());
+                Log.d("mylog", "getDataAccessExpirationTime;" + loginResult.getAccessToken().getDataAccessExpirationTime());
+                Log.d("mylog", "isExpired;" + loginResult.getAccessToken().isExpired());
 
+                try {
+                    Log.d("mylog", "getName;" + profile.getName());
+                    Log.d("mylog", "getId;" + profile.getId());
+                    Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500,500));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                Log.d("mylog", "User Profile Pic Link: " + Profile.getCurrentProfile().getProfilePictureUri(500, 500));
                 Toast toast = Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT);
-                FirebaseInstanceId.getInstance().getInstanceId()
-                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                if (!task.isSuccessful()) {
-                                    showToast("Sorry! Something went wrong");
-                                    return;
-                                }
-                                String token = task.getResult().getToken();
-                                FirebaseInstanceId.getInstance().getInstanceId()
-                                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                                if (!task.isSuccessful()) {
-                                                    showToast("Sorry! Something went wrong");
-                                                    return;
-                                                }
-                                                String token = task.getResult().getToken();
-                                                authenticationPresenter.loginUser(loginResult.getAccessToken().getToken(), LoginRequestTypeId.GOOGLE, token);
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        String getUserName;
+                        if (!task.isSuccessful()) {
+//                            showToast("Sorry! Something went wrong");
+                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        String token = task.getResult().getToken();
+                        if(profile!=null){
+                             getUserName= profile.getName();
+                        }else{
+                             getUserName= loginResult.getAccessToken().getUserId();
+//                            getUserName= "user";
 
-                                            }
-                                        });
-
-                            }
-                        });
+                        }
+                        authenticationPresenter.loginUser(getUserName, LoginRequestTypeId.FACEBOOK, token);
+                    }
+                });
             }
 
             @Override
             public void onCancel() {
-                // App code
-                Toast toast = Toast.makeText(getApplicationContext(), "Login cancel", Toast.LENGTH_SHORT);
+                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
 
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code0
-                Log.d("mylog", "Successful: " + exception.toString());
-                Toast toast = Toast.makeText(getApplicationContext(), "Login cancel error", Toast.LENGTH_SHORT);
-
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+                    Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
             }
+
         });
     }
 
@@ -209,13 +226,17 @@ public class LoginActivity extends BaseActivity {
     public void GmailLoginButton(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 0);
+//        authenticationPresenter.loginUser("gagan3809@gmail.com", LoginRequestTypeId.GOOGLE, "2");
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-
+        try {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -228,37 +249,143 @@ public class LoginActivity extends BaseActivity {
         try {
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             account.getEmail();
-            Log.d("aaaaaaaaaa", "EMAIL;" + account.getEmail());
+            Log.d("Email", "EMAIL;" + account.getEmail());
+            Log.d("name", "NAME;" + account.getDisplayName());
+
             FirebaseInstanceId.getInstance().getInstanceId()
                     .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                         @Override
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful()) {
-                                showToast("Sorry! Something went wrong");
+                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
                                 return;
                             }
                             String token = task.getResult().getToken();
-
-                            FirebaseInstanceId.getInstance().getInstanceId()
-                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                            if (!task.isSuccessful()) {
-                                                showToast("Sorry! Something went wrong");
-                                                return;
-                                            }
-                                            String token = task.getResult().getToken();
-                                            authenticationPresenter.loginUser(account.getEmail(), LoginRequestTypeId.GOOGLE, token);
-
-                                        }
-                                    });
-
+                            authenticationPresenter.loginUser(account.getDisplayName(), LoginRequestTypeId.GOOGLE, token);
                         }
                     });
         } catch (ApiException e) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+                Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(LoginActivity.this, "2345678", Toast.LENGTH_LONG).show();
+        }
+//            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
+//            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
 
-            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(LoginActivity.this, LanguageSelect.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void check() {
+        LocationManager lm = (LocationManager) LoginActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        if (!gps_enabled && !network_enabled) {
+            // notify user
+            AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+//            dialog.setMessage("Gps is not enabled");
+            dialog.setCancelable(false);
+            dialog.setMessage(R.string.textGPSisnotenabled);
+//            dialog.setPositiveButton("Open Setting", new DialogInterface.OnClickListener()
+            dialog.setPositiveButton(R.string.textOpensettings, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    LoginActivity.this.startActivity(myIntent);
+                    //get gps
+                }
+            });
+//            dialog.setNegativeButton("if you cancel your app will be closed", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(R.string.textifyoucancelyourappwillbeclosed, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+//                @Override
+//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    public void SelectLoginImage() {
+        UserDetails userDetails = new UserDetails(this);
+        try {
+            Locale locale = new Locale(userDetails.getLanguageSelect());
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String languageCode = userDetails.getLanguageSelect();
+        //eng
+        if (languageCode.equals("en")) {
+
+        }
+        //che
+        else if (languageCode.equals("zh")) {
+            try {
+                fb.setImageResource(R.drawable.facebook_che);
+                google.setImageResource(R.drawable.google_che);
+                linkedin.setImageResource(R.drawable.linkedin_che);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (languageCode.equals("ja")) {
+            try {
+                fb.setImageResource(R.drawable.facebook_jap);
+                google.setImageResource(R.drawable.google_jap);
+                linkedin.setImageResource(R.drawable.linkedin_jap);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+        //kor
+        else if (languageCode.equals("ko")) {
+            try {
+                fb.setImageResource(R.drawable.facebook_kor);
+                google.setImageResource(R.drawable.google_kor);
+                linkedin.setImageResource(R.drawable.linkedin_kor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (languageCode.equals("es")) {
+            try {
+                fb.setImageResource(R.drawable.facebook_esp);
+                google.setImageResource(R.drawable.google_esp);
+                linkedin.setImageResource(R.drawable.linkedin_esp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            showToast(" no language select");
+
         }
     }
 }

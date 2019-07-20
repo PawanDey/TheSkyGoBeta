@@ -32,9 +32,9 @@
             android:layout_height="53dp"
             android:layout_marginBottom="1dp"
             android:layout_weight="16"
+            android:fontFamily="@font/roboto_bold"
             android:gravity="center"
             android:paddingLeft="30dp"
-            android:fontFamily="@font/roboto_bold"
             android:text="SkyGo"
             android:textColor="#ffffff"
             android:textSize="18dp"
@@ -58,7 +58,7 @@
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:onClick="notificatioButton"
-            android:src="@drawable/notification" />
+            android:src="@drawable/notification1" />
 
 
     </LinearLayout>
@@ -85,9 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/segoe"
-            android:text="‘Available Soon’"
+            android:text="@string/textAvailableSoon"
             android:textColor="#707070"
-
             android:textSize="22dp"
             android:textStyle="bold" />
 
@@ -100,7 +99,7 @@
             android:fontFamily="@font/segoe"
 
             android:gravity="center"
-            android:text="Voice over IP (VoIP) "
+            android:text="@string/textVoiceoverIPVoIP"
             android:textColor="#707070"
             android:textSize="22dp" />
 
@@ -111,7 +110,7 @@
             android:layout_below="@+id/textView13"
             android:layout_gravity="center"
             android:fontFamily="@font/segoe"
-            android:text=" delivers phone "
+            android:text="@string/textDeliverPhone"
             android:textColor="#707070"
             android:textSize="22dp" />
 
@@ -123,7 +122,7 @@
             android:layout_gravity="center"
             android:fontFamily="@font/segoe"
             android:gravity="center"
-            android:text="call messages"
+            android:text="@string/textcallmessages"
             android:textColor="#707070"
             android:textSize="22dp" />
 

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.gtt.app.ui.activities.Recharge;
 
+import java.util.Date;
+
 public class UserDetails {
 
     Context context;
@@ -58,6 +60,17 @@ public class UserDetails {
     private String TxnSeriesPrefix;
     private String PaypalTransactionFee;
 
+    public String getLanguageSelect() {
+        LanguageSelect = sharedPreferences.getString("LanguageSelect", "");
+        return LanguageSelect;
+    }
+
+    public void setLanguageSelect(String LanguageSelect) {
+        sharedPreferences.edit().putString("LanguageSelect", LanguageSelect).commit();
+    }
+
+    private  String LanguageSelect;
+
     public int getRechargeStatus() {
         RechargeStatus = sharedPreferences.getInt("RechargeStatus", 1);
         return RechargeStatus;
@@ -81,6 +94,18 @@ public class UserDetails {
     private int RechargeStatus;
     private String MacAddress;
 
+    public String getActivationDate() {
+        ActivationDate = sharedPreferences.getString("SIMActivationDate", "");
+        return ActivationDate;
+    }
+
+    public void setActivationDate(String ActivationDate) {
+        sharedPreferences.edit().putString("SIMActivationDate", ActivationDate).commit();
+
+    }
+
+    private String ActivationDate;
+
     public String getMacAddress() {
         MacAddress = sharedPreferences.getString("MacAddress", "");
         return MacAddress;
@@ -93,6 +118,8 @@ public class UserDetails {
 
     public UserDetails(Context context) {
         this.context = context;
+        sharedPreferences = context.getSharedPreferences("LanguageSelect",Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("SIMActivationDate",Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("MacAddress", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("RechargeStatus", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("MSISDN", Context.MODE_PRIVATE);

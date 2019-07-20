@@ -1,7 +1,109 @@
 <resources>
     <string name="app_name">GTT App</string>
-    <string name="welcome_to_gtt">Welcome to SkyGO</string>
+    <string name="welcome_to_gtt">Welcome to SkyGO </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
-    <string name="facebook_app_id">417781505734616</string>
-    <string name="fb_login_protocol_scheme">fb417781505734616</string>
+    <string name="textDashboard">Dashboard</string>
+    <string name="facebook_app_id">680846345699872</string>
+    <string name="fb_login_protocol_scheme">fb680846345699872</string>
+
+    <string name="textYouareHere">You are here</string>
+    <string name="textHereisLocation">Here is Location</string>
+    <string name="textActivateSIM">Activate SIM</string>
+    <string name="textActivateyourSIMnumber">Activate your SIM number </string>
+    <string name="textRecentActivationOnMobile">Recent Activation on Mobile#</string>
+    <string name="textAlltypebooking">All type booking available soon !!</string>
+    <string name="textFlights">Flights</string>
+    <string name="textUber">UBER</string>
+    <string name="textFoodDelivery">Food Delivery</string>
+    <string name="textHotels">Hotels</string>
+    <string name="textMovie">Movie</string>
+    <string name="textTrain">Train Tickets</string>
+    <string name="textGooglePay">Google Play</string>
+    <string name="textMore">More</string>
+    <string name="textSIMSerialNo">SIM Serial No#</string>
+    <string name="textDate">Date</string>
+    <string name="textNoOfDays">No. of days</string>
+    <string name="textCurrentAmnt">Current Amount</string>
+    <string name="textMobileNumber">Mobile Number</string>
+    <string name="textBuyNow">Buy Now</string>
+    <string name="textSomeOutstandingFeatures">Some Outstanding Features</string>
+
+    <!--Sourabh Panwar-->
+
+    <string name="texthintSIMNumber">SIM Number</string>
+    <string name="textLanguage">Language</string>
+    <string name="textSelectyourapplanguage">Select your app language</string>
+    <string name="textENGLISH">ENGLISH</string>
+    <string name="textCHINESE">CHINESE</string>
+    <string name="textJAPANESE">JAPANESE</string>
+    <string name="textKOREAN">KOREAN</string>
+    <string name="textSPANISH">SPANISH</string>
+    <string name="textNEXT">NEXT</string>
+    <string name="textPaymentSummary">Payment Summary</string>
+    <string name="textSIMhash">SIM#</string>
+    <string name="texthinthereisnumber">here is number</string>
+    <string name="texthintAmount">Amount</string>
+    <string name="textCartAmount">Cart Amount</string>
+    <string name="textConvenienceFee">Convenience Fee</string>
+    <string name="textAmountPayable">Amount Payable</string>
+    <string name="textActivationDetails">Activation Details</string>
+    <string name="textValiditydays">Validity days - </string>
+    <string name="textActivationfromdate">Activation from date - </string>
+    <string name="textMODIFY">MODIFY</string>
+    <string name="textProceed">Proceed</string>
+    <string name="textYourOrderwasSuccessfullyProccessed">Your Order was Successfully Proccessed</string>
+    <string name="textBACKTOHOME">BACK TO HOME</string>
+    <string name="textLoading">Loading..</string>
+
+    <!-- Prateek Sharma -->
+
+    <string name="textAnd">And</string>
+    <string name="textbackToDashboardButton">back To Dashboard Button</string>
+    <string name="textComingSoon">Coming Soon</string>
+    <string name="textUnderConstruction">Under Construction</string>
+    <string name="textSigninwithyoursocialnetwork">Sign in with your social network</string>
+    <string name="textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission">We will never login to Facebook, Google+ or LinkedIn without your permission</string>
+    <string name="textNotifications">Notifications</string>
+    <string name="texthotspotButton">hotspotButton</string>
+    <string name="textRecharge">Recharge</string>
+    <string name="textSIMHash">SIM #</string>
+    <string name="textValiditydate">Validity date</string>
+    <string name="textAvailableSoon">Available Soon</string>
+    <string name="textVoiceoverIPVoIP">Voice over IP (VoIP)</string>
+    <string name="textPayment">Payment</string>
+    <string name="textHereisno">Here is number</string>
+    <string name="textDeliverPhone">Deliver Phone</string>
+    <string name="textcallmessages">call messages</string>
+    <string name="textProcessPending">Process Pending</string>
+
+    <!--updaetd 27july by sourav-->
+
+    <string name="textSorrySomethingwentwrong">Sorry! Something went wrong</string>
+    <string name="textPleaseCheckYourInternetConnection">Please Check Your Internet Connection</string>
+    <string name="textLocationPermissionNotEnabled">Location Permission Not Enabled</string>
+    <string name="textStatusPending">Status : Pending</string>
+    <string name="textStatusUnderProcessing">Status : Under Processing</string>
+    <string name="textFor">For</string>
+    <string name="textClickBACKagaintoExit">Click BACK again to Exit</string>
+    <string name="textPleaseEnterSIMSerialNumber">Please Enter SIM Serial Number</string>
+    <string name="textInvalidNumberOfDay">Invalid Number Of Day</string>
+    <string name="textInvalidSerialNumber">Invalid Serial Number</string>
+    <string name="textPleaseEnterValidNumberOfDays">Please Enter Valid Number Of Days</string>
+    <string name="textValidity">Validity</string>
+    <string name="textto">to</string>
+    <string name="textLoginSuccessful">Login Successful</string>
+    <string name="textLogincancel">Login cancel</string>
+    <string name="textLogincancelerror">Login cancel error</string>
+    <string name="textInvalid">Invalid</string>
+    <string name="textCancel">Cancel</string>
+    <string name="textGPSisnotenabled">GPS is not enabled</string>
+    <string name="textifyoucancelyourappwillbeclosed">if you cancel your app will be closed</string>
+    <string name="textThisappneedsLocationpermissions">This app needs Location permissions.</string>
+    <string name="textNeedMultiplePermission">Need Multiple Permission</string>
+    <string name="textGrant">Grant</string>
+    <string name="textThisappneedsCameraandLocationpermissions">This app needs Camera and Location permissions.</string>
+    <string name="textGotoPermissionstoGrantCameraandLocation">Go to Permissions to Grant Camera and Location</string>
+    <string name="textPleaseLoginagain">Please Login again</string>
+    <string name="textOpensettings">Open Setting</string>
+    <string name="textNOInternetConnection">No Internet Connection</string>
 </resources>

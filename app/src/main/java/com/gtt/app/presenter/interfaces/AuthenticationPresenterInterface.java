@@ -17,6 +17,7 @@ public interface AuthenticationPresenterInterface {
     public void  UpdateFundsMethod(UpdateFundReq updateFundReq);
     public void extensionRequest(NewExtensionRequest newExtensionRequest);
     public void ListNotifications(String TokenID, String Condition);
+    public void TranslateAPI(String inputlang, String outputlang, String text);
 
 
 }

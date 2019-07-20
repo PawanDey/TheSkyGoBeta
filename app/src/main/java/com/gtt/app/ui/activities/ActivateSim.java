@@ -1,23 +1,25 @@
 package com.gtt.app.ui.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-
-import android.graphics.Rect;
+import android.content.Context;
+import android.icu.text.SimpleDateFormat;
+import android.location.LocationManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,17 +27,19 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.gtt.app.R;
 import com.gtt.app.base.BaseActivity;
-import com.gtt.app.base.BaseView;
 import com.gtt.app.model.ActivateSimResponse;
 import com.gtt.app.model.NewActivationRequest;
 import com.gtt.app.presenter.implementation.AuthenticationPresenter;
 import com.gtt.app.service.UserDetails;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static java.lang.System.exit;
+
 
 public class ActivateSim extends BaseActivity {
 
@@ -53,21 +57,19 @@ public class ActivateSim extends BaseActivity {
     NewActivationRequest newActivationRequest;
     TextView scannerData;
     //    Button scannerDataLogo;
-    TextView ValidDays;
+    TextView ValidDays, validDateLeftAS;
     DatePickerDialog picker;
-    Boolean ignoreChange =false;
-
-
-
+    Boolean ignoreChange = false;
+    Boolean SimValidAPIStatus = false;
+    String TotalAmount;
 
     @Override
     protected int getLayout() {
         return R.layout.activity_activate_sim;
     }
 
-
     Date d = new Date();
-    CharSequence DateToday = DateFormat.format("MMMM d, yyyy ", d.getTime());
+    CharSequence DateToday = DateFormat.format("d MMMM,yyyy", d.getTime());
 
     @Override
     protected void onViewReady() {
@@ -81,6 +83,7 @@ public class ActivateSim extends BaseActivity {
         scannerData = findViewById(R.id.scanner);
 //        edtSerialNumber.setOnFocusChangeListener(this);
         txtnoOfDays = findViewById(R.id.txtnoOfDaysActivateSim);
+        validDateLeftAS = findViewById(R.id.validDateLeftAS);
         UserDetails userDetails = new UserDetails(ActivateSim.this);
         token = userDetails.getTokenID();
         totalAmount = findViewById(R.id.totalAmountActivate);
@@ -88,46 +91,40 @@ public class ActivateSim extends BaseActivity {
         edtSerialNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (edtSerialNumber.getText().toString().length() == 20) {
 
+                if (edtSerialNumber.getText().toString().length() == 20) {
                     Serial = edtSerialNumber.getText().toString();
                     if (Serial != null && !Serial.isEmpty()) {
-
                         FirebaseInstanceId.getInstance().getInstanceId()
                                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                         if (!task.isSuccessful()) {
-                                            showToast("Sorry! Something went wrong");
+//                                            showToast(""+R.string.textSorrySomethingwentwrong);
+                                            Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                         try {
                                             authenticationPresenter.validateSim(Serial, token);
-                                        }catch (Exception e)
-                                        {
+                                        } catch (Exception e) {
                                             showToast(e.toString());
                                         }
-
                                     }
                                 });
                     }
-                }
-                else
-                {
-//                 txtnoOfDays.getText().clear();
+                } else {
                     totalAmount.setText("$ 0.0");
+
 
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -135,45 +132,41 @@ public class ActivateSim extends BaseActivity {
         txtnoOfDays.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 Days = txtnoOfDays.getText().toString();
+                txtnoOfDays.setHint("  ");
                 try {
-                    if(ignoreChange==false)
-                    {
-                        Amount = ((Integer.parseInt(Days)) * rate);
-                        txtnoOfDays.setFocusable(true);
-                        NumberFormat formatter = NumberFormat.getNumberInstance();
-                        formatter.setMinimumFractionDigits(2);
-                        formatter.setMaximumFractionDigits(2);
-                        String TotalAmount = formatter.format(Amount);
-                        totalAmount.setText("$" + TotalAmount);
-
+                    if (ignoreChange == false) {
+                        if (txtnoOfDays.getText().length() == 0) {
+                            validDateLeftAS.setText("  ");
+                            totalAmount.setText("");
+                            totalAmount.setHint("$ 0.00");
+                        } else {
+                            Amount = ((Integer.parseInt(Days)) * rate);
+                            txtnoOfDays.setFocusable(true);
+                            NumberFormat formatter = NumberFormat.getNumberInstance();
+                            formatter.setMinimumFractionDigits(2);
+                            formatter.setMaximumFractionDigits(2);
+                            TotalAmount = formatter.format(Amount);
+                            totalAmount.setText("$ " + TotalAmount);
+                            getCurretDatePicker();
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    if (edtSerialNumber.getText().toString().isEmpty())
-                    {
-                        showToast("Please Enter SIM Serial Number");
-                    }
-                    else if(Amount==0)
-                    {
+                } catch (Exception e) {
+                    if (edtSerialNumber.getText().toString().isEmpty()) {
+                        Toast.makeText(ActivateSim.this, R.string.textPleaseEnterSIMSerialNumber, Toast.LENGTH_LONG).show();
+                    } else if (Amount == 0) {
                         totalAmount.setText("$ 0.0");
-                    }
-                    else
-                        showToast("Invalid Number Of Day");
+                    } else
+                        Toast.makeText(ActivateSim.this, R.string.textInvalidNumberOfDay, Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -184,12 +177,12 @@ public class ActivateSim extends BaseActivity {
 //
 //            }
 //        });
-
     }
 
     @Override
     public void onFailure() {
-        showToast("Sorry! Something went wrong");
+//        showToast(""+R.string.textSorrySomethingwentwrong);
+        Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -197,28 +190,26 @@ public class ActivateSim extends BaseActivity {
         switch (method2) {
             case "simvalidated": {
                 ActivateSimResponse obj = (ActivateSimResponse) response;
-
-
                 try {
-//
                     rate = Double.parseDouble(obj.getmRatePerDay());
+                    SimValidAPIStatus = true;
 
                     if (!obj.getNumberOfDays().equals("0")) {
                         Days = obj.getNumberOfDays();
-                        txtnoOfDays.setFocusable(false);
+                        txtnoOfDays.setEnabled(false);
                         Amount = 0.0;
-                        ignoreChange=true;
+                        ignoreChange = true;
                         txtnoOfDays.setText(Days);
                         totalAmount.setText("$ 0.0");
+                        TotalAmount = "0";
+                        showToast(obj.getResponseMessage());
+                        getCurretDatePicker();
 
+                    } else {
                         showToast(obj.getResponseMessage());
-                    }
-                    else
-                    {
-                        showToast(obj.getResponseMessage());
-                        ignoreChange=false;
-                        txtnoOfDays.setFocusable(true);
-//                        Days = txtnoOfDays.getText().toString();
+                        ignoreChange = false;
+                        txtnoOfDays.setEnabled(true);
+                        txtnoOfDays.getText().clear();//                        Days = txtnoOfDays.getText().toString();
 //                        Amount = ((Integer.parseInt(Days)) * rate);
 //                        NumberFormat formatter = NumberFormat.getNumberInstance();
 //                        formatter.setMinimumFractionDigits(2);
@@ -239,9 +230,10 @@ public class ActivateSim extends BaseActivity {
     @Override
     public void onServerError(String method2, String errorMessage) {
         switch (method2) {
-            case "simvalidated" : {
+            case "simvalidated": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
                     showToast("Please Login again");
+
                     Intent intent = new Intent(ActivateSim.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -249,7 +241,7 @@ public class ActivateSim extends BaseActivity {
                     showToast(errorMessage);
                     txtnoOfDays.getText().clear();
                     edtSerialNumber.getText().clear();
-                    ignoreChange=false;
+                    ignoreChange = false;
                 }
             }
         }
@@ -273,100 +265,43 @@ public class ActivateSim extends BaseActivity {
 //
 //                    }
 //                });
-//
 //    }
 
     public void btnBuyNowClick(View view) {
         try {
-            if (edtSerialNumber.getText().toString().isEmpty()) {
-                throw new Exception("Please Enter SIM Serial Number");
-            }
-            if (txtnoOfDays.getText().toString().equals("0") || txtnoOfDays.getText().toString().isEmpty()) {
-                throw new Exception("Please Enter Valid Number Of Days");
-            } else {
+            UserDetails userDetails = new UserDetails(this);
+            if (TextUtils.isEmpty(edtSerialNumber.toString())) {
+//                throw new Exception(""+R.string.textPleaseEnterSIMSerialNumber);
+                throw new Exception(getResources().getString(R.string.textPleaseEnterSIMSerialNumber));
+            } else if (edtSerialNumber.getText().length() != 20) {
+//                throw new Exception(""+R.string.textInvalidSerialNumber);
+                throw new Exception(getResources().getString(R.string.textInvalidSerialNumber));
+            } else if (txtnoOfDays.getText().toString().isEmpty() ||
+                    txtnoOfDays.getText().toString().equals("0") ||
+                    txtnoOfDays.getText().toString().equals("00") ||
+                    txtnoOfDays.getText().toString().equals("000")) {
+//                throw new Exception(""+R.string.textPleaseEnterValidNumberOfDays);
+                throw new Exception(getResources().getString(R.string.textPleaseEnterValidNumberOfDays));
+            } else if (SimValidAPIStatus) {
+
                 Days = txtnoOfDays.getText().toString();
                 Serial = edtSerialNumber.getText().toString();
-//                newActivationRequest = new NewActivationRequest();
-//                newActivationRequest.setNumberOfDays(Days);
-//                newActivationRequest.setSerialNumber(Serial);
-//                newActivationRequest.setAmountCharged(String.valueOf(Amount));
-//                newActivationRequest.setRequestedForDtTm(DateToday.toString());
-//                newActivationRequest.setRefNo("1");
-//                newActivationRequest.setRequestedDevice("2");
-//                newActivationRequest.setRequestedIP("24");
-//                newActivationRequest.setRequestedOS("android");
-
-
                 Intent PaymentSummary = new Intent(ActivateSim.this, mPayment.class);
                 PaymentSummary.putExtra("SerialNumber", Serial);
                 PaymentSummary.putExtra("NumberOfDays", Days);
-                PaymentSummary.putExtra("RequestedIP", "24");
-                PaymentSummary.putExtra("RequestedOS", "Android");
-                PaymentSummary.putExtra("AmountCharged", String.valueOf(Amount));
-                PaymentSummary.putExtra("RequestedForDtTm", DateToday.toString());
+                PaymentSummary.putExtra("RequestedIP", "ipAddress");
+                PaymentSummary.putExtra("RequestedOS", "Android|" + userDetails.getLanguageSelect());
+                PaymentSummary.putExtra("AmountCharged", TotalAmount);
+                PaymentSummary.putExtra("RequestedForDtTm", todayDate.getText().toString());
                 PaymentSummary.putExtra("RefNo", "1");
                 PaymentSummary.putExtra("RequestedDevice", "2");
                 startActivity(PaymentSummary);
-                finish();
             }
         } catch (Exception e) {
-            String[] Error = e.toString().split(":");
+            String Error[] = e.toString().split(":");
             showToast(Error[1]);
         }
     }
-
-
-
-//    @Override
-//    public void onFocusChange(View v, boolean hasFocus) {
-//
-//        try {
-//            if (!hasFocus) {
-//                if (edtSerialNumber.getText().toString().length() == 20) {
-//
-//                    Serial = edtSerialNumber.getText().toString();
-//                    if (Serial != null && !Serial.isEmpty()) {
-//
-//                        FirebaseInstanceId.getInstance().getInstanceId()
-//                                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                                        if (!task.isSuccessful()) {
-//                                            showToast("Sorry! Something went wrong");
-//                                            return;
-//                                        }
-//                                        authenticationPresenter.validateSim(Serial, token);
-//
-//                                    }
-//                                });
-//                    }
-//                }
-//
-//            }
-//        } catch (Exception e) {
-//            String[] Error = e.toString().split(":");
-//            showToast(Error[1]);
-//        }
-//
-//    }
-
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent event) {
-//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            View v = getCurrentFocus();
-//            if (v instanceof EditText) {
-//                Rect outRect = new Rect();
-//                v.getGlobalVisibleRect(outRect);
-//                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-//                    v.clearFocus();
-//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//                }
-//            }
-//        }
-//        return super.dispatchTouchEvent(event);
-//    }
 
     public void scnnerafumction(View view) {
         Intent i = new Intent(ActivateSim.this, ScannerFunction.class);
@@ -382,37 +317,98 @@ public class ActivateSim extends BaseActivity {
         finish();
     }
 
-    public void getCurretDatePicker(View view) {
+
+    public void getCurretDatePicker(View view) throws ParseException {
         final Calendar cldr = Calendar.getInstance();
         int day = cldr.get(Calendar.DAY_OF_MONTH);
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
         // date picker dialog
-        picker = new DatePickerDialog(ActivateSim.this,R.style.DatePickerDialog,
+
+        picker = new DatePickerDialog(ActivateSim.this, R.style.DatePickerDialog,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        todayDate.setText(year + "-" +(monthOfYear + 1  ) + "-" + dayOfMonth);
+                        String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            try {
+                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                                String strDate = formatter.format(date1);
+                                todayDate.setText(strDate);
+                                getCurretDatePicker();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }, year, month, day);
+
+        picker.getDatePicker().setMinDate(System.currentTimeMillis());
+        picker.show();
+
+    }
+
+    public void calenderButton(View view) {
+        final Calendar cldr = Calendar.getInstance();
+        int day = cldr.get(Calendar.DAY_OF_MONTH);
+        int month = cldr.get(Calendar.MONTH);
+        int year = cldr.get(Calendar.YEAR);
+
+        // date picker dialog
+        picker = new DatePickerDialog(ActivateSim.this, R.style.DatePickerDialog,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            try {
+                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                                String strDate = formatter.format(date1);
+                                todayDate.setText(strDate);
+                                getCurretDatePicker();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }, year, month, day);
         picker.getDatePicker().setMinDate(System.currentTimeMillis());
         picker.show();
     }
 
-    public void calenderButton(View view){
-        final Calendar cldr = Calendar.getInstance();
-        int day = cldr.get(Calendar.DAY_OF_MONTH);
-        int month = cldr.get(Calendar.MONTH);
-        int year = cldr.get(Calendar.YEAR);
-        // date picker dialog
-        picker = new DatePickerDialog(ActivateSim.this,R.style.DatePickerDialog,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        todayDate.setText(year + "-" +(monthOfYear + 1  ) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-        picker.getDatePicker().setMinDate(System.currentTimeMillis());
-        picker.show();
+    public void getCurretDatePicker() {
+        String getDate = todayDate.getText().toString();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            try {
+                Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
+                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+                String validityStartDate = formatter.format(date1);
+                String getNoOfDays = txtnoOfDays.getText().toString();
+                if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.equals(null)) {
+                    validDateLeftAS.setText("  ");
+
+                } else {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date1);
+                    cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
+                    String validityEndDate = sdf1.format(cal.getTime());
+                    validDateLeftAS.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void noOFdaysHide(View view) {
+
     }
 }
+
+
+

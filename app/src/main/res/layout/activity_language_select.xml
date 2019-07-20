@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activities.LanguageSelect">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon_arrow"
+            android:layout_width="43dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:onClick="backToExit"
+            app:srcCompat="@drawable/back_arow_language" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/segoe_bold"
+            android:text="Language"
+            android:textColor="#313131"
+            android:textSize="32dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/segoe_semi_light"
+            android:text="Select your app language"
+            android:textColor="#707070"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!--1st language-->
+            <RelativeLayout
+                android:id="@+id/relativelayoutEnglish"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:onClick="SelectEnglish"
+                android:orientation="horizontal">
+                <!--language select -->
+                <ImageView
+                    android:id="@+id/icon_UK"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/language_uk" />
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/segoe_semi_light"
+                    android:gravity="center"
+                    android:text="ENGLISH"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/border1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="30dp"
+                    android:background="#80D6D6D6"
+                    android:backgroundTint="#48707070" />
+            </RelativeLayout>
+
+            <!--2nd laungae-->
+            <RelativeLayout
+                android:id="@+id/relativelayoutChinese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="SelectChinese">
+
+                <ImageView
+                    android:id="@+id/icon_CH"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    app:srcCompat="@drawable/language_jp" />
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon_CH"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="100dp"
+                    android:fontFamily="@font/segoe_semi_light"
+                    android:gravity="center"
+                    android:text="中文"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/border2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="30dp"
+                    android:background="#80D6D6D6"
+                    android:backgroundTint="#48707070" />
+            </RelativeLayout>
+
+            <!--3rd language -->
+            <RelativeLayout
+                android:id="@+id/relativelayoutJapanese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:onClick="SelectJapanese">
+
+                <ImageView
+                    android:id="@+id/icon_JP"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    app:srcCompat="@drawable/language_ch" />
+
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon_JP"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="100dp"
+                    android:fontFamily="@font/segoe_semi_light"
+                    android:gravity="center"
+                    android:text="日本人"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/border3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="30dp"
+                    android:background="#80D6D6D6"
+                    android:backgroundTint="#48707070" />
+            </RelativeLayout>
+
+            <!--4th lanuage-->
+            <RelativeLayout
+                android:id="@+id/relativelayoutKorean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:onClick="SelectKorean">
+
+                <ImageView
+                    android:id="@+id/icon_KO"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    app:srcCompat="@drawable/language_ko" />
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon_KO"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="100dp"
+                    android:fontFamily="@font/segoe_semi_light"
+                    android:gravity="center"
+                    android:text="한국어"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/border4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="30dp"
+                    android:background="#80D6D6D6"
+                    android:backgroundTint="#48707070" />
+            </RelativeLayout>
+
+            <!--5th langauge-->
+            <RelativeLayout
+                android:id="@+id/relativelayoutSpanish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:onClick="SelectSPANISH">
+
+                <ImageView
+                    android:id="@+id/icon_ES"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/language_es" />
+
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="100dp"
+                    android:fontFamily="@font/segoe_semi_light"
+                    android:gravity="center"
+                    android:text="español"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/border5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="30dp"
+                    android:background="#80D6D6D6"
+                    android:backgroundTint="#48707070" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

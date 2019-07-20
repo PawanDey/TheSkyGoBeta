@@ -33,7 +33,7 @@
             android:fontFamily="@font/segoe_bold"
             android:gravity="center"
             android:paddingLeft="30dp"
-            android:text="Activate SIM"
+            android:text="@string/textActivateSIM"
             android:textColor="#ffffff"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -56,12 +56,19 @@
             android:layout_marginRight="18dp"
             android:onClick="notificationButton"
             android:padding="2dp"
-            android:src="@drawable/notification" />
+            android:src="@drawable/notification1" />
 
 
     </LinearLayout>
 
-
+    <!--others-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <!--other-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,13 +88,13 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="18dp"
-                android:layout_marginEnd="33dp"
                 android:layout_marginTop="31dp"
+                android:layout_marginEnd="33dp"
                 android:fontFamily="@font/roboto"
-                android:hint="SIM Number"
+                android:hint="@string/texthintSIMNumber"
+                android:maxLength="20"
                 android:inputType="textPersonName"
                 android:textColor="#888888" />
-
 
 
             <TextView
@@ -99,7 +106,7 @@
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="229dp"
                 android:fontFamily="@font/roboto"
-                android:hint="Current Amount"
+                android:hint="@string/textCurrentAmnt"
                 android:textSize="13dp" />
 
             <TextView
@@ -123,22 +130,23 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="120dp"
                 android:focusable="false"
-                android:onClick="getCurretDatePicker"
                 android:fontFamily="@font/roboto"
                 android:inputType="date"
+                android:onClick="getCurretDatePicker"
                 android:textSize="14dp" />
 
             <Button
+                android:id="@+id/calenderDate"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:gravity="center"
-                android:onClick="calenderButton"
-                android:id="@+id/calenderDate"
                 android:layout_alignStart="@+id/editSerial"
                 android:layout_alignBottom="@+id/datePickerActivateSim"
                 android:layout_marginStart="190dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/calender" />
+                android:background="@drawable/calender"
+                android:gravity="center"
+                android:onClick="calenderButton" />
+
             <Button
                 android:id="@+id/btnActivateSIM"
                 android:layout_width="174dp"
@@ -150,7 +158,7 @@
                 android:fontFamily="@font/sf_old_republic_font"
                 android:gravity="center"
                 android:onClick="btnBuyNowClick"
-                android:text="Buy Now"
+                android:text="@string/textBuyNow"
                 android:textColor="#FFFFFF"
                 android:textSize="17dp" />
 
@@ -169,14 +177,18 @@
             <EditText
                 android:id="@+id/txtnoOfDaysActivateSim"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:layout_alignTop="@+id/datePickerActivateSim"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="-22dp"
                 android:layout_marginEnd="33dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:gravity="center|end"
+                android:gravity="center"
                 android:hint="00"
+                android:inputType="number"
+                android:maxLength="3"
+                android:onClick="noOFdaysHide"
+                android:textColor="#FC3E52"
                 android:textSize="50dp" />
 
             <TextView
@@ -187,7 +199,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="11dp"
-                android:text="SIM Serial No#" />
+                android:text="@string/textSIMSerialNo" />
 
             <TextView
                 android:id="@+id/textDate"
@@ -198,7 +210,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="89dp"
                 android:fontFamily="@font/roboto"
-                android:text="Date"
+                android:text="@string/textDate"
                 android:textSize="13dp" />
 
             <TextView
@@ -209,18 +221,19 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="87dp"
                 android:layout_marginEnd="26dp"
-                android:text="No. of days" />
+                android:text="@string/textNoOfDays" />
 
             <TextView
                 android:id="@+id/validDateLeftAS"
-                android:layout_width="152dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
                 android:layout_alignBottom="@+id/btnActivateSIM"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="39dp"
                 android:layout_marginBottom="-23dp"
                 android:fontFamily="@font/segoe"
-                android:text="Validity date "
+                android:gravity="right"
+                android:text="  "
                 android:textColor="#414141"
                 android:textSize="11dp" />
 
@@ -253,7 +266,7 @@
             android:layout_weight="9"
             android:fontFamily="@font/roboto"
             android:gravity="center|left"
-            android:text="All type booking available soon !!"
+            android:text="@string/textAlltypebooking"
             android:textColor="#333232"
             android:textSize="15dp"
             android:textStyle="normal" />
@@ -269,6 +282,7 @@
         android:src="@drawable/uber_add"
         tools:layout_editor_absoluteX="5dp"
         tools:layout_editor_absoluteY="48dp" />
-
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
