@@ -1,5 +1,7 @@
 package com.gtt.app.presenter.implementation;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gtt.app.R;
@@ -43,6 +45,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void loginUser(String userEmail, LoginRequestTypeId regTypeID, String gcmToken) {
         baseView.showProgressBar();
+        Log.d("mylog", "getToken;" +gcmToken);
         Call<ResponseBody> call = APIClient.getApiService().signUp(userEmail, regTypeID.getValue(), gcmToken);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

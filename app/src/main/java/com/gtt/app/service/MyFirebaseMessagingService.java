@@ -16,6 +16,14 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.gtt.app.R;
 import com.gtt.app.ui.activities.MainActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
@@ -38,13 +46,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
+            Map<String, String> hash_map = remoteMessage.getData();
+            sendNotification(hash_map.get("body"));
 
         }
 
@@ -97,7 +100,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
@@ -123,6 +126,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setContentText(messageBody)
+                        .setSmallIcon(R.drawable.skylogo)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

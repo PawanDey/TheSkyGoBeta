@@ -176,7 +176,7 @@ public class LoginActivity extends BaseActivity {
                 try {
                     Log.d("mylog", "getName;" + profile.getName());
                     Log.d("mylog", "getId;" + profile.getId());
-                    Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500,500));
+                    Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500, 500));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -192,10 +192,10 @@ public class LoginActivity extends BaseActivity {
                             return;
                         }
                         String token = task.getResult().getToken();
-                        if(profile!=null){
-                             getUserName= profile.getName();
-                        }else{
-                             getUserName= loginResult.getAccessToken().getUserId();
+                        if (profile != null) {
+                            getUserName = profile.getName();
+                        } else {
+                            getUserName = loginResult.getAccessToken().getUserId();
 //                            getUserName= "user";
 
                         }
@@ -226,7 +226,7 @@ public class LoginActivity extends BaseActivity {
     public void GmailLoginButton(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 0);
-//        authenticationPresenter.loginUser("gagan3809@gmail.com", LoginRequestTypeId.GOOGLE, "2");
+//        authenticationPresenter.loginUser("ssssssss@gmail.com", LoginRequestTypeId.GOOGLE, "2");
 
     }
 
@@ -267,9 +267,9 @@ public class LoginActivity extends BaseActivity {
         } catch (ApiException e) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
-                Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
             } else
-                Toast.makeText(LoginActivity.this, "2345678", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
         }
 //            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
 //            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();

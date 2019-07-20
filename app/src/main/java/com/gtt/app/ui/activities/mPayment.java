@@ -83,8 +83,8 @@ public class mPayment extends BaseActivity implements
     private mPayment mPayment;
     TextView m_response;
     PayPalConfiguration m_configuration;
-//    String m_paypalClientId = "AYM1ES72_Yc1GwxAeGMhRGpQSEFWRVt-JvfjRN54O466vcO9tB8HgGR1WWaLDq4Cc-a0wBjyM-5TN9qu";   //sandbox
-    String m_paypalClientId = " ";     // live
+    String m_paypalClientId = "AYM1ES72_Yc1GwxAeGMhRGpQSEFWRVt-JvfjRN54O466vcO9tB8HgGR1WWaLDq4Cc-a0wBjyM-5TN9qu";   //sandbox
+//    String m_paypalClientId = " ";     // live
     Intent m_service;
     int m_paypalRequestCode = 999;
     TextView SimNumber;
