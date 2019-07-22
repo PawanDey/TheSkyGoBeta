@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:878746053563:android:39dc0b2ae66fe470",
+        "mobilesdk_app_id": "1:878746053563:android:a615c9e23bc830ad",
         "android_client_info": {
-          "package_name": "com.gtt.app"
+          "package_name": "com.global.travel.telecom.app"
         }
       },
       "oauth_client": [
@@ -28,8 +28,67 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "878746053563-tea20ovq0m65leg8hokrej0905clcq5o.apps.googleusercontent.com",
+              "client_id": "878746053563-6dtg0olhp9q9l2e495t7044mb1n3ebia.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "878746053563-2oi6vhv014s8olcrr0m4g18258ftdhl1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.global.travel.telecom.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878746053563:android:39dc0b2ae66fe470",
+        "android_client_info": {
+          "package_name": "com.gtt.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878746053563-qaee77jtr39u00frl3lp69cigjv22tpj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gtt.app",
+            "certificate_hash": "def28fbb5cf31979318f22341d98d70a42bc19c2"
+          }
+        },
+        {
+          "client_id": "878746053563-cur628k86t0jpd5g0ih516qb7ogmqsrd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gtt.app",
+            "certificate_hash": "f65b0570ed70fc38b04eae55b0de1c30b3853e52"
+          }
+        },
+        {
+          "client_id": "878746053563-tea20ovq0m65leg8hokrej0905clcq5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ-i3llnsvWmagOOFLykCkgcGoO5a2bqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878746053563-6dtg0olhp9q9l2e495t7044mb1n3ebia.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878746053563-2oi6vhv014s8olcrr0m4g18258ftdhl1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.global.travel.telecom.app"
+              }
             }
           ]
         }

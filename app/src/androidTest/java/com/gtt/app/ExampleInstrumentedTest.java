@@ -1,4 +1,4 @@
-package com.gtt.app;
+package com.global.travel.telecom.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.gtt.app", appContext.getPackageName());
+        assertEquals("com.global.travel.telecom.app", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.gtt.app;
+package com.global.travel.telecom.app;
 
 import org.junit.Test;
 
