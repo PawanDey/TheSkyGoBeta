@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GTT App</string>
+    <string name="app_name">SkyGo</string>
     <string name="welcome_to_gtt" translatable="false">SkyGOへようこそ </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
 

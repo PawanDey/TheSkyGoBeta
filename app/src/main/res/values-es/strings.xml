@@ -1,6 +1,6 @@
 <!--3rd july updated by prateek sharma-->
 <resources>
-    <string name="app_name">Aplicación GTT</string>
+    <string name="app_name">SkyGO</string>
     <string name="welcome_to_gtt">Bienvenido a SkyGO </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GTT App</string>
+    <string name="app_name">SkyGO</string>
     <string name="welcome_to_gtt" translatable="false">欢迎来到SkyGO </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
     <string name="textDashboard">仪表板</string>
