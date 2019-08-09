@@ -5,7 +5,6 @@
     <string name="textDashboard">Dashboard</string>
     <string name="facebook_app_id">680846345699872</string>
     <string name="fb_login_protocol_scheme">fb680846345699872</string>
-
     <string name="textYouareHere">You are here</string>
     <string name="textHereisLocation">Here is Location</string>
     <string name="textActivateSIM">Activate SIM</string>
@@ -27,10 +26,7 @@
     <string name="textMobileNumber">Mobile Number</string>
     <string name="textBuyNow">Buy Now</string>
     <string name="textSomeOutstandingFeatures">Some Outstanding Features</string>
-
-    <!--Sourabh Panwar-->
-
-    <string name="texthintSIMNumber">SIM Number</string>
+     <string name="texthintSIMNumber">SIM Number</string>
     <string name="textLanguage">Language</string>
     <string name="textSelectyourapplanguage">Select your app language</string>
     <string name="textENGLISH">ENGLISH</string>
@@ -54,10 +50,7 @@
     <string name="textYourOrderwasSuccessfullyProccessed">Your Order was Successfully Proccessed</string>
     <string name="textBACKTOHOME">BACK TO HOME</string>
     <string name="textLoading">Loading..</string>
-
-    <!-- Prateek Sharma -->
-
-    <string name="textAnd">And</string>
+     <string name="textAnd">And</string>
     <string name="textbackToDashboardButton">back To Dashboard Button</string>
     <string name="textComingSoon">Coming Soon</string>
     <string name="textUnderConstruction">Under Construction</string>
