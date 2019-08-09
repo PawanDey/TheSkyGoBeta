@@ -1,6 +1,7 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,12 +15,15 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.R;
 
@@ -36,7 +40,7 @@ import com.global.travel.telecom.app.service.UserDetails;
 public class Dashboard extends BaseActivity {
 
     //for current location
-    public static TextView currentLocation;
+    public static TextView currentLocation, Button;
     private LocationManager locationManager;
     private double logitude;
     private double latitude;
@@ -44,8 +48,10 @@ public class Dashboard extends BaseActivity {
     TextView validity;
     ImageView skygoDialerLogo;
     boolean doubleBackToExitPressedOnce;
-
-
+    public BaseView baseView;
+    Context context = this;
+    String isHotspotEnabled;
+    public ImageView setImageOnHotspot;
     //end location
     AuthenticationPresenter authenticationPresenter;
 
@@ -73,6 +79,7 @@ public class Dashboard extends BaseActivity {
                 getBaseContext().getResources().getDisplayMetrics());
         authenticationPresenter = new AuthenticationPresenter(this);
         skygoDialerLogo = findViewById(R.id.skyGoDialer);
+        setImageOnHotspot=findViewById(R.id.button25);
         SelectLoginImage();
         //UserDetails userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
@@ -283,33 +290,97 @@ public class Dashboard extends BaseActivity {
     private WifiManager.LocalOnlyHotspotReservation mReservation;
 
     public void hotspotButton(View view) {
-
-
-        final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                wifiManager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
-
-                    @Override
-                    public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
-                    }
-
-                    @Override
-                    public void onStopped() {
-                        super.onStopped();
-                    }
-
-                    @Override
-                    public void onFailed(int reason) {
-                        super.onFailed(reason);
-                    }
-                }, new Handler());
-            } catch (Exception errorInHot) {
-                errorInHot.printStackTrace();
-            }
-        }
+        Hotspot hotspot = new Hotspot();
+        hotspot.hotspotFxn(context);
     }
+
+
+//    public void hotspotButton(View view) {
+//        Context context = this;
+////        WifiManager.LocalOnlyHotspotReservation mReservation;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            final Dialog dialog = new Dialog(context);
+//            if (mReservation == null) {
+//                dialog.setContentView(R.layout.dialog_hotspot);
+//                dialog.show();
+//                TextView text2 = dialog.findViewById(R.id.textOk);
+//                try {
+//                    text2.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            try {
+//                                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//                                wifiManager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
+//                                    @Override
+//                                    public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
+//                                        super.onStarted(reservation);
+//                                        mReservation = reservation;
+//                                        Toast.makeText(Dashboard.this, "HotSpot Start", Toast.LENGTH_LONG).show();
+//                                    }
+//
+//                                    @Override
+//                                    public void onStopped() {
+//                                        super.onStopped();
+//                                        Toast.makeText(Dashboard.this, "Stop", Toast.LENGTH_LONG).show();
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailed(int reason) {
+//                                        super.onFailed(reason);
+//                                        Toast.makeText(Dashboard.this, "Fail", Toast.LENGTH_LONG).show();
+//                                    }
+//                                }, new Handler());
+//                                dialog.dismiss();
+//                            } catch (Exception e) {
+//                                Toast.makeText(Dashboard.this, "Already ruuning State", Toast.LENGTH_LONG).show();
+//                                e.printStackTrace();
+//                                dialog.dismiss();
+//                            }
+//                        }
+//
+//                    });
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            } else {
+//                dialog.setContentView(R.layout.dialog_hotspotoff);
+//                dialog.show();
+//                TextView text2 = dialog.findViewById(R.id.textOk);
+//                try {
+//                    text2.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            try {
+//                                mReservation.close();
+//                                dialog.dismiss();
+//                                mReservation = null;
+//
+//                                Toast.makeText(Dashboard.this, "close", Toast.LENGTH_LONG).show();
+//                                isHotspotEnabled = "afterOff";
+//
+//
+//                            } catch (Exception e) {
+//                                Toast.makeText(Dashboard.this, e.toString(), Toast.LENGTH_LONG).show();
+//                                e.printStackTrace();
+//                                dialog.dismiss();
+//                            }
+//                        }
+////                        else {
+////                            Toast.makeText(Dashboard.this, "Already HotSpot On", Toast.LENGTH_LONG).show();
+////                            dialog.dismiss();
+////                        }
+//
+//                    });
+//                } catch (Exception e) {
+//                    dialog.dismiss();
+//                    e.printStackTrace();
+//
+//                }
+//            }
+//        }
+//    }
+
 
 //    public void btnRefresh(View view) {
 //        Intent refresh = new Intent(Dashboard.this, Dashboard.class);

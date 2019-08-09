@@ -1,14 +1,22 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
+//import android.icu.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
+
+import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
+import android.text.format.DateFormat;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,7 +56,6 @@ public class Recharge extends BaseActivity {
     TextView GoodUntil;
     String validityStartDate;
     SimpleDateFormat formatter;
-    //    Button MSISDNRecharge;
 
     @Override
     protected int getLayout() {
@@ -84,7 +91,6 @@ public class Recharge extends BaseActivity {
 
             }
 
-            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Days = numberOfDaysRecharge.getText().toString();
@@ -101,7 +107,7 @@ public class Recharge extends BaseActivity {
                         formatter.setMinimumFractionDigits(2);
                         formatter.setMaximumFractionDigits(2);
                         String TotalAmount = formatter.format(Amount);
-                        totalAmountRecharge.setText("$ "+TotalAmount);
+                        totalAmountRecharge.setText("$ " + TotalAmount);
                         getCurretDatePicker();
                     }
                 } catch (Exception e) {
@@ -136,19 +142,18 @@ public class Recharge extends BaseActivity {
                 ActivateSimResponse obj = (ActivateSimResponse) response;
 
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    try {
-                        rate = Double.parseDouble(obj.getmRatePerDay());
-                        String dateConverter = obj.getmLastValidityDate();
-                        Date date1 = new SimpleDateFormat("dd-MMM-yyyy").parse(dateConverter);
-                        SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
-                        String strDate = formatter.format(date1);
-                        todayDate.setText(strDate);
-                        UserDetails userDetails = new UserDetails(this);
-                        userDetails.setRechargeStatus(0);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    rate = Double.parseDouble(obj.getmRatePerDay());
+                    String dateConverter = obj.getmLastValidityDate();
+                    Date date1 = new SimpleDateFormat("dd-MMM-yyyy").parse(dateConverter);
+                    SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                    String strDate = formatter.format(date1);
+                    todayDate.setText(strDate);
+
+                    UserDetails userDetails = new UserDetails(this);
+                    userDetails.setRechargeStatus(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -205,27 +210,34 @@ public class Recharge extends BaseActivity {
 
     public void getCurretDatePicker() {
         String getDate = todayDate.getText().toString();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            try {
-                Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
-                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
-                validityStartDate = formatter.format(date1);
+        try {
 
-                String getNoOfDays = numberOfDaysRecharge.getText().toString();
-                if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.equals("000")) {
-                    GoodUntil.setText("  ");
+            Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            validityStartDate = formatter.format(date1);
 
-                } else {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date1);
-                    cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
-                    String validityEndDate = sdf1.format(cal.getTime());
-                    GoodUntil.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            String getNoOfDays = numberOfDaysRecharge.getText().toString();
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.equals("000")) {
+                GoodUntil.setText("  ");
+
+            } else {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date1);
+                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
+                SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
+                String validityEndDate = sdf1.format(cal.getTime());
+                GoodUntil.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+    }
+
+    private WifiManager.LocalOnlyHotspotReservation mReservation;
+    Context context = this;
+
+    public void hotspotButton(View view) {
+        Hotspot hotspot=new Hotspot();
+        hotspot.hotspotFxn(context);
     }
 }

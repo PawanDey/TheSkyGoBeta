@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GTT App</string>
+    <string name="app_name">SkyGo</string>
     <string name="welcome_to_gtt">Welcome to SkyGO </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
     <string name="textDashboard">Dashboard</string>
@@ -106,4 +106,9 @@
     <string name="textPleaseLoginagain">Please Login again</string>
     <string name="textOpensettings">Open Setting</string>
     <string name="textNOInternetConnection">No Internet Connection</string>
+    <string name="textTabTheSetpHotspot">Tap the \"Set up Wi-Fi hotspot\"</string>
+    <string name="textOK">OK</string>
+
+
+
 </resources>

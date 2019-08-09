@@ -91,21 +91,24 @@
 
         <ImageView
             android:id="@+id/button25"
-            android:layout_width="23dp"
-            android:layout_height="18dp"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:padding="5dp"
+            android:onClick="hotspotButton"
             android:src="@drawable/wifi" />
 
         <ImageView
             android:id="@+id/button25e"
             android:layout_width="23dp"
-            android:layout_height="18dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
+            android:padding="5dp"
             android:onClick="notificatioButton"
             android:src="@drawable/notification1" />
 

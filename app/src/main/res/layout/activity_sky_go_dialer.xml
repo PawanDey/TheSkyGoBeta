@@ -41,18 +41,21 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/button25"
+            android:id="@+id/hotspotImage"
             android:layout_width="23dp"
-            android:layout_height="18dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
+            android:padding="3dp"
             android:layout_weight="1"
+            android:onClick="hotspotButton"
             android:src="@drawable/wifi" />
 
         <ImageView
             android:id="@+id/button25e"
             android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_height="50dp"
+            android:padding="6dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"

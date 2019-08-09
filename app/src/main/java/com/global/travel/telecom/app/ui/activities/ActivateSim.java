@@ -2,18 +2,24 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
-import android.icu.text.SimpleDateFormat;
+//import android.icu.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
+
 import android.location.LocationManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -62,7 +68,6 @@ public class ActivateSim extends BaseActivity {
     Boolean ignoreChange = false;
     Boolean SimValidAPIStatus = false;
     String TotalAmount;
-
     @Override
     protected int getLayout() {
         return R.layout.activity_activate_sim;
@@ -87,6 +92,8 @@ public class ActivateSim extends BaseActivity {
         UserDetails userDetails = new UserDetails(ActivateSim.this);
         token = userDetails.getTokenID();
         totalAmount = findViewById(R.id.totalAmountActivate);
+         WifiManager.LocalOnlyHotspotReservation mReservation;
+        Context context = this;
 
         edtSerialNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -330,16 +337,14 @@ public class ActivateSim extends BaseActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            try {
-                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
-                                String strDate = formatter.format(date1);
-                                todayDate.setText(strDate);
-                                getCurretDatePicker();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                            String strDate = formatter.format(date1);
+                            todayDate.setText(strDate);
+                            getCurretDatePicker();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -362,19 +367,18 @@ public class ActivateSim extends BaseActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            try {
-                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
-                                String strDate = formatter.format(date1);
-                                todayDate.setText(strDate);
-                                getCurretDatePicker();
+                        try {
+                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                            String strDate = formatter.format(date1);
+                            todayDate.setText(strDate);
+                            getCurretDatePicker();
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
+
                 }, year, month, day);
         picker.getDatePicker().setMinDate(System.currentTimeMillis());
         picker.show();
@@ -382,31 +386,36 @@ public class ActivateSim extends BaseActivity {
 
     public void getCurretDatePicker() {
         String getDate = todayDate.getText().toString();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            try {
-                Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
-                SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
-                String validityStartDate = formatter.format(date1);
-                String getNoOfDays = txtnoOfDays.getText().toString();
-                if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.equals(null)) {
-                    validDateLeftAS.setText("  ");
+        try {
+            Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            String validityStartDate = formatter.format(date1);
+            String getNoOfDays = txtnoOfDays.getText().toString();
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.equals(null)) {
+                validDateLeftAS.setText("  ");
 
-                } else {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date1);
-                    cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
-                    String validityEndDate = sdf1.format(cal.getTime());
-                    validDateLeftAS.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } else {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date1);
+                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
+                SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
+                String validityEndDate = sdf1.format(cal.getTime());
+                validDateLeftAS.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
     public void noOFdaysHide(View view) {
+    }
 
+    private WifiManager.LocalOnlyHotspotReservation mReservation;
+    Context context = this;
+
+    public void hotspotButton(View view) {
+        Hotspot hotspot=new Hotspot();
+        hotspot.hotspotFxn(context);
     }
 }
 

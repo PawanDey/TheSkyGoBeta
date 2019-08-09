@@ -1,10 +1,13 @@
 package com.global.travel.telecom.app.presenter.interfaces;
 
 import com.global.travel.telecom.app.model.AddFundsApp;
+import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
+
+import java.util.List;
 
 public interface AuthenticationPresenterInterface {
 
@@ -17,7 +20,7 @@ public interface AuthenticationPresenterInterface {
     public void  UpdateFundsMethod(UpdateFundReq updateFundReq);
     public void extensionRequest(NewExtensionRequest newExtensionRequest);
     public void ListNotifications(String TokenID, String Condition);
-    public void TranslateAPI(String inputlang, String outputlang, String text);
+    public void TranslateAPI(String inputlang, String outputlang, List<GetNotifications> text);
 
 
 }

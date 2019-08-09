@@ -266,9 +266,6 @@ public class LoginActivity extends BaseActivity {
                     });
         } catch (ApiException e) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
-                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
-            } else
                 Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
         }
 //            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());

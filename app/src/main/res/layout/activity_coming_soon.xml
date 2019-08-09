@@ -43,16 +43,17 @@
         <ImageView
             android:id="@+id/button25"
             android:layout_width="23dp"
-            android:layout_height="18dp"
+            android:layout_height="44dp"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
+            android:onClick="hotspotButton"
             android:src="@drawable/wifi" />
 
         <ImageView
             android:id="@+id/button25e"
             android:layout_width="23dp"
-            android:layout_height="18dp"
+            android:layout_height="23dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"

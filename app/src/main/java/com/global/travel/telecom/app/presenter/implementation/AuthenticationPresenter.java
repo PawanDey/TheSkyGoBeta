@@ -45,7 +45,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void loginUser(String userEmail, LoginRequestTypeId regTypeID, String gcmToken) {
         baseView.showProgressBar();
-        Log.d("mylog", "getToken;" +gcmToken);
+        Log.d("mylog", "getToken;" + gcmToken);
         Call<ResponseBody> call = APIClient.getApiService().signUp(userEmail, regTypeID.getValue(), gcmToken);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -480,7 +480,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     }
 
     @Override
-    public void TranslateAPI(String inputlang, String outputlang, String text) {
+    public void TranslateAPI(String inputlang, String outputlang, List<GetNotifications> text) {
         try {
             baseView.showProgressBar();
             Call<ResponseBody> call = APIClient.getTranslateApiService().TranslateAPI(inputlang, outputlang, text);
@@ -496,16 +496,16 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             try {
                                 ResponseBody body = response.body();
                                 JSONObject responseBody = new JSONObject(body.string());
-
-                                int respondeCode = responseBody.getInt("responseCode");
-                                String respondeMessage = responseBody.getString("message");
+                                JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                                int respondeCode = table.getInt("ResponseCode");
+                                String respondeMessage = table.getString("Response");
                                 if (respondeCode == 1) {
 
-//                                    Type listType = new TypeToken<List<GetNotifications>>() {
-//                                    }.getType();
-//                                    List<GetNotifications> result = new Gson().fromJson(responseBody.getJSONArray("Payload").toString(), listType);
-
-                                    String result = responseBody.getString("Payload").replace("[", "").replace("]", "").replace("\"", "");
+                                    Type listType = new TypeToken<List<GetNotifications>>() {
+                                    }.getType();
+                                    List<GetNotifications> result = new Gson().fromJson(responseBody.getJSONArray("Payload").toString(), listType);
+                                    //this is for single reponse get
+//                                    String result = responseBody.getString("Payload").replace("[", "").replace("]", "").replace("\"", "");
                                     baseView.onSuccess("translateAPI", result);
                                     baseView.hideProgressBar();
 

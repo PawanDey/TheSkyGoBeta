@@ -3,6 +3,7 @@ package com.global.travel.telecom.app.ui.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.aware.WifiAwareManager;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -84,7 +86,7 @@ public class mPayment extends BaseActivity implements
     TextView m_response;
     PayPalConfiguration m_configuration;
     String m_paypalClientId = "AenMZYOK_JJk-FKV7trJDtyyUSOiZJgvSc06FTf5ZH46qnW1xD16LzcJHThGeaSSkB-KMp5qbYYDVpRd";   //sandbox
-//    String m_paypalClientId = " ";     // live
+    //    String m_paypalClientId = " ";     // live
     Intent m_service;
     int m_paypalRequestCode = 999;
     TextView SimNumber;
@@ -246,7 +248,7 @@ public class mPayment extends BaseActivity implements
                     newActivationRequest.setRefNo(extras.getString("RefNo"));
                     newActivationRequest.setRequestedDevice("Mobile");
                     newActivationRequest.setRequestedIP(IPaddress);
-                    newActivationRequest.setRequestedOS("Android|" +userDetails.getLanguageSelect());
+                    newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                     try {
                         authenticationPresenter.activateSim(newActivationRequest);
                     } catch (Exception e) {
@@ -282,10 +284,10 @@ public class mPayment extends BaseActivity implements
                     updateFundID = addFundsResponse.getRequestId();
                     PayPalPayment payment;
                     try {
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "Test Paypal",
+                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "SkyGo",
                                 PayPalPayment.PAYMENT_INTENT_SALE);
                     } catch (Exception e) {
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "Test Paypal",
+                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "SkyGo",
                                 PayPalPayment.PAYMENT_INTENT_SALE);
                     }
                     Intent intent = new Intent(this, PaymentActivity.class);
@@ -328,7 +330,7 @@ public class mPayment extends BaseActivity implements
                 addFundsApp.setRemarks("Payment From Android APP");
                 addFundsApp.setRequestedDevice("Mobile");
                 addFundsApp.setRequestedIP(IPaddress);
-                addFundsApp.setRequestedOS("Android|"+userDetails.getLanguageSelect());
+                addFundsApp.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                 addFundsApp.setServiceCharge("0");
                 addFundsApp.setTokenID(userDetails.getTokenID());
                 addFundsApp.setTransactionReferenceID(sessionTxnID);
@@ -434,6 +436,14 @@ public class mPayment extends BaseActivity implements
     public void notificatioButton(View view) {
         Intent i = new Intent(mPayment.this, Notification.class);
         startActivity(i);
+    }
+
+    private WifiManager.LocalOnlyHotspotReservation mReservation;
+    Context context = this;
+
+    public void hotspotButton(View view) {
+        Hotspot hotspot=new Hotspot();
+        hotspot.hotspotFxn(context);
     }
 
     public void backToDashboardButton(View view) {

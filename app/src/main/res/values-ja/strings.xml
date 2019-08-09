@@ -98,4 +98,7 @@
     <string name="textPleaseLoginagain">もう一度ログインしてください</string>
     <string name="textOpensettings">オープン設定</string>
     <string name="textNOInternetConnection">インターネット接続なし</string>
+    <string name="textTabTheSetpHotspot">[Wi-Fiホットスポットを設定]をタップします</string>
+    <string name="textOK">はい</string>
+
 </resources>

@@ -1,11 +1,17 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -27,7 +33,6 @@ public class Notification extends BaseActivity {
     imageGalleryAdapterNotification adapter;
     ImageGalleryAdapterNotificationEN adapter2;
     public BaseView baseView;
-
     RecyclerView recyclerView;
     String mName, mMsg, mTime;
     int num = 0;
@@ -55,8 +60,12 @@ public class Notification extends BaseActivity {
 
     }
 
-    public void hotspotButton(View view) {
+    private WifiManager.LocalOnlyHotspotReservation mReservation;
+    Context context = this;
 
+    public void hotspotButton(View view) {
+        Hotspot hotspot=new Hotspot();
+        hotspot.hotspotFxn(context);
     }
 
     @Override
@@ -64,7 +73,7 @@ public class Notification extends BaseActivity {
         Toast.makeText(Notification.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //        @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onSuccess(String method, Object response) {
         switch (method) {
@@ -83,19 +92,19 @@ public class Notification extends BaseActivity {
                     recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
                 } else {
                     List<GetNotifications> result = (List<GetNotifications>) response;
-                    mName = result.get(0).mDealerName;
-                    for (int i = 0; i < result.size(); i++) {
-                        translatePaasData.add(result.get(i).mMessage);
-                        translatePaasData.add(result.get(i).mAlertTime);
-                    }
-                    for (int j = 0; j < translatePaasData.size(); j++) {
-                        TranslateaApiCall(translatePaasData.get(j).toString());
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    mName = result.get(0).mDealerName;
+//                    for (int i = 0; i < result.size(); i++) {
+//                        translatePaasData.add(result.get(i).mMessage);
+//                        translatePaasData.add(result.get(i).mAlertTime);
+//                    }
+//                    for (int j = 0; j < translatePaasData.size(); j++) {
+                    TranslateaApiCall(result);
+//                        try {
+//                            Thread.sleep(600);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 }
                 break;
             }
@@ -128,7 +137,7 @@ public class Notification extends BaseActivity {
 
     }
 
-    private void TranslateaApiCall(String translatePaasData) {
+    private void TranslateaApiCall(List<GetNotifications> translatePaasData) {
         AuthenticationPresenter authenticationPresenter = new AuthenticationPresenter(this);
         UserDetails userDetails = new UserDetails(this);
         authenticationPresenter.TranslateAPI("en", userDetails.getLanguageSelect(), translatePaasData);
