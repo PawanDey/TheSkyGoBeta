@@ -42,8 +42,8 @@
     <string name="textConvenienceFee">편의 요금</string>
     <string name="textAmountPayable">지급 금액</string>
     <string name="textActivationDetails">활성화 세부 정보</string>
-    <string name="textValiditydays">유효 기간 -</string>
-    <string name="textActivationfromdate">날짜에서 활성화 -</string>
+    <string name="textValiditydays">유효 기간 - </string>
+    <string name="textActivationfromdate">날짜에서 활성화 - </string>
     <string name="textMODIFY">수정</string>
     <string name="textProceed">발하다</string>
     <string name="textYourOrderwasSuccessfullyProccessed">주문이 성공적으로 처리되었습니다.</string>

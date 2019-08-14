@@ -442,8 +442,12 @@ public class mPayment extends BaseActivity implements
     Context context = this;
 
     public void hotspotButton(View view) {
-        Hotspot hotspot=new Hotspot();
-        hotspot.hotspotFxn(context);
+        try {
+            Hotspot hotspot = new Hotspot();
+            hotspot.hotspotFxn(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void backToDashboardButton(View view) {

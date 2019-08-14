@@ -42,8 +42,8 @@
     <string name="textConvenienceFee">コンビニエンス料</string>
     <string name="textAmountPayable">支払い可能な金額</string>
     <string name="textActivationDetails">アクティベーション詳細</string>
-    <string name="textValiditydays">有効期間 -</string>
-    <string name="textActivationfromdate">日付からの有効化 -</string>
+    <string name="textValiditydays">有効期間 - </string>
+    <string name="textActivationfromdate">日付からの有効化 - </string>
     <string name="textMODIFY">修正する</string>
     <string name="textProceed">進む</string>
     <string name="textYourOrderwasSuccessfullyProccessed">注文は正常に処理されました</string>

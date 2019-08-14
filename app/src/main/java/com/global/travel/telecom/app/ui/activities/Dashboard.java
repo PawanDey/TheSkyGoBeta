@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
@@ -61,7 +62,6 @@ public class Dashboard extends BaseActivity {
 
     @Override
     protected int getLayout() {
-
         return R.layout.activity_dashboard;
     }
 
@@ -79,7 +79,7 @@ public class Dashboard extends BaseActivity {
                 getBaseContext().getResources().getDisplayMetrics());
         authenticationPresenter = new AuthenticationPresenter(this);
         skygoDialerLogo = findViewById(R.id.skyGoDialer);
-        setImageOnHotspot=findViewById(R.id.button25);
+        setImageOnHotspot = findViewById(R.id.button25);
         SelectLoginImage();
         //UserDetails userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
@@ -226,7 +226,7 @@ public class Dashboard extends BaseActivity {
         startActivity(intent);
     }
 
-    public void gridLayoutFunction(View view) {
+    public void allTypeOfBookingSoonFunction(View view) {
 
         Intent i = new Intent(Dashboard.this, ComingSoon.class);
         startActivity(i);
@@ -290,8 +290,12 @@ public class Dashboard extends BaseActivity {
     private WifiManager.LocalOnlyHotspotReservation mReservation;
 
     public void hotspotButton(View view) {
-        Hotspot hotspot = new Hotspot();
-        hotspot.hotspotFxn(context);
+        try {
+            Hotspot hotspot = new Hotspot();
+            hotspot.hotspotFxn(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -445,5 +449,42 @@ public class Dashboard extends BaseActivity {
         currentLocation.setText(result);
     }
 
+
+    public void clickOnTicketMaster(View view) {
+        setURL("https://www.ticketmaster.com");
+    }
+
+    public void clickOnLyft(View view) {
+        setURL("https://www.lyft.com/rider");
+    }
+
+    public void clickOnGrubHub(View view) {
+        setURL("https://www.grubhub.com");
+    }
+
+    public void clickOnExpedia(View view) {
+        setURL("https://www.expedia.com");
+    }
+
+    public void clickOncurrencyexchange(View view) {
+        setURL("https://www.iceplc.com");
+    }
+
+    public void clickOnBuyAccessories(View view) {
+        setURL("https://www.google.com");
+    }
+
+    public void clickOnPlayStore(View view) {
+        setURL("https://play.google.com/store/apps");
+    }
+
+    public void clickOnGolfnow(View view) {
+        setURL("https://www.golfnow.com");
+    }
+
+    private void setURL(String getURL) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        startActivity(browserIntent);
+    }
 
 }

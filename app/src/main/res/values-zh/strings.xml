@@ -42,8 +42,8 @@
     <string name="textConvenienceFee">便利费</string>
     <string name="textAmountPayable">应付金额</string>
     <string name="textActivationDetails">激活细节</string>
-    <string name="textValiditydays">有效期 -</string>
-    <string name="textActivationfromdate">从日期开始激活 -</string>
+    <string name="textValiditydays">有效期 - </string>
+    <string name="textActivationfromdate">从日期开始激活 - </string>
     <string name="textMODIFY">修改</string>
     <string name="textProceed">继续</string>
     <string name="textYourOrderwasSuccessfullyProccessed">您的订单已成功进行</string>

@@ -366,6 +366,7 @@
                 android:layout_marginTop="17dp"
                 android:background="@drawable/dashboarddgredient3"
                 android:gravity="center"
+                android:onClick="allTypeOfBookingSoonFunction"
                 android:orientation="horizontal">
 
 
@@ -414,7 +415,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="8"
-                    android:onClick="gridLayoutFunction"
                     app:columnCount="4"
                     app:columnOrderPreserved="false"
                     app:rowCount="2">
@@ -428,25 +428,61 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_flights"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOnTicketMaster"
                             android:orientation="vertical">
 
                             <ImageView
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/flight" />
+                                android:src="@drawable/tm" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textFlights"
+                                android:text="TicketMaster"
+                                android:textColor="#333232"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_columnWeight="1"
+                        app:layout_rowWeight="1">
+
+                        <LinearLayout
+                            android:id="@+id/Linear_uber"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:background="@drawable/dashboarddgredient5"
+                            android:gravity="center"
+                            android:onClick="clickOnLyft"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/lyft" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/segoe"
+                                android:paddingTop="3dp"
+                                android:text="Lyft"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 
@@ -461,48 +497,15 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_fooddelivery"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/uber" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-
-                                android:fontFamily="@font/segoe"
-                                android:paddingTop="3dp"
-                                android:text="@string/textUber"
-                                android:textColor="#333232"
-                                android:textSize="10dp" />
-
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-
-                        app:layout_columnWeight="1"
-                        app:layout_rowWeight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal|center_vertical"
-
-                            android:background="@drawable/dashboarddgredient5"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:onClick="clickOnGrubHub"
+                            android:orientation="vertical"
+                            tools:ignore="OnClick">
 
                             <ImageView
                                 android:layout_width="45dp"
@@ -516,7 +519,7 @@
 
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textFoodDelivery"
+                                android:text="GrubHub"
                                 android:textColor="#333232"
 
                                 android:textSize="10dp" />
@@ -532,18 +535,20 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_hotel"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOnExpedia"
                             android:orientation="vertical">
 
                             <ImageView
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/hotel" />
+                                android:src="@drawable/expedia" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -552,7 +557,7 @@
 
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textHotels"
+                                android:text="Expedia"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 
@@ -567,26 +572,27 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_movie"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
-
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOncurrencyexchange"
                             android:orientation="vertical">
 
                             <ImageView
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/movie" />
+                                android:src="@drawable/currencyexchange" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textMovie"
+                                android:text="ICE Currency"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 
@@ -601,11 +607,13 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linearflights"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOnBuyAccessories"
                             android:orientation="vertical"
 
                             >
@@ -614,14 +622,14 @@
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/train" />
+                                android:src="@drawable/more" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textTrain"
+                                android:text="Buy Accessories"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 
@@ -636,11 +644,13 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_googleplaystore"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOnPlayStore"
                             android:orientation="vertical"
 
                             >
@@ -673,26 +683,27 @@
                         app:layout_rowWeight="1">
 
                         <LinearLayout
+                            android:id="@+id/Linear_more"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
+                            android:onClick="clickOnGolfnow"
                             android:orientation="vertical">
 
                             <ImageView
                                 android:layout_width="39dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/more" />
+                                android:src="@drawable/golfnow" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="@string/textMore"
+                                android:text="Golfnow"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 

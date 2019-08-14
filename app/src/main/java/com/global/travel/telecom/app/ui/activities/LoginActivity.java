@@ -266,7 +266,7 @@ public class LoginActivity extends BaseActivity {
                     });
         } catch (ApiException e) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
         }
 //            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
 //            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();

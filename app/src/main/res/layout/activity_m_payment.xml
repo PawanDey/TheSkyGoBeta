@@ -96,8 +96,8 @@
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:padding="5dp"
             android:onClick="hotspotButton"
+            android:padding="5dp"
             android:src="@drawable/wifi" />
 
         <ImageView
@@ -108,8 +108,8 @@
             android:layout_gravity="center"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:padding="5dp"
             android:onClick="notificatioButton"
+            android:padding="5dp"
             android:src="@drawable/notification1" />
 
 
@@ -137,7 +137,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/mapnew" />
+                    android:src="@drawable/map2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -216,6 +216,13 @@
                             android:hint="@string/texthintAmount"
                             android:text="$ 0.00"
                             android:textColor="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#21212199" />
+
                     </RelativeLayout>
 
                     <!--Card Amount-->
@@ -228,9 +235,7 @@
                             android:id="@+id/textView8"
                             android:layout_width="93dp"
                             android:layout_height="20dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="25dp"
                             android:layout_marginLeft="25dp"
                             android:layout_marginBottom="16dp"
@@ -244,9 +249,8 @@
                             android:id="@+id/textView9"
                             android:layout_width="128dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginEnd="30dp"
                             android:layout_marginRight="30dp"
                             android:layout_marginBottom="16dp"
@@ -255,28 +259,27 @@
                             android:textColor="#FFFFFF"
                             android:textSize="15dp" />
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#21212199" />
                     </RelativeLayout>
 
                     <!--Convenience Fee-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="55dp">
+                        android:layout_height="48dp">
 
 
                         <TextView
                             android:id="@+id/textView10"
                             android:layout_width="182dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginStart="25dp"
+                            android:layout_centerVertical="true"
                             android:layout_marginLeft="25dp"
-                            android:layout_marginBottom="22dp"
-
                             android:fontFamily="@font/segoe_bold"
                             android:text="@string/textConvenienceFee"
-
                             android:textColor="#FFFFFF"
                             android:textSize="15dp" />
 
@@ -284,9 +287,8 @@
                             android:id="@+id/textView11"
                             android:layout_width="123dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginEnd="30dp"
                             android:layout_marginRight="30dp"
                             android:layout_marginBottom="22dp"
@@ -296,6 +298,11 @@
                             android:textColor="#FFFFFF"
                             android:textSize="15dp" />
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#21212199" />
                     </RelativeLayout>
 
                     <!--Amount Payable-->
@@ -308,9 +315,7 @@
                             android:id="@+id/text1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="24dp"
                             android:layout_marginLeft="24dp"
                             android:layout_marginTop="20dp"
@@ -337,8 +342,8 @@
                             android:id="@+id/editAmount1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginTop="20dp"
                             android:layout_marginEnd="30dp"
                             android:layout_marginRight="30dp"
@@ -348,7 +353,11 @@
                             android:textColor="#FFFFFF"
                             android:textSize="20dp" />
 
-
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#21212199" />
                     </RelativeLayout>
 
                     <!--ActivationDetails-->
@@ -442,11 +451,11 @@
                             android:id="@+id/modifyButton"
                             android:layout_width="230dp"
                             android:layout_height="49dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="35dp"
                             android:background="@drawable/gredientmodify"
                             android:fontFamily="@font/segoe"
                             android:onClick="backToactivation"
-                            android:layout_marginTop="30dp"
-                            android:layout_centerHorizontal="true"
                             android:text="@string/textMODIFY"
                             android:textColor="#FFFFFF"
                             android:textSize="22dp" />
@@ -456,11 +465,11 @@
                             android:layout_width="230dp"
                             android:layout_height="49dp"
                             android:layout_centerInParent="true"
+                            android:layout_marginTop="205dp"
                             android:background="@drawable/gredientmodify"
                             android:fontFamily="@font/segoe"
                             android:src="@drawable/paypallogo"
                             android:text="@string/textProceed"
-                            android:layout_marginTop="200dp"
                             android:textColor="#FFFFFF"
                             android:textSize="22dp" />
                     </RelativeLayout>
@@ -471,8 +480,6 @@
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </LinearLayout>

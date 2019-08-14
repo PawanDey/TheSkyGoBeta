@@ -64,8 +64,12 @@ public class Notification extends BaseActivity {
     Context context = this;
 
     public void hotspotButton(View view) {
-        Hotspot hotspot=new Hotspot();
-        hotspot.hotspotFxn(context);
+        try {
+            Hotspot hotspot = new Hotspot();
+            hotspot.hotspotFxn(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -92,19 +96,19 @@ public class Notification extends BaseActivity {
                     recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
                 } else {
                     List<GetNotifications> result = (List<GetNotifications>) response;
-//                    mName = result.get(0).mDealerName;
-//                    for (int i = 0; i < result.size(); i++) {
-//                        translatePaasData.add(result.get(i).mMessage);
-//                        translatePaasData.add(result.get(i).mAlertTime);
-//                    }
-//                    for (int j = 0; j < translatePaasData.size(); j++) {
-                    TranslateaApiCall(result);
-//                        try {
-//                            Thread.sleep(600);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
+                    mName = result.get(0).mDealerName;
+                    for (int i = 0; i < result.size(); i++) {
+                        translatePaasData.add(result.get(i).mMessage);
+                        translatePaasData.add(result.get(i).mAlertTime);
+                    }
+                    for (int j = 0; j < translatePaasData.size(); j++) {
+                        try {
+                            TranslateaApiCall(translatePaasData.get(j));
+                            Thread.sleep(650);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 break;
             }
@@ -123,12 +127,10 @@ public class Notification extends BaseActivity {
 //                String translateDone[] = response.toString().split("");
 
                     list.add(new translatPassdata(mName, mMsg, mTime));
-
                     recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                     adapter = new imageGalleryAdapterNotification(list, getApplication());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
-
                 }
             }
 
@@ -137,7 +139,7 @@ public class Notification extends BaseActivity {
 
     }
 
-    private void TranslateaApiCall(List<GetNotifications> translatePaasData) {
+    private void TranslateaApiCall(String translatePaasData) {
         AuthenticationPresenter authenticationPresenter = new AuthenticationPresenter(this);
         UserDetails userDetails = new UserDetails(this);
         authenticationPresenter.TranslateAPI("en", userDetails.getLanguageSelect(), translatePaasData);
