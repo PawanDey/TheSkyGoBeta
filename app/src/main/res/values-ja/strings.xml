@@ -100,5 +100,8 @@
     <string name="textNOInternetConnection">インターネット接続なし</string>
     <string name="textTabTheSetpHotspot">[Wi-Fiホットスポットを設定]をタップします</string>
     <string name="textOK">はい</string>
+    <string name="textyes">はい</string>
+    <string name="textno">いや</string>
+
 
 </resources>

@@ -100,6 +100,7 @@
     <string name="textOpensettings">Ajuste abierto</string>
     <string name="textNOInternetConnection">Sin conexión a Internet</string>
     <string name="textTabTheSetpHotspot">Toca la opción "Configurar zona Wi-Fi"</string>
-    <string name="textOK">Sí</string>
-
+    <string name="textOK">Bueno</string>
+    <string name="textyes">Sí</string>
+    <string name="textno">no</string>
 </resources>

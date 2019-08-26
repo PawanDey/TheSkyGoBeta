@@ -98,7 +98,8 @@
     <string name="textOpensettings">开放式设置</string>
     <string name="textNOInternetConnection">没有网络连接</string>
     <string name="textTabTheSetpHotspot">点按“设置Wi-Fi热点”</string>
-    <string name="textOK">是</string>
-
+    <string name="textOK">好</string>
+    <string name="textyes">是</string>
+    <string name="textno">没有</string>
 
 </resources>

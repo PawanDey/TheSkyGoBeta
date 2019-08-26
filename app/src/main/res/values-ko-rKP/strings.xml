@@ -98,6 +98,8 @@
     <string name="textPleaseLoginagain">다시 로그인하십시오</string>
     <string name="textOpensettings">열린 설정</string>
     <string name="textTabTheSetpHotspot">Wi-Fi 핫스팟 설정 을 탭합니다</string>
-    <string name="textOK">예</string>
+    <string name="textOK">승인</string>
+    <string name="textyes">예</string>
+    <string name="textno">아니</string>
 
 </resources>

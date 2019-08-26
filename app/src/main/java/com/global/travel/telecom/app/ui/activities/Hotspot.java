@@ -1,11 +1,14 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,7 +26,6 @@ public class Hotspot {
 
     public void hotspotFxn(final Context context) {
         final Dialog dialog = new Dialog(context);
-
         dialog.setContentView(R.layout.dialog_hotspot);
         dialog.show();
         final WifiManager wifi_manager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
@@ -49,7 +51,7 @@ public class Hotspot {
     }
 
     // here is the hotspot function code
-    // this code is run in android versio 5.1 // click to on and agan click to off
+    // this code is run in android versio 5.1 // click to on and again click to off
     //write the code her for anoother version hotspot code
     //ui already created for both activity (on and off)
 
@@ -61,7 +63,6 @@ public class Hotspot {
             // if WiFi is on, turn it off
             if (isApOn(context)) {
                 Toast.makeText(context, "wifi on ", Toast.LENGTH_LONG).show();
-
                 wifimanager.setWifiEnabled(false);
             }
             Method method = wifimanager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
@@ -87,6 +88,14 @@ public class Hotspot {
 
         }
         return false;
+    }
+
+    private void turnOffHotspot() {
+
+        if (mReservation != null) {
+            mReservation.close();
+//            isHotspotEnabled = false;
+        }
     }
 }
 

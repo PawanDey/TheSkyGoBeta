@@ -52,6 +52,7 @@ public class Dashboard extends BaseActivity {
     public BaseView baseView;
     Context context = this;
     String isHotspotEnabled;
+    String country, pincode, city, adress1, adress2, adress3, adress4, adress5, adress6;
     public ImageView setImageOnHotspot;
     //end location
     AuthenticationPresenter authenticationPresenter;
@@ -114,7 +115,6 @@ public class Dashboard extends BaseActivity {
 
         } catch (Exception e) {
             Toast.makeText(Dashboard.this, R.string.textLocationPermissionNotEnabled, Toast.LENGTH_LONG).show();
-
         }
         try {
             if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
@@ -227,14 +227,12 @@ public class Dashboard extends BaseActivity {
     }
 
     public void allTypeOfBookingSoonFunction(View view) {
-
         Intent i = new Intent(Dashboard.this, ComingSoon.class);
         startActivity(i);
-
     }
 
     private void onLocationCahange(Location location) {
-        logitude = location.getLatitude();
+        logitude = location.getLongitude();
         latitude = location.getLatitude();
     }
 
@@ -242,7 +240,6 @@ public class Dashboard extends BaseActivity {
         Intent intent = new Intent(Dashboard.this, Recharge.class);
         startActivity(intent);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -264,26 +261,23 @@ public class Dashboard extends BaseActivity {
 
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            List<Address> addresses = geocoder.getFromLocation(latitude, logitude, 1);
 
-            String country = addresses.get(0).getCountryName();
-            String pincode = addresses.get(0).getPostalCode();
-            String city = addresses.get(0).getLocality();
-            String adress1 = addresses.get(0).getAdminArea();
-            String adress2 = addresses.get(0).getCountryCode();
-//            String adress3 =addresses.get(0).getPhone();
-            String adress4 = addresses.get(0).getSubLocality();
-            String adress5 = addresses.get(0).getAddressLine(0);
-            String adress6 = addresses.get(0).getPremises();
+            country = addresses.get(0).getCountryName();
+            pincode = addresses.get(0).getPostalCode();
+            city = addresses.get(0).getLocality();
+            adress1 = addresses.get(0).getAdminArea();
+            adress2 = addresses.get(0).getCountryCode();
+            adress3 = addresses.get(0).getPhone();
+            adress4 = addresses.get(0).getSubLocality();
+            adress5 = addresses.get(0).getAddressLine(0);
+            adress6 = addresses.get(0).getPremises();
             UserDetails userDetails = new UserDetails(this);
-
-//            authenticationPresenter.TranslateAPI("en", userDetails.getLanguageSelect(), city + ", " + adress1 + ", " + country);
             currentLocation.setText(city + ", " + adress1 + ", " + country);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -297,100 +291,6 @@ public class Dashboard extends BaseActivity {
             e.printStackTrace();
         }
     }
-
-
-//    public void hotspotButton(View view) {
-//        Context context = this;
-////        WifiManager.LocalOnlyHotspotReservation mReservation;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            final Dialog dialog = new Dialog(context);
-//            if (mReservation == null) {
-//                dialog.setContentView(R.layout.dialog_hotspot);
-//                dialog.show();
-//                TextView text2 = dialog.findViewById(R.id.textOk);
-//                try {
-//                    text2.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            try {
-//                                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//                                wifiManager.startLocalOnlyHotspot(new WifiManager.LocalOnlyHotspotCallback() {
-//                                    @Override
-//                                    public void onStarted(WifiManager.LocalOnlyHotspotReservation reservation) {
-//                                        super.onStarted(reservation);
-//                                        mReservation = reservation;
-//                                        Toast.makeText(Dashboard.this, "HotSpot Start", Toast.LENGTH_LONG).show();
-//                                    }
-//
-//                                    @Override
-//                                    public void onStopped() {
-//                                        super.onStopped();
-//                                        Toast.makeText(Dashboard.this, "Stop", Toast.LENGTH_LONG).show();
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailed(int reason) {
-//                                        super.onFailed(reason);
-//                                        Toast.makeText(Dashboard.this, "Fail", Toast.LENGTH_LONG).show();
-//                                    }
-//                                }, new Handler());
-//                                dialog.dismiss();
-//                            } catch (Exception e) {
-//                                Toast.makeText(Dashboard.this, "Already ruuning State", Toast.LENGTH_LONG).show();
-//                                e.printStackTrace();
-//                                dialog.dismiss();
-//                            }
-//                        }
-//
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            } else {
-//                dialog.setContentView(R.layout.dialog_hotspotoff);
-//                dialog.show();
-//                TextView text2 = dialog.findViewById(R.id.textOk);
-//                try {
-//                    text2.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            try {
-//                                mReservation.close();
-//                                dialog.dismiss();
-//                                mReservation = null;
-//
-//                                Toast.makeText(Dashboard.this, "close", Toast.LENGTH_LONG).show();
-//                                isHotspotEnabled = "afterOff";
-//
-//
-//                            } catch (Exception e) {
-//                                Toast.makeText(Dashboard.this, e.toString(), Toast.LENGTH_LONG).show();
-//                                e.printStackTrace();
-//                                dialog.dismiss();
-//                            }
-//                        }
-////                        else {
-////                            Toast.makeText(Dashboard.this, "Already HotSpot On", Toast.LENGTH_LONG).show();
-////                            dialog.dismiss();
-////                        }
-//
-//                    });
-//                } catch (Exception e) {
-//                    dialog.dismiss();
-//                    e.printStackTrace();
-//
-//                }
-//            }
-//        }
-//    }
-
-
-//    public void btnRefresh(View view) {
-//        Intent refresh = new Intent(Dashboard.this, Dashboard.class);
-//        refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(refresh);
-//    }
 
     public void SelectLoginImage() {
         UserDetails userDetails = new UserDetails(this);
@@ -449,6 +349,13 @@ public class Dashboard extends BaseActivity {
         currentLocation.setText(result);
     }
 
+    public void googleMapOpen(View view) {
+        //here is google map api call
+        Intent intent = new Intent(Dashboard.this, GoogleMapActivity.class);
+        intent.putExtra("logitude", logitude);
+        intent.putExtra("latitude", latitude);
+        startActivity(intent);
+    }
 
     public void clickOnTicketMaster(View view) {
         setURL("https://www.ticketmaster.com");
@@ -474,8 +381,8 @@ public class Dashboard extends BaseActivity {
         setURL("https://www.google.com");
     }
 
-    public void clickOnPlayStore(View view) {
-        setURL("https://play.google.com/store/apps");
+    public void clickOnYelp(View view) {
+        setURL("https://www.yelp.com");
     }
 
     public void clickOnGolfnow(View view) {

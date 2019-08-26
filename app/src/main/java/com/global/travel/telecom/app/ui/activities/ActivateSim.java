@@ -68,6 +68,7 @@ public class ActivateSim extends BaseActivity {
     Boolean ignoreChange = false;
     Boolean SimValidAPIStatus = false;
     String TotalAmount;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_activate_sim;
@@ -92,7 +93,7 @@ public class ActivateSim extends BaseActivity {
         UserDetails userDetails = new UserDetails(ActivateSim.this);
         token = userDetails.getTokenID();
         totalAmount = findViewById(R.id.totalAmountActivate);
-         WifiManager.LocalOnlyHotspotReservation mReservation;
+        WifiManager.LocalOnlyHotspotReservation mReservation;
         Context context = this;
 
         edtSerialNumber.addTextChangedListener(new TextWatcher() {

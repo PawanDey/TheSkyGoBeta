@@ -26,7 +26,7 @@
     <string name="textMobileNumber">Mobile Number</string>
     <string name="textBuyNow">Buy Now</string>
     <string name="textSomeOutstandingFeatures">Some Outstanding Features</string>
-     <string name="texthintSIMNumber">SIM Number</string>
+    <string name="texthintSIMNumber">SIM Number</string>
     <string name="textLanguage">Language</string>
     <string name="textSelectyourapplanguage">Select your app language</string>
     <string name="textENGLISH">ENGLISH</string>
@@ -50,7 +50,7 @@
     <string name="textYourOrderwasSuccessfullyProccessed">Your Order was Successfully Proccessed</string>
     <string name="textBACKTOHOME">BACK TO HOME</string>
     <string name="textLoading">Loading..</string>
-     <string name="textAnd">And</string>
+    <string name="textAnd">And</string>
     <string name="textbackToDashboardButton">back To Dashboard Button</string>
     <string name="textComingSoon">Coming Soon</string>
     <string name="textUnderConstruction">Under Construction</string>
@@ -101,6 +101,8 @@
     <string name="textNOInternetConnection">No Internet Connection</string>
     <string name="textTabTheSetpHotspot">Tap the \"Set up Wi-Fi hotspot\"</string>
     <string name="textOK">OK</string>
+    <string name="textyes">Yes</string>
+    <string name="textno">No</string>
 
 
 

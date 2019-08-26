@@ -316,9 +316,8 @@ public class LoginActivity extends BaseActivity {
 
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-//                @Override
-//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    //this is for close the app
+//                    finishAffinity();
 
 
                 }
