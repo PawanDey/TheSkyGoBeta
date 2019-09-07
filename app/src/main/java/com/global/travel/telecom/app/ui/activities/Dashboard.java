@@ -84,7 +84,7 @@ public class Dashboard extends BaseActivity {
         SelectLoginImage();
         //UserDetails userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
-
+        token=userDetails.getTokenID();
         try {
             authenticationPresenter.GetSubscriber(userDetails.getTokenID());
         } catch (Exception e) {
@@ -267,13 +267,19 @@ public class Dashboard extends BaseActivity {
             pincode = addresses.get(0).getPostalCode();
             city = addresses.get(0).getLocality();
             adress1 = addresses.get(0).getAdminArea();
+            String aadress1 =addresses.get(0).getSubAdminArea();
+            String aadress2 =addresses.get(0).getUrl();
+            String aadress3 =addresses.get(0).getSubAdminArea();
+
             adress2 = addresses.get(0).getCountryCode();
             adress3 = addresses.get(0).getPhone();
             adress4 = addresses.get(0).getSubLocality();
             adress5 = addresses.get(0).getAddressLine(0);
             adress6 = addresses.get(0).getPremises();
             UserDetails userDetails = new UserDetails(this);
-            currentLocation.setText(city + ", " + adress1 + ", " + country);
+//            currentLocation.setText(city + ", " + adress1 + ", " + country);
+            currentLocation.setText(adress5);
+
 
         } catch (IOException e) {
             e.printStackTrace();

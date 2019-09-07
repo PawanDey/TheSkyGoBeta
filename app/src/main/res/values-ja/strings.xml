@@ -102,6 +102,8 @@
     <string name="textOK">はい</string>
     <string name="textyes">はい</string>
     <string name="textno">いや</string>
+    <string name="textextendvalidity">有効期限を延長</string>
+    <string name="textyourmobilenumber">あなたの電話番号</string>
 
 
 </resources>

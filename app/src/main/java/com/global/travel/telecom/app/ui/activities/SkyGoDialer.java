@@ -31,7 +31,7 @@ public class SkyGoDialer extends AppCompatActivity {
 
     }
 
-    public void notificatioButton(View view) {
+    public void notificationButton(View view) {
         Intent i = new Intent(this, Notification.class);
         startActivity(i);
     }

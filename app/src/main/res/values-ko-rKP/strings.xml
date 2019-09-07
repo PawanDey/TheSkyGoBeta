@@ -101,5 +101,9 @@
     <string name="textOK">승인</string>
     <string name="textyes">예</string>
     <string name="textno">아니</string>
+    <string name="textextendvalidity">유효 기간 연장</string>
+    <string name="textyourmobilenumber">전화 번호</string>
+
+
 
 </resources>

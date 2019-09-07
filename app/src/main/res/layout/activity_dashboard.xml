@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:weightSum="12"
         android:background="@drawable/shadow_black_outside">
 
 
@@ -21,8 +22,8 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
             android:src="@drawable/threeline" />
 
         <TextView
@@ -31,10 +32,9 @@
             android:layout_height="53dp"
             android:layout_gravity="center"
             android:layout_marginBottom="1dp"
-            android:layout_weight="20"
+            android:layout_weight="10"
             android:fontFamily="@font/segoe_bold"
             android:gravity="center"
-            android:paddingLeft="30dp"
             android:text="@string/textDashboard"
             android:textColor="#ffffff"
             android:textSize="18dp"
@@ -45,18 +45,18 @@
             android:layout_width="23dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginRight="14dp"
-            android:layout_weight="1"
+            android:visibility="gone"
             android:onClick="hotspotButton"
             android:src="@drawable/wifi" />
 
+
+
         <ImageView
             android:id="@+id/notificationButton"
-            android:layout_width="22dp"
+            android:layout_width="25dp"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
             android:layout_gravity="center"
-            android:layout_marginRight="18dp"
+            android:padding="1dp"
             android:onClick="notificationButton"
             android:src="@drawable/notification1" />
 
@@ -129,11 +129,14 @@
                     <TextView
 
                         android:id="@+id/hereIsLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_below="@+id/youArehere"
                         android:layout_alignEnd="@+id/youArehere"
                         android:layout_marginTop="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="right"
+                        android:layout_toEndOf="@+id/locationimage"
                         android:fontFamily="@font/segoe"
                         android:textColor="#ffffff"
                         android:textSize="12dp"
@@ -235,8 +238,9 @@
                 android:layout_marginTop="17dp"
                 android:background="@drawable/dashboardgredient2"
                 android:onClick="btnExtendMSISDNClick"
+                android:visibility="gone"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -252,7 +256,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="19dp"
                         android:fontFamily="@font/segoe_bold"
-                        android:text="@string/textRecentActivationOnMobile"
+                        android:text="@string/textyourmobilenumber"
                         android:textColor="#A6FFFFFF"
                         android:textSize="15dp" />
 

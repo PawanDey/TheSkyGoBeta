@@ -103,4 +103,9 @@
     <string name="textOK">Bueno</string>
     <string name="textyes">Sí</string>
     <string name="textno">no</string>
+    <string name="textextendvalidity">extender la validez</string>
+    <string name="textyourmobilenumber">Su número de teléfono</string>
+
+
+
 </resources>

@@ -101,5 +101,10 @@
     <string name="textOK">好</string>
     <string name="textyes">是</string>
     <string name="textno">没有</string>
+    <string name="textextendvalidity">延长有效期</string>
+    <string name="textyourmobilenumber">你的电话号码</string>
+
+
+
 
 </resources>

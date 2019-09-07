@@ -12,18 +12,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:baselineAligned="false"
-        android:background="@drawable/shadow_black_outside">
+        android:background="@drawable/shadow"
+        android:weightSum="12">
 
         <ImageView
             android:id="@+id/button12"
-            android:layout_width="30dp"
+            android:layout_width="25dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:onClick="backToDashboardButton"
-            android:padding="17dp"
+            android:padding="16dp"
             android:src="@drawable/arrowwhite" />
 
         <TextView
@@ -31,10 +30,9 @@
             android:layout_width="145dp"
             android:layout_height="53dp"
             android:layout_marginBottom="1dp"
-            android:layout_weight="16"
+            android:layout_weight="10"
             android:fontFamily="@font/segoe_bold"
             android:gravity="center"
-            android:paddingLeft="30dp"
             android:text="@string/textComingSoon"
             android:textColor="#ffffff"
             android:textSize="18dp"
@@ -45,21 +43,22 @@
             android:layout_width="23dp"
             android:layout_height="44dp"
             android:layout_gravity="center"
-            android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:onClick="hotspotButton"
-            android:src="@drawable/wifi" />
+            android:src="@drawable/wifi"
+            android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/button25e"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_alignParentEnd="true"
+            android:id="@+id/notificationButton"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
             android:onClick="notificationButton"
+            android:padding="1dp"
             android:src="@drawable/notification1" />
+
+
+
 
     </LinearLayout>
 
@@ -82,8 +81,8 @@
             android:id="@+id/comingSoonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="20dp"
             android:layout_toRightOf="@+id/imageView8"
             android:fontFamily="@font/segoe"
             android:text="@string/textAlltypebooking"
@@ -159,9 +158,9 @@
                 android:layout_below="@+id/comingSoontext3"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/segoe"
+                android:gravity="center"
                 android:text="@string/textUnderConstruction"
                 android:textSize="22dp"
-                android:gravity="center"
 
                 android:textStyle="bold" />
 

@@ -433,7 +433,7 @@ public class mPayment extends BaseActivity implements
         Toast.makeText(mPayment.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
     }
 
-    public void notificatioButton(View view) {
+    public void notificationButton(View view) {
         Intent i = new Intent(mPayment.this, Notification.class);
         startActivity(i);
     }

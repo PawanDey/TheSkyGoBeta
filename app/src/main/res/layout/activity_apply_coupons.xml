@@ -11,25 +11,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/shadow_black_outside">
+        android:background="@drawable/shadow"
+        android:weightSum="12">
 
         <ImageView
-            android:id="@+id/List"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
+            android:id="@+id/button12"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:onClick="backToDashboardButton"
             android:src="@drawable/arrowwhite" />
+
 
         <TextView
             android:id="@+id/textViewwsc4"
             android:layout_width="145dp"
             android:layout_height="53dp"
             android:layout_marginBottom="1dp"
-            android:layout_weight="20"
+            android:layout_weight="10"
             android:gravity="center"
-            android:paddingLeft="30dp"
             android:text="Apply Coupons"
             android:textColor="#ffffff"
             android:textSize="18dp"
@@ -40,17 +42,16 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:layout_marginRight="14dp"
             android:layout_weight="1"
-            android:src="@drawable/wifi" />
+            android:src="@drawable/wifi"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/notificationButton"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_alignParentEnd="true"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginRight="18dp"
+            android:padding="1dp"
             android:src="@drawable/notification1" />
 
 
