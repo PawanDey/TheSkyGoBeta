@@ -1,9 +1,10 @@
 <!--3rd july updated by prateek sharma-->
 <resources>
-    <string name="app_name">SkyGO</string>
-    <string name="welcome_to_gtt">Bienvenido a SkyGO </string>
+    <string name="app_name">The SkyGo</string>
+    <string name="welcome_to_gtt">Bienvenido a The SkyGo </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
-
+    <string name="facebook_app_id">680846345699872</string>
+    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textDashboard">Tablero</string>
     <string name="textYouareHere">Estás aquí</string>
     <string name="textHereisLocation">Aquí está la ubicación</string>

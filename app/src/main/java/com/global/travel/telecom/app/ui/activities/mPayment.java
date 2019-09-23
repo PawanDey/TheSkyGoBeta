@@ -284,10 +284,10 @@ public class mPayment extends BaseActivity implements
                     updateFundID = addFundsResponse.getRequestId();
                     PayPalPayment payment;
                     try {
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "SkyGo",
+                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "The SkyGo",
                                 PayPalPayment.PAYMENT_INTENT_SALE);
                     } catch (Exception e) {
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "SkyGo",
+                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "The SkyGo",
                                 PayPalPayment.PAYMENT_INTENT_SALE);
                     }
                     Intent intent = new Intent(this, PaymentActivity.class);

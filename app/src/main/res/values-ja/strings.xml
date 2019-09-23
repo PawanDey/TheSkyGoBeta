@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">SkyGo</string>
-    <string name="welcome_to_gtt" translatable="false">SkyGOへようこそ </string>
+    <string name="app_name">The SkyGo</string>
+    <string name="welcome_to_gtt" translatable="false">The SkyGoへようこそ </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
-
+    <string name="facebook_app_id">680846345699872</string>
+    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textDashboard">ダッシュボード</string>
     <string name="textYouareHere">あなたはここにいる</string>
     <string name="textHereisLocation">ここはロケーションです</string>

@@ -19,7 +19,7 @@
         tools:layout_editor_absoluteX="20dp">
 
         <TextView
-            android:layout_width="308dp"
+            android:layout_width="match_parent"
             android:layout_height="43dp"
             android:layout_gravity="left"
             android:layout_marginLeft="29dp"

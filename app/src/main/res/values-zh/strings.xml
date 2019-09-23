@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SkyGO</string>
-    <string name="welcome_to_gtt" translatable="false">欢迎来到SkyGO </string>
+    <string name="app_name">The SkyGo</string>
+    <string name="welcome_to_gtt" translatable="false">欢迎来到The SkyGo</string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
     <string name="textDashboard">仪表板</string>
     <string name="textYouareHere">你在这里</string>
     <string name="textHereisLocation">这是位置</string>
     <string name="textActivateSIM">激活SIM卡</string>
+    <string name="facebook_app_id">680846345699872</string>
+    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textActivateyourSIMnumber">激活您的SIM卡号码</string>
     <string name="textRecentActivationOnMobile">最近在手机上激活＃</string>
     <string name="textAlltypebooking">所有类型预订即将推出!!</string>

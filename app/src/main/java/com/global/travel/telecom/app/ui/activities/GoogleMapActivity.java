@@ -41,8 +41,11 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         Bundle extras = getIntent().getExtras();
         logitude = extras.getDouble("logitude");
         latitude = extras.getDouble("latitude");
-        checkLocationAccess();
-
+        try {
+            checkLocationAccess();
+        }catch (Exception e){
+            Log.d("here is error--->","error",e);
+        }
 
         try {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -73,7 +76,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             }
             map.setMyLocationEnabled(true);
             map.addMarker(new MarkerOptions().position(mapLocation).title("You are here"));
-            map.setPadding(0, 0, 0,0 );
+            map.setPadding(0, 0, 0, 0);
             //add circle
 //            Circle circle = map.addCircle(new CircleOptions()
 //                    .center(new LatLng(latitude, logitude))

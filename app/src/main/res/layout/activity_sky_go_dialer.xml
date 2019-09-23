@@ -32,7 +32,7 @@
             android:layout_weight="10"
             android:fontFamily="@font/roboto_bold"
             android:gravity="center"
-            android:text="SkyGo"
+            android:text="@string/app_name"
             android:textColor="#ffffff"
             android:textSize="18dp"
             android:textStyle="bold" />

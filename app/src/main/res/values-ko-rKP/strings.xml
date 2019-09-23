@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SkyGo</string>
-    <string name="welcome_to_gtt" translatable="false">SkyGO에 오신 것을 환영합니다. </string>
+    <string name="app_name">The SkyGo</string>
+    <string name="welcome_to_gtt" translatable="false">The SkyGo에 오신 것을 환영합니다. </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
     <string name="textDashboard">계기반</string>
     <string name="textYouareHere">너 여기 왔어.</string>
     <string name="textHereisLocation">위치 정보</string>
+    <string name="facebook_app_id">680846345699872</string>
+    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textActivateSIM">시뮬레이션 활성화</string>
     <string name="textActivateyourSIMnumber">시뮬레이션 번호 활성화</string>
     <string name="textRecentActivationOnMobile">모바일 #의 최근 활성화</string>
