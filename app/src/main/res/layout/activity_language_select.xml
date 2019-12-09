@@ -78,7 +78,7 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/segoe_semi_light"
                     android:gravity="center"
-                    android:text="ENGLISH"
+                    android:text="English"
                     android:textColor="#606060"
                     android:textSize="14dp" />
 
@@ -229,7 +229,7 @@
                     android:layout_marginLeft="30dp"
                     android:fontFamily="@font/segoe_semi_light"
                     android:gravity="center"
-                    android:text="español"
+                    android:text="Espanol"
                     android:textSize="14dp" />
 
                 <TextView

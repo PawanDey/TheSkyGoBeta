@@ -1,50 +1,37 @@
 package com.global.travel.telecom.app.ui.activities;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.Context;
-//import android.icu.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
-
-import android.location.LocationManager;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
+import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-import static java.lang.System.exit;
+//import android.icu.text.SimpleDateFormat;
 
 
 public class ActivateSim extends BaseActivity {
@@ -67,15 +54,16 @@ public class ActivateSim extends BaseActivity {
     DatePickerDialog picker;
     Boolean ignoreChange = false;
     Boolean SimValidAPIStatus = false;
+    Boolean SpecialDealer = false;
     String TotalAmount;
+    Context context = this;
+    Date d = new Date();
+    CharSequence DateToday = DateFormat.format("d MMMM,yyyy", d.getTime());
 
     @Override
     protected int getLayout() {
         return R.layout.activity_activate_sim;
     }
-
-    Date d = new Date();
-    CharSequence DateToday = DateFormat.format("d MMMM,yyyy", d.getTime());
 
     @Override
     protected void onViewReady() {
@@ -92,6 +80,7 @@ public class ActivateSim extends BaseActivity {
         validDateLeftAS = findViewById(R.id.validDateLeftAS);
         UserDetails userDetails = new UserDetails(ActivateSim.this);
         token = userDetails.getTokenID();
+//        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFiYyIsIm5iZiI6MTU3NDk0NjM3MiwiZXhwIjoxNTc0OTgyMzcyLCJpYXQiOjE1NzQ5NDYzNzJ9.FYEgVkQQsKOMm3CZlWISGeTiGrxb5n9CS-oscRQomF0;";
         totalAmount = findViewById(R.id.totalAmountActivate);
         WifiManager.LocalOnlyHotspotReservation mReservation;
         Context context = this;
@@ -106,28 +95,12 @@ public class ActivateSim extends BaseActivity {
 
                 if (edtSerialNumber.getText().toString().length() == 20) {
                     Serial = edtSerialNumber.getText().toString();
-                    if (Serial != null && !Serial.isEmpty()) {
-                        FirebaseInstanceId.getInstance().getInstanceId()
-                                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                        if (!task.isSuccessful()) {
-//                                            showToast(""+R.string.textSorrySomethingwentwrong);
-                                            Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
-                                            return;
-                                        }
-                                        try {
-                                            authenticationPresenter.validateSim(Serial, token);
-                                        } catch (Exception e) {
-                                            showToast(e.toString());
-                                        }
-                                    }
-                                });
+                    try {
+                        authenticationPresenter.validateSim(Serial, token);
+                    } catch (Exception e) {
+                        showToast(e.getMessage());
                     }
-                } else {
-                    totalAmount.setText("$ 0.0");
-
-
+//                    }
                 }
             }
 
@@ -152,7 +125,7 @@ public class ActivateSim extends BaseActivity {
                             validDateLeftAS.setText("  ");
                             totalAmount.setText("");
                             totalAmount.setHint("$ 0.00");
-                        } else {
+                        } else if (SpecialDealer.equals(false)) {
                             Amount = ((Integer.parseInt(Days)) * rate);
                             txtnoOfDays.setFocusable(true);
                             NumberFormat formatter = NumberFormat.getNumberInstance();
@@ -161,6 +134,9 @@ public class ActivateSim extends BaseActivity {
                             TotalAmount = formatter.format(Amount);
                             totalAmount.setText("$ " + TotalAmount);
                             getCurretDatePicker();
+                        } else if (SpecialDealer.equals(true)) {
+//                            showToast("Special dealer");
+                            authenticationPresenter.GetRateForPaymentPlan(edtSerialNumber.getText().toString().trim(), Integer.parseInt(txtnoOfDays.getText().toString()));
                         }
                     }
                 } catch (Exception e) {
@@ -178,7 +154,6 @@ public class ActivateSim extends BaseActivity {
             }
         });
 
-//
 //        txtnoOfDays.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -188,25 +163,18 @@ public class ActivateSim extends BaseActivity {
     }
 
     @Override
-    public void onFailure() {
-//        showToast(""+R.string.textSorrySomethingwentwrong);
-        Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onSuccess(String method2, Object response) {
         switch (method2) {
             case "simvalidated": {
                 ActivateSimResponse obj = (ActivateSimResponse) response;
                 try {
-                    rate = Double.parseDouble(obj.getmRatePerDay());
+                    rate = obj.getmRatePerDay();
                     SimValidAPIStatus = true;
 
-                    if (!obj.getNumberOfDays().equals("0")) {
+                    if (Integer.parseInt(obj.getNumberOfDays()) > 0) {
+                        SpecialDealer = true;
                         Days = obj.getNumberOfDays();
-                        txtnoOfDays.setEnabled(false);
                         Amount = 0.0;
-                        ignoreChange = true;
                         txtnoOfDays.setText(Days);
                         totalAmount.setText("$ 0.0");
                         TotalAmount = "0";
@@ -217,7 +185,8 @@ public class ActivateSim extends BaseActivity {
                         showToast(obj.getResponseMessage());
                         ignoreChange = false;
                         txtnoOfDays.setEnabled(true);
-                        txtnoOfDays.getText().clear();//                        Days = txtnoOfDays.getText().toString();
+                        txtnoOfDays.getText().clear();//
+                        // Days = txtnoOfDays.getText().toString();
 //                        Amount = ((Integer.parseInt(Days)) * rate);
 //                        NumberFormat formatter = NumberFormat.getNumberInstance();
 //                        formatter.setMinimumFractionDigits(2);
@@ -231,7 +200,34 @@ public class ActivateSim extends BaseActivity {
                     totalAmount.setText("$ 0.00");
                     showToast(e.toString());
                 }
+                break;
             }
+
+            case "GetRateForPaymentPlan":
+                GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response; //change pojo classs name model
+                try {
+                    totalAmount.setText("$ " + obj.getRate());
+                } catch (Exception e) {
+                    txtnoOfDays.setText("0");
+                    totalAmount.setText("$ 0.00");
+                    showToast(e.getMessage());
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onFailure() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        edtSerialNumber.getText().clear();
+        txtnoOfDays.getText().clear();
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            Toast.makeText(ActivateSim.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -251,29 +247,14 @@ public class ActivateSim extends BaseActivity {
                     edtSerialNumber.getText().clear();
                     ignoreChange = false;
                 }
+                break;
+            }
+            case "GetRateForPaymentPlan": {
+                showToast("Please Contact Customer Care: support@theskygo.com");
+                break;
             }
         }
     }
-
-//    public void btnValidateSIM1Click( View view ) {
-//        //edtSerialNumber = findViewById(R.id.editSerialNo);
-//        FirebaseInstanceId.getInstance().getInstanceId()
-//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                        if (!task.isSuccessful()) {
-//                            showToast("Sorry! Something went wrong");
-//                            return;
-//                        }
-//
-//                         Serial = edtSerialNumber.getText().toString();
-//
-
-//                        authenticationPresenter.validateSim(Serial,token);
-//
-//                    }
-//                });
-//    }
 
     public void btnBuyNowClick(View view) {
         try {
@@ -298,11 +279,11 @@ public class ActivateSim extends BaseActivity {
                 PaymentSummary.putExtra("SerialNumber", Serial);
                 PaymentSummary.putExtra("NumberOfDays", Days);
                 PaymentSummary.putExtra("RequestedIP", "ipAddress");
-                PaymentSummary.putExtra("RequestedOS", "Android|" + userDetails.getLanguageSelect());
+                PaymentSummary.putExtra("RequestedOS", getDeviceName());
                 PaymentSummary.putExtra("AmountCharged", TotalAmount);
                 PaymentSummary.putExtra("RequestedForDtTm", todayDate.getText().toString());
                 PaymentSummary.putExtra("RefNo", "1");
-                PaymentSummary.putExtra("RequestedDevice", "2");
+                PaymentSummary.putExtra("RequestedDevice", "Android|" + userDetails.getLanguageSelect());
                 startActivity(PaymentSummary);
             }
         } catch (Exception e) {
@@ -324,7 +305,6 @@ public class ActivateSim extends BaseActivity {
     public void backToDashboardButton(View view) {
         finish();
     }
-
 
     public void getCurretDatePicker(View view) throws ParseException {
         final Calendar cldr = Calendar.getInstance();
@@ -411,16 +391,10 @@ public class ActivateSim extends BaseActivity {
     public void noOFdaysHide(View view) {
     }
 
-    private WifiManager.LocalOnlyHotspotReservation mReservation;
-    Context context = this;
-
-    public void hotspotButton(View view) {
-        try {
-            Hotspot hotspot = new Hotspot();
-            hotspot.hotspotFxn(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String getDeviceName() {
+        String MANUFACTURER = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        return MANUFACTURER + "__" + model;
     }
 }
 

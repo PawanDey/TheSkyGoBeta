@@ -55,8 +55,8 @@
     <string name="textbackToDashboardButton">대시 보드 버튼으로 돌아 가기</string>
     <string name="textComingSoon">출시 예정</string>
     <string name="textUnderConstruction">공사 중</string>
-    <string name="textSigninwithyoursocialnetwork">소셜 네트워크에 로그인</string>
-    <string name="textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission">귀하의 허락없이 Facebook, Google+ 및 LinkedIn에 로그인하지 않습니다.</string>
+    <string name="textSigninwithyoursocialnetwork">로그인</string>
+    <string name="textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission">우리는 귀하의 허락없이 Facebook, Google 이메일 또는 다른 이메일 계정에 로그인하지 않습니다</string>
     <string name="textNotifications">공고</string>
     <string name="texthotspotButton">핫스팟 버튼</string>
     <string name="textRecharge">재충전</string>
@@ -105,7 +105,7 @@
     <string name="textno">아니</string>
     <string name="textextendvalidity">유효 기간 연장</string>
     <string name="textyourmobilenumber">전화 번호</string>
-
-
+    <string name="textAlreadyhaveanaccount">Already have an account? <font fgcolor="#442EB4"><b><u> Login here</u></b></font></string>
+    <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
 
 </resources>

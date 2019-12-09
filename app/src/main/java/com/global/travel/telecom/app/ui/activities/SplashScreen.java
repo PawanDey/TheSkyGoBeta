@@ -4,35 +4,23 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.widget.ImageView;
 import android.content.Intent;
-import android.graphics.drawable.Animatable;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.model.LoginRequestTypeId;
-import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
 import io.fabric.sdk.android.Fabric;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class SplashScreen extends AppCompatActivity {

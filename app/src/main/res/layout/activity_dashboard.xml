@@ -416,7 +416,7 @@
                 android:background="@drawable/dashboarddgredient5"
                 android:baselineAligned="false">
 
-                <android.support.v7.widget.GridLayout
+                <androidx.gridlayout.widget.GridLayout
                     android:id="@+id/gridLayoutFunction"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -427,7 +427,7 @@
 
                     <!--row1-->
                     <!--colum 1-4-->
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_columnWeight="1"
@@ -459,9 +459,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_columnWeight="1"
@@ -493,9 +493,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -531,9 +531,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -568,9 +568,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -603,9 +603,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -640,9 +640,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -679,9 +679,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
 
@@ -714,9 +714,9 @@
                                 android:textSize="10dp" />
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                </android.support.v7.widget.GridLayout>
+                </androidx.gridlayout.widget.GridLayout>
 
 
             </LinearLayout>

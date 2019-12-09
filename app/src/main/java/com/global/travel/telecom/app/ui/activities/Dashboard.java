@@ -1,7 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,32 +9,31 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+
+import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.GetSIMStatus;
-import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.model.GetSubscriberResponse;
+import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
+import com.global.travel.telecom.app.service.UserDetails;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.model.GetSubscriberResponse;
-import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
-import com.global.travel.telecom.app.service.UserDetails;
 
 
 public class Dashboard extends BaseActivity {
@@ -84,7 +82,7 @@ public class Dashboard extends BaseActivity {
         SelectLoginImage();
         //UserDetails userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
-        token=userDetails.getTokenID();
+        token = userDetails.getTokenID();
         try {
             authenticationPresenter.GetSubscriber(userDetails.getTokenID());
         } catch (Exception e) {
@@ -131,7 +129,16 @@ public class Dashboard extends BaseActivity {
 
     @Override
     public void onFailure() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -267,9 +274,9 @@ public class Dashboard extends BaseActivity {
             pincode = addresses.get(0).getPostalCode();
             city = addresses.get(0).getLocality();
             adress1 = addresses.get(0).getAdminArea();
-            String aadress1 =addresses.get(0).getSubAdminArea();
-            String aadress2 =addresses.get(0).getUrl();
-            String aadress3 =addresses.get(0).getSubAdminArea();
+            String aadress1 = addresses.get(0).getSubAdminArea();
+            String aadress2 = addresses.get(0).getUrl();
+            String aadress3 = addresses.get(0).getSubAdminArea();
 
             adress2 = addresses.get(0).getCountryCode();
             adress3 = addresses.get(0).getPhone();

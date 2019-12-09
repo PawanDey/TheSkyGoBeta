@@ -255,14 +255,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/uberAdd"
-                android:layout_width="match_parent"
-                android:layout_height="245dp"
-                android:cropToPadding="true"
-                android:src="@drawable/uber_add"
-                tools:layout_editor_absoluteX="5dp"
-                tools:layout_editor_absoluteY="48dp" />
         </LinearLayout>
     </ScrollView>
 

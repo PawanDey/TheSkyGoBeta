@@ -1,15 +1,13 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.model.GetNotifications;
-import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
-import com.global.travel.telecom.app.service.UserDetails;
+
 import java.util.Collections;
 import java.util.List;
 

@@ -2,8 +2,6 @@ package com.global.travel.telecom.app.presenter.implementation;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.base.BaseView;
@@ -11,17 +9,19 @@ import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
 import com.global.travel.telecom.app.model.GetNotifications;
+import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
+import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
 import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
-import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 import com.global.travel.telecom.app.presenter.interfaces.AuthenticationPresenterInterface;
 import com.global.travel.telecom.app.service.APIClient;
 import com.global.travel.telecom.app.ui.activities.Dashboard;
-import com.global.travel.telecom.app.ui.activities.Notification;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -50,15 +50,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -66,23 +61,18 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
                             baseView.onSuccess("loginUser", result);
                             baseView.hideProgressBar();
-
                         } else {
                             baseView.hideProgressBar();
                             baseView.onServerError("loginUser", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.hideProgressBar();
                         baseView.onServerError("loginUser", e.toString());
                     }
-
-
                 } else {
                     baseView.hideProgressBar();
                     baseView.onServerError("loginUser", "");
                 }
-
             }
 
             @Override
@@ -100,16 +90,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 baseView.hideProgressBar();
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -119,16 +104,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("ExtensionRequest", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("ExtensionRequest", "Something went wrong");
                     }
-
-
                 } else {
                     baseView.onServerError("activateSim", "");
                 }
-
             }
 
             @Override
@@ -137,7 +118,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 baseView.onFailure();
             }
         });
-
     }
 
     @Override
@@ -147,16 +127,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 baseView.hideProgressBar();
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -166,16 +141,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("AddFundsViaAPP", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("AddFundsViaAPP", " " + R.string.textSorrySomethingwentwrong);
                     }
-
-
                 } else {
                     baseView.onServerError("AddFundsViaAPP", "");
                 }
-
             }
 
             @Override
@@ -184,7 +155,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 baseView.onFailure();
             }
         });
-
     }
 
     @Override
@@ -194,16 +164,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 baseView.hideProgressBar();
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -211,20 +176,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             AddFundsResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), AddFundsResponse.class);
                             baseView.onSuccess("UpdateFunds", result);
                             baseView.onSuccess("UpdateFunds", result);
-
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("UpdateFunds", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("UpdateFunds", "" + R.string.textSorrySomethingwentwrong);
                     }
-
-
                 } else {
                     baseView.onServerError("UpdateFunds", "");
                 }
-
             }
 
             @Override
@@ -233,7 +193,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 baseView.onFailure();
             }
         });
-
     }
 
     @Override
@@ -243,31 +202,24 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 baseView.hideProgressBar();
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
                         if (respondeCode == 0) {
+                            String MSISDN = table.getString("MSISDN");
                             ActivateSimResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), ActivateSimResponse.class);
                             baseView.onSuccess("activateSim", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("activateSim", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("activateSim", "" + R.string.textSorrySomethingwentwrong);
                     }
-
-
                 } else {
                     baseView.onServerError("activateSim", "");
                 }
@@ -280,7 +232,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 baseView.onFailure();
             }
         });
-
     }
 
     @Override
@@ -294,12 +245,9 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 //                baseView.hideProgressBar();
 
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -312,16 +260,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 baseView.onSuccess("GetSubscriber2", result2);
                             } else
                                 baseView.onSuccess("GetSubscriber", result);
-
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("GetSubscriber", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("GetSubscriber", "" + R.string.textSorrySomethingwentwrong);
                     }
-
-
                 } else {
                     baseView.onServerError("GetSubscriber", "");
                 }
@@ -362,14 +306,57 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("simvalidated", respondeMessage);
                         }
-
                     } catch (Exception e) {
                         baseView.onServerError("simvalidated", "" + R.string.textSorrySomethingwentwrong);
+                    }
+                } else {
+                    baseView.onServerError("simvalidated", "");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                baseView.hideProgressBar();
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void GetRateForPaymentPlan(String SerialNumber, int NoOfDay) {
+        baseView.showProgressBar();
+        Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                baseView.hideProgressBar();
+
+                if (response.isSuccessful()) {
+
+                    try {
+
+                        ResponseBody body = response.body();
+                        JSONObject responseBody = new JSONObject(body.string());
+
+                        JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                        int respondeCode = table.getInt("ResponseCode");
+                        String respondeMessage = table.getString("ResponseMessage");
+                        if (respondeCode == 0) {
+                            GetRateForPaymentPlan result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetRateForPaymentPlan.class);
+                            baseView.onSuccess("GetRateForPaymentPlan", result);
+                        } else if (respondeCode == 1) {
+                            baseView.onServerError("GetRateForPaymentPlan", respondeMessage);
+                        }
+
+                    } catch (Exception e) {
+                        baseView.onServerError("GetRateForPaymentPlan", "_______" + R.string.textSorrySomethingwentwrong);
                     }
 
 
                 } else {
-                    baseView.onServerError("simvalidated", "");
+                    baseView.onServerError("GetRateForPaymentPlan", "");
                 }
 
             }

@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -16,13 +16,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.ui.activities.MainActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

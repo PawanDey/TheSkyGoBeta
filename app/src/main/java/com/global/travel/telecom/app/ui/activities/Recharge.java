@@ -1,37 +1,25 @@
 package com.global.travel.telecom.app.ui.activities;
 
-import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 //import android.icu.text.SimpleDateFormat;
 import java.text.SimpleDateFormat;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.Handler;
-import android.text.format.DateFormat;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
-import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
@@ -101,7 +89,6 @@ public class Recharge extends BaseActivity {
                         totalAmountRecharge.setHint("$ 0.00");
 
                     } else {
-
                         Amount = ((Integer.parseInt(Days)) * rate);
                         NumberFormat formatter = NumberFormat.getNumberInstance();
                         formatter.setMinimumFractionDigits(2);
@@ -131,8 +118,16 @@ public class Recharge extends BaseActivity {
 
     @Override
     public void onFailure() {
-//        showToast("Sorry! Something went wrong");
-        Toast.makeText(Recharge.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+        ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        numberOfDaysRecharge.getText().clear();
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -143,7 +138,7 @@ public class Recharge extends BaseActivity {
 
 
                 try {
-                    rate = Double.parseDouble(obj.getmRatePerDay());
+                    rate =obj.getmRatePerDay();
                     String dateConverter = obj.getmLastValidityDate();
                     Date date1 = new SimpleDateFormat("dd-MMM-yyyy").parse(dateConverter);
                     SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");

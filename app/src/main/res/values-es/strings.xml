@@ -57,8 +57,8 @@
     <string name="textbackToDashboardButton">volver al botón del tablero</string>
     <string name="textComingSoon">Próximamente</string>
     <string name="textUnderConstruction">En construcción</string>
-    <string name="textSigninwithyoursocialnetwork">Inicia sesión con tu red social.</string>
-    <string name="textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission">Nunca iniciaremos sesión en Facebook, Google+ o LinkedIn sin su permiso</string>
+    <string name="textSigninwithyoursocialnetwork">registrarse</string>
+    <string name="textWewillneverlogintoFacebookGoogleorLinkedInwithoutyourpermission">No iniciarás sesión en Facebook, Google Mail u otras cuentas de correo electrónico sin tu permiso</string>
     <string name="textNotifications">Notificaciones</string>
     <string name="texthotspotButton">botón de punto de acceso</string>
     <string name="textRecharge">Recargar</string>
@@ -106,7 +106,7 @@
     <string name="textno">no</string>
     <string name="textextendvalidity">extender la validez</string>
     <string name="textyourmobilenumber">Su número de teléfono</string>
-
-
+    <string name="textAlreadyhaveanaccount">Already have an account?<font fgcolor="#442EB4"><b><u>Login here</u></b>!</font> </string>
+    <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
 
 </resources>

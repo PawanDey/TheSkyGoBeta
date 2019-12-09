@@ -2,13 +2,9 @@ package com.global.travel.telecom.app.service;
 
 
 import com.global.travel.telecom.app.model.AddFundsApp;
-import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -24,6 +20,9 @@ public interface ApiService {
 
     @GET("ValidateSIM")
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);
+
+    @GET("GetRateForPaymentPlan")
+    Call<ResponseBody> GetRateForPaymentPlan(@Query("serialnumber") String SerialNumber, @Query("activationdays") int NoOfDay);
 
     @GET("GetSubscriberDetails")
     Call<ResponseBody> GetSubscriber(@Query("TokenID") String TokenID);

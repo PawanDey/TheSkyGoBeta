@@ -10,7 +10,7 @@ public class ActivateSimResponse {
     @SerializedName("ResponseMessage")
     private String mResponseMessage;
     @SerializedName("RatePerDay")
-    private String mRatePerDay;
+    private double mRatePerDay;
 
     @SerializedName("NumberOfDays")
     private String mNumberOfDays;
@@ -43,7 +43,7 @@ public class ActivateSimResponse {
         mResponseMessage = responseMessage;
     }
 
-    public  String  getmRatePerDay () {return  mRatePerDay;}
+    public  double  getmRatePerDay () {return  mRatePerDay;}
 
-    public void setmRatePerDay (String ratePerDay) {mRatePerDay=ratePerDay;}
+    public void setmRatePerDay (double ratePerDay) {mRatePerDay=ratePerDay;}
 }

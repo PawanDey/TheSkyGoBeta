@@ -1,16 +1,12 @@
 package com.global.travel.telecom.app.base;
 
-import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -18,9 +14,6 @@ import android.widget.Toast;
 import android.graphics.drawable.ColorDrawable;
 
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.base.BaseView;
-
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
@@ -66,6 +59,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             View mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loader, null);
             AlertDialog.Builder mBuilder = new AlertDialog.Builder( this ).setView(mDialogView);
             progressDialog = mBuilder.create();
+           try {
+               progressDialog.setCancelable(false);
+           }catch (Exception e){
+               progressDialog.setCanceledOnTouchOutside(false);
+           }
             progressDialog.getWindow().setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT) );
             progressDialog.getWindow().setLayout( WindowManager.LayoutParams.WRAP_CONTENT , WindowManager.LayoutParams.WRAP_CONTENT  );
         }

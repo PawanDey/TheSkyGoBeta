@@ -3,7 +3,6 @@ package com.global.travel.telecom.app.ui.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,66 +13,49 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.net.wifi.aware.WifiAwareManager;
-import android.os.Build;
-import android.os.Handler;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.text.format.DateFormat;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
-import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalPaymentDetails;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
-
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.text.NumberFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
-
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
 public class mPayment extends BaseActivity implements
@@ -313,11 +295,11 @@ public class mPayment extends BaseActivity implements
             } catch (Exception e) {
                 Deduction = Double.parseDouble(extras.getString("AmountChargedR"));
             }
+            String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
 
             if ((Deduction > 0)) {
 
                 UserDetails userDetails = new UserDetails(this);
-                String paypalTxnNumber = String.format("%06d", random.nextInt(1000000));
                 sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
                 addFundsApp.setAmountCharged(String.valueOf(Deduction));
                 addFundsApp.setDealerID("0");
@@ -348,18 +330,16 @@ public class mPayment extends BaseActivity implements
                 newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
                 newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
                 newActivationRequest.setToken(userDetails.getTokenID());
-                newActivationRequest.setRefNo(extras.getString("RefNo"));
+                newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
                 newActivationRequest.setRequestedDevice(extras.getString("RequestedDevice"));
                 newActivationRequest.setRequestedIP(IPaddress);
                 newActivationRequest.setRequestedOS(extras.getString("RequestedOS"));
                 try {
-                    authenticationPresenter.activateSim(newActivationRequest);
+                    authenticationPresenter.activateSim(newActivationRequest);   //if 0
                 } catch (Exception e) {
                     showToast(e.toString());
                 }
-
             }
-
         } catch (Exception e) {
             showToast(e.toString());
         }
@@ -380,7 +360,7 @@ public class mPayment extends BaseActivity implements
                     if (state.equals("approved")) {
                         m_response.setText("payment Approved");
                         updateFundReq.setId(updateFundID);
-                        updateFundReq.setPaypalReferenceID(sessionTxnID); // send paypal id
+                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId()); // send paypal id
                         updateFundReq.setPayPalResponse("payment Approved");
                         updateFundReq.setRequestStatusID("15");
                         updateFundReq.setTokenID(userDetails.getTokenID());
@@ -394,7 +374,7 @@ public class mPayment extends BaseActivity implements
                     } else {
                         m_response.setText("not apporved");
                         updateFundReq.setId(updateFundID);
-                        updateFundReq.setPaypalReferenceID(sessionTxnID);
+                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
                         updateFundReq.setPayPalResponse("not apporved");
                         updateFundReq.setRequestStatusID("16");
                         updateFundReq.setTransactionReferenceID(sessionTxnID);
@@ -407,7 +387,7 @@ public class mPayment extends BaseActivity implements
                 } else {
                     m_response.setText("confirmation is null");
                     updateFundReq.setId(updateFundID);
-                    updateFundReq.setPaypalReferenceID(sessionTxnID);
+                    updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
                     updateFundReq.setPayPalResponse("confirmation is null");
                     updateFundReq.setRequestStatusID("16");
                     updateFundReq.setTransactionReferenceID(sessionTxnID);
@@ -429,8 +409,15 @@ public class mPayment extends BaseActivity implements
 
     @Override
     public void onFailure() {
-//        showToast("Sorry! Something went wrong");
-        Toast.makeText(mPayment.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void notificationButton(View view) {

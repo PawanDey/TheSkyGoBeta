@@ -1,23 +1,15 @@
 package com.global.travel.telecom.app.ui.activities;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
