@@ -619,7 +619,7 @@
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:background="@drawable/dashboarddgredient5"
                             android:gravity="center"
-                            android:onClick="clickOnBuyAccessories"
+                            android:onClick="clickOnESimActivation"
                             android:orientation="vertical"
 
                             >
@@ -628,14 +628,14 @@
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/more" />
+                                android:src="@drawable/esim" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/segoe"
                                 android:paddingTop="3dp"
-                                android:text="Buy Accessories"
+                                android:text="ESim Activation"
                                 android:textColor="#333232"
                                 android:textSize="10dp" />
 

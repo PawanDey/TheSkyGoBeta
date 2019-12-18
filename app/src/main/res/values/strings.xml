@@ -1,4 +1,5 @@
 <resources>
+    <string name="textcontactCare">Please contact Customer Care <font fgcolor="#FC3E52"><b><u><a>support@theskygo.com</a></u></b></font></string>
     <string name="app_name">The SkyGo</string>
     <string name="welcome_to_gtt">Welcome to The SkyGo </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
@@ -19,7 +20,7 @@
     <string name="textTrain">Train Tickets</string>
     <string name="textGooglePay">Google Play</string>
     <string name="textMore">More</string>
-    <string name="textSIMSerialNo">SIM Serial No#</string>
+    <string name="textSIMSerialNo">SIM Number</string>
     <string name="textDate">Date</string>
     <string name="textNoOfDays">No. of days</string>
     <string name="textCurrentAmnt">Current Amount</string>
@@ -68,9 +69,6 @@
     <string name="textDeliverPhone">Deliver Phone</string>
     <string name="textcallmessages">call messages</string>
     <string name="textProcessPending">Process Pending</string>
-
-    <!--updaetd 27july by sourav-->
-
     <string name="textSorrySomethingwentwrong">Sorry! Something went wrong</string>
     <string name="textPleaseCheckYourInternetConnection">Please Check Your Internet Connection</string>
     <string name="textLocationPermissionNotEnabled">Location Permission Not Enabled</string>
@@ -78,9 +76,9 @@
     <string name="textStatusUnderProcessing">Status : Under Processing</string>
     <string name="textFor">For</string>
     <string name="textClickBACKagaintoExit">Click BACK again to Exit</string>
-    <string name="textPleaseEnterSIMSerialNumber">Please Enter SIM Serial Number</string>
+    <string name="textPleaseEnterSIMSerialNumber">Please Enter SIM Number</string>
     <string name="textInvalidNumberOfDay">Invalid Number Of Day</string>
-    <string name="textInvalidSerialNumber">Invalid Serial Number</string>
+    <string name="textInvalidSerialNumber">Invalid SIM Number</string>
     <string name="textPleaseEnterValidNumberOfDays">Please Enter Valid Number Of Days</string>
     <string name="textValidity">Validity</string>
     <string name="textto">to</string>
@@ -106,6 +104,6 @@
     <string name="textextendvalidity">Extend Validity</string>
     <string name="textyourmobilenumber">Your Mobile Number</string>
     <string name="textAlreadyhaveanaccount">Already have an account? <font fgcolor="#442EB4"><b><u>Login here</u></b></font> </string>
+    <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations">Disclaimer :Only available to pick/drop at LAX Ice Currency Locations</string>
     <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
-
 </resources>

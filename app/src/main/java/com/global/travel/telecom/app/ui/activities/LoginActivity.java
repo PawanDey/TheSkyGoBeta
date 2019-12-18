@@ -1,5 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,7 +38,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
@@ -58,26 +58,25 @@ import com.google.firebase.iid.InstanceIdResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 
 public class LoginActivity extends BaseActivity {
     ImageView fb, google, linkedin, ownEmail;
-    LoginButton LoginButton;
     ProgressBar processBar;
     EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password;
     TextView text_below_signIn, text_below_login, verificationText;
     LinearLayout SignInPageLayout, LogInPageLayout;
     RelativeLayout verificationLayout;
-    Button GooglesignInButton, createaccount_signIn, Button_login;
+    Button createaccount_signIn, Button_login;
     GoogleSignInClient mGoogleSignInClient;
-    private static final String EMAIL = "email";
     CallbackManager callbackManager;
     AuthenticationPresenter authenticationPresenter;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
-    public BaseView baseView;
-    private androidx.appcompat.app.AlertDialog progressDialog;
-    private FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener authStateListener;
+    androidx.appcompat.app.AlertDialog progressDialog;
+    FirebaseAuth firebaseAuth;
     FirebaseUser user;
 
     @Override
@@ -89,6 +88,9 @@ public class LoginActivity extends BaseActivity {
         int loc = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int phone = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE);
+//        int contact = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        int microphone = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+
         List<String> listPermissionsNeeded = new ArrayList<>();
 
         if (camera != PackageManager.PERMISSION_GRANTED) {
@@ -106,6 +108,12 @@ public class LoginActivity extends BaseActivity {
         if (loc != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
         }
+//        if (contact != PackageManager.PERMISSION_GRANTED) {
+//            listPermissionsNeeded.add(Manifest.permission.READ_CONTACTS);
+//        }
+        if (microphone != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
+        }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
                     (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
@@ -122,7 +130,11 @@ public class LoginActivity extends BaseActivity {
 
 
         callbackManager = CallbackManager.Factory.create();
-
+        try {
+            firebaseAuth = FirebaseAuth.getInstance();
+        } catch (Exception e) {
+            showToast("Firebase Auth Error");
+        }
         return R.layout.activity_login;
     }
 
@@ -140,13 +152,13 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onFailure() {
         ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
         }
     }
 
@@ -154,13 +166,13 @@ public class LoginActivity extends BaseActivity {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "loginUser": {
-                Toast.makeText(LoginActivity.this, R.string.textLoginSuccessful, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.textLoginSuccessful, LENGTH_LONG).show();
                 LoginResponse obj = (LoginResponse) response;
                 UserDetails userDetails = new UserDetails(LoginActivity.this);
                 userDetails.setTokenID(obj.getTokenID());
                 userDetails.setUserName(obj.getUserName());
                 userDetails.setPaypalTransactionFee(obj.getTxnSeriesPrefix());
-                userDetails.setTxnSeriesPrefix(obj.getTxnSeriesPrefix());
+                userDetails.setTxnSeriesPrefix("SKY");
                 Intent intent = new Intent(LoginActivity.this, Dashboard.class);
                 intent.putExtra("TokenID", userDetails.getTokenID());
                 startActivity(intent);
@@ -171,10 +183,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onServerError(String method, String errorMessage) {
-        switch (method) {
-            case "loginUser": {
-                showToast(errorMessage);
-            }
+        if ("loginUser".equals(method)) {
+            showToast(errorMessage);
         }
     }
 
@@ -226,17 +236,17 @@ public class LoginActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                Toast toast = Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT);
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         String getUserName;
                         if (!task.isSuccessful()) {
 //                            showToast("Sorry! Something went wrong");
-                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
                             return;
                         }
-                        String token = task.getResult().getToken();
+                        String token = Objects.requireNonNull(task.getResult()).getToken();
                         if (profile != null) {
                             getUserName = profile.getId();
                         } else {
@@ -251,17 +261,18 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.textLogincancel, LENGTH_LONG).show();
 
             }
 
             @Override
             public void onError(FacebookException exception) {
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
-                    Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+                assert connectivityManager != null;
+                if (Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+                    Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, LENGTH_LONG).show();
                 } else
-                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
             }
 
         });
@@ -275,10 +286,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void ownEmailLoginButton(View view) {
-        View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen, null);
+        View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen,null);
         androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(mViewSiginScreen);
         progressDialog = mBuilder.create();
-        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         progressDialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         progressDialog.show();
 
@@ -309,7 +320,7 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (input_login_email.getText().toString().isEmpty() || input_login_password.getText().toString().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "E-mail/Password is Empty", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "E-mail/Password is Empty", LENGTH_LONG).show();
                         return;
                     }
                     processBar.setVisibility(View.VISIBLE);
@@ -321,7 +332,8 @@ public class LoginActivity extends BaseActivity {
                                     if (task.isSuccessful()) {
                                         if (!user.isEmailVerified()) {
                                             Toast.makeText(getApplicationContext(), " Your email is not verified ", Toast.LENGTH_SHORT).show();
-                                        } else if (user.isEmailVerified()) {
+                                        } else {
+                                            user.isEmailVerified();
 
                                             //go to dashboard activity
                                             FirebaseInstanceId.getInstance().getInstanceId()
@@ -329,18 +341,16 @@ public class LoginActivity extends BaseActivity {
                                                         @Override
                                                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                                             if (!task.isSuccessful()) {
-                                                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
                                                                 return;
                                                             }
-                                                            String token = task.getResult().getToken();
-                                                            authenticationPresenter.loginUser(user.getEmail().trim(), LoginRequestTypeId.Email, token);
+                                                            String token = Objects.requireNonNull(task.getResult()).getToken();
+                                                            authenticationPresenter.loginUser(Objects.requireNonNull(user.getEmail()).trim(), LoginRequestTypeId.Email, token);
                                                         }
                                                     });
 
 
                                             Toast.makeText(getApplicationContext(), " Login Succesful: Verified " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), " Something went wrong: Server Issue ", Toast.LENGTH_SHORT).show();
                                         }
                                     } else if (task.isComplete()) {
                                         Toast.makeText(getApplicationContext(), " Email/password is invalid", Toast.LENGTH_SHORT).show();
@@ -359,37 +369,36 @@ public class LoginActivity extends BaseActivity {
                 public void onClick(View v) {
 
                     if (input_email_signin.getText().toString().isEmpty() || input_password_signin.getText().toString().isEmpty() || confrom_input_password_signin.getText().toString().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "Fill All details ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Fill All details ", LENGTH_LONG).show();
                         return;
                     }
                     if (input_password_signin.length() < 5 || confrom_input_password_signin.length() < 5) {
-                        Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Password too short", LENGTH_LONG).show();
                         return;
                     }
                     if (!input_password_signin.getText().toString().equals(confrom_input_password_signin.getText().toString())) {
-                        Toast.makeText(getApplicationContext(), "Password Not match", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Password Not match", LENGTH_LONG).show();
                         return;
                     }
 
                     processBar.setVisibility(View.VISIBLE);
-                    firebaseAuth = FirebaseAuth.getInstance();
                     firebaseAuth.createUserWithEmailAndPassword(input_email_signin.getText().toString().trim(), input_password_signin.getText().toString().trim())
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
+                                        Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task task) {
                                                 if (task.isSuccessful()) {
                                                     verificationLayout.setVisibility(View.VISIBLE);
                                                     verificationText.setText("A verification link has been send to " + input_email_signin.getText().toString().trim());
-                                                    Toast.makeText(getApplicationContext(), "A verification link has been send to your Email address", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getApplicationContext(), "A verification link has been send to " + input_email_signin.getText().toString().trim(), LENGTH_LONG).show();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), LENGTH_LONG).show();
 
                                     }
                                     processBar.setVisibility(View.GONE);
@@ -420,7 +429,6 @@ public class LoginActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
         }
 
 
@@ -429,6 +437,7 @@ public class LoginActivity extends BaseActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            assert account != null;
             account.getEmail();
             Log.d("Email", "EMAIL;" + account.getEmail());
             Log.d("name", "NAME;" + account.getDisplayName());
@@ -438,15 +447,15 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
                                 return;
                             }
-                            String token = task.getResult().getToken();
+                            String token = Objects.requireNonNull(task.getResult()).getToken();
                             authenticationPresenter.loginUser(account.getEmail(), LoginRequestTypeId.GOOGLE, token);
                         }
                     });
         } catch (ApiException e) {
-            Toast.makeText(LoginActivity.this, R.string.textLogincancel, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.textLogincancel, LENGTH_LONG).show();
         }
 //            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
 //            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
@@ -459,13 +468,14 @@ public class LoginActivity extends BaseActivity {
         boolean network_enabled = false;
 
         try {
+            assert lm != null;
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         if (!gps_enabled && !network_enabled) {
@@ -491,8 +501,6 @@ public class LoginActivity extends BaseActivity {
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     //this is for close the app
 //                    finishAffinity();
-
-
                 }
             });
             dialog.show();
@@ -512,49 +520,54 @@ public class LoginActivity extends BaseActivity {
             e.printStackTrace();
         }
         String languageCode = userDetails.getLanguageSelect();
-        //eng
-        if (languageCode.equals("en")) {
 
-        }
-        //che
-        else if (languageCode.equals("zh")) {
-            try {
-                fb.setImageResource(R.drawable.facebook_che);
-                google.setImageResource(R.drawable.google_che);
-                linkedin.setImageResource(R.drawable.linkedin_che);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (languageCode.equals("ja")) {
-            try {
-                fb.setImageResource(R.drawable.facebook_jap);
-                google.setImageResource(R.drawable.google_jap);
-                linkedin.setImageResource(R.drawable.linkedin_jap);
-            } catch (Exception e) {
-                e.printStackTrace();
+        switch (languageCode) {
+            case "en":
 
-            }
-        }
-        //kor
-        else if (languageCode.equals("ko")) {
-            try {
-                fb.setImageResource(R.drawable.facebook_kor);
-                google.setImageResource(R.drawable.google_kor);
-                linkedin.setImageResource(R.drawable.linkedin_kor);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (languageCode.equals("es")) {
-            try {
-                fb.setImageResource(R.drawable.facebook_esp);
-                google.setImageResource(R.drawable.google_esp);
-                linkedin.setImageResource(R.drawable.linkedin_esp);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            showToast("no language select");
+                break;
+            //che
+            case "zh":
+                try {
+                    fb.setImageResource(R.drawable.facebook_che);
+                    google.setImageResource(R.drawable.google_che);
+                    ownEmail.setImageResource(R.drawable.emaillogin_che);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "ja":
+                try {
+                    fb.setImageResource(R.drawable.facebook_jap);
+                    google.setImageResource(R.drawable.google_jap);
+                    ownEmail.setImageResource(R.drawable.emaillogin_jap);
+                } catch (Exception e) {
+                    e.printStackTrace();
 
+                }
+                break;
+            //kor
+            case "ko":
+                try {
+                    fb.setImageResource(R.drawable.facebook_kor);
+                    google.setImageResource(R.drawable.google_kor);
+                    ownEmail.setImageResource(R.drawable.emaillogin_kor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "es":
+                try {
+                    fb.setImageResource(R.drawable.facebook_esp);
+                    google.setImageResource(R.drawable.google_esp);
+                    ownEmail.setImageResource(R.drawable.emaillogin_esp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                showToast("no language select");
+
+                break;
         }
     }
 

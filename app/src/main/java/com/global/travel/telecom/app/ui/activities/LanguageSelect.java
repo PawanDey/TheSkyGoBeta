@@ -20,8 +20,6 @@ import com.global.travel.telecom.app.service.UserDetails;
 import java.util.Locale;
 
 public class LanguageSelect extends BaseActivity {
-    ImageView english, chinese, japanese, korean,spanish;
-    TextView next;
 
     @Override
     protected int getLayout() {
@@ -37,6 +35,7 @@ public class LanguageSelect extends BaseActivity {
     @Override
     public void onFailure() {
         ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();

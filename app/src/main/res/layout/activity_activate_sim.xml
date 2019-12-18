@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical"
     tools:context=".ui.activities.ActivateSim">
 
@@ -11,8 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:weightSum="12"
-        android:background="@drawable/shadow">
+        android:background="@drawable/shadow"
+        android:weightSum="12">
 
         <ImageView
             android:id="@+id/button12"
@@ -20,8 +21,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:padding="16dp"
             android:onClick="backToDashboardButton"
+            android:padding="16dp"
             android:src="@drawable/arrowwhite" />
 
         <TextView
@@ -37,15 +38,6 @@
             android:textSize="18dp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/button25"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:onClick="hotspotButton"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:src="@drawable/wifi" />
 
         <ImageView
             android:id="@+id/notificationButton"
@@ -53,9 +45,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
-            android:padding="1dp"
             android:onClick="notificationButton"
+            android:padding="1dp"
             android:src="@drawable/notification1" />
+
 
 
     </LinearLayout>
@@ -64,214 +57,217 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-    <!--other-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <!--other-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="310dp"
-            android:background="@drawable/dashboarddgredient5">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="310dp"
+                    android:background="@drawable/dashboarddgredient5">
 
 
-            <EditText
-                android:id="@+id/editSerial"
+                    <Button
+                        android:id="@+id/calenderDate"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignStart="@+id/editSerial"
+                        android:layout_alignBottom="@+id/datePickerActivateSim"
+                        android:layout_marginStart="190dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/calender"
+                        android:gravity="center"
+                        android:onClick="calenderButton" />
+
+
+                    <Button
+                        android:id="@+id/btnActivateSIM"
+                        android:layout_width="174dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="216dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@drawable/gredientmodify"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="center"
+                        android:onClick="btnBuyNowClick"
+                        android:text="@string/textBuyNow"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17dp" />
+
+                    <Button
+                        android:id="@+id/scanner"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="47dp"
+                        android:background="@drawable/barcode_dark"
+                        android:gravity="center"
+                        android:onClick="scnnerafumction" />
+
+
+                    <EditText
+                        android:id="@+id/editSerial"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="33dp"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/texthintSIMNumber"
+                        android:inputType="textPersonName"
+                        android:maxLength="20"
+                        android:textColor="#888888" />
+
+                    <EditText
+                        android:id="@+id/datePickerActivateSim"
+                        android:layout_width="232dp"
+                        android:layout_height="50dp"
+                        android:layout_alignStart="@+id/editSerial"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="120dp"
+                        android:focusable="false"
+                        android:fontFamily="@font/roboto"
+                        android:inputType="date"
+                        android:onClick="getCurretDatePicker"
+                        android:textSize="14dp" />
+
+                    <EditText
+                        android:id="@+id/txtnoOfDaysActivateSim"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_alignTop="@+id/datePickerActivateSim"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="-22dp"
+                        android:layout_marginEnd="33dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="center"
+                        android:hint="00"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:onClick="noOFdaysHide"
+                        android:textColor="#FC3E52"
+                        android:textSize="50dp" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="17dp"
+                        android:layout_alignStart="@+id/editSerial"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="229dp"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/textCurrentAmnt"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/totalAmountActivate"
+                        android:layout_width="159dp"
+                        android:layout_height="19dp"
+                        android:layout_alignStart="@+id/editSerial"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="246dp"
+                        android:hint="$ 0.00"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="154dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/textSIMSerialNo" />
+
+                    <TextView
+                        android:id="@+id/textDate"
+                        android:layout_width="103dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="89dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/textDate"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/textNoOfDaysAS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="87dp"
+                        android:layout_marginEnd="26dp"
+                        android:text="@string/textNoOfDays" />
+
+                    <TextView
+                        android:id="@+id/validDateLeftAS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_alignBottom="@+id/btnActivateSIM"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="39dp"
+                        android:layout_marginBottom="-23dp"
+                        android:fontFamily="@font/segoe"
+                        android:gravity="right"
+                        android:text="  "
+                        android:textColor="#414141"
+                        android:textSize="11dp" />
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageAdd"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:padding="4dp"
+                android:onClick="addOn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/add" />
+
+            <!--booking avaible soon scrren-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="31dp"
-                android:layout_marginEnd="33dp"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/texthintSIMNumber"
-                android:maxLength="20"
-                android:inputType="textPersonName"
-                android:textColor="#888888" />
-
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_alignStart="@+id/editSerial"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="229dp"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/textCurrentAmnt"
-                android:textSize="13dp" />
-
-            <TextView
-                android:id="@+id/totalAmountActivate"
-                android:layout_width="159dp"
-                android:layout_height="19dp"
-                android:layout_alignStart="@+id/editSerial"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="246dp"
-                android:hint="$ 0.00"
-                android:textSize="14dp"
-                android:textStyle="bold" />
-
-
-            <EditText
-                android:id="@+id/datePickerActivateSim"
-                android:layout_width="232dp"
-                android:layout_height="50dp"
-                android:layout_alignStart="@+id/editSerial"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="120dp"
-                android:focusable="false"
-                android:fontFamily="@font/roboto"
-                android:inputType="date"
-                android:onClick="getCurretDatePicker"
-                android:textSize="14dp" />
-
-            <Button
-                android:id="@+id/calenderDate"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignStart="@+id/editSerial"
-                android:layout_alignBottom="@+id/datePickerActivateSim"
-                android:layout_marginStart="190dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/calender"
                 android:gravity="center"
-                android:onClick="calenderButton" />
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnActivateSIM"
-                android:layout_width="174dp"
-                android:layout_height="49dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="216dp"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/gredientmodify"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:gravity="center"
-                android:onClick="btnBuyNowClick"
-                android:text="@string/textBuyNow"
-                android:textColor="#FFFFFF"
-                android:textSize="17dp" />
-
-            <Button
-                android:id="@+id/scanner"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="31dp"
-                android:layout_marginEnd="47dp"
-                android:background="@drawable/barcode_dark"
-                android:gravity="center"
-                android:onClick="scnnerafumction" />
-
-            <EditText
-                android:id="@+id/txtnoOfDaysActivateSim"
-                android:layout_width="wrap_content"
-                android:layout_height="72dp"
-                android:layout_alignTop="@+id/datePickerActivateSim"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="-22dp"
-                android:layout_marginEnd="33dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:gravity="center"
-                android:hint="00"
-                android:inputType="number"
-                android:maxLength="3"
-                android:onClick="noOFdaysHide"
-                android:textColor="#FC3E52"
-                android:textSize="50dp" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="154dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="11dp"
-                android:text="@string/textSIMSerialNo" />
-
-            <TextView
-                android:id="@+id/textDate"
-                android:layout_width="103dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="89dp"
-                android:fontFamily="@font/roboto"
-                android:text="@string/textDate"
-                android:textSize="13dp" />
-
-            <TextView
-                android:id="@+id/textNoOfDaysAS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="87dp"
-                android:layout_marginEnd="26dp"
-                android:text="@string/textNoOfDays" />
-
-            <TextView
-                android:id="@+id/validDateLeftAS"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_alignBottom="@+id/btnActivateSIM"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="39dp"
-                android:layout_marginBottom="-23dp"
-                android:fontFamily="@font/segoe"
-                android:gravity="right"
-                android:text="  "
-                android:textColor="#414141"
-                android:textSize="11dp" />
+                <TextView
+                    android:id="@+id/textView1111"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center|left"
+                    android:text="@string/textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations"
+                    android:textColor="#333232"
+                    android:textSize="15dp"
+                    android:padding="10dp"
+                    android:textStyle="normal" />
 
 
-        </RelativeLayout>
-    </LinearLayout>
-
-
-    <!--booking avaible soon scrren-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-
-        <ImageView
-            android:id="@+id/imageView12233"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="25dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ring" />
-
-        <TextView
-            android:id="@+id/textView1111"
-            android:layout_width="254dp"
-            android:layout_height="48dp"
-            android:layout_weight="9"
-            android:fontFamily="@font/roboto"
-            android:gravity="center|left"
-            android:text="@string/textAlltypebooking"
-            android:textColor="#333232"
-            android:textSize="15dp"
-            android:textStyle="normal" />
-
-
-    </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -31,7 +31,6 @@
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/verifyuseric"
             android:paddingLeft="3dp"
-            android:text="A verification link haass beasasen as tossadasdsayoadsaasdurasdasd address "
             android:textColor="#00CD00"
             android:textSize="13dp" />
     </RelativeLayout>
@@ -119,7 +118,7 @@
                 android:fontFamily="@font/segoe"
                 android:gravity="center"
                 android:onClick="CreateAccount"
-                android:text="Create a account"
+                android:text="Create an account"
                 android:textColor="#FFFFFF" />
             <TextView
                 android:id="@+id/text_below_signIn"

@@ -15,7 +15,7 @@ public interface AuthenticationPresenterInterface {
     public void activateSim(NewActivationRequest newActivationRequest );
     public void AddFundsAPI(AddFundsApp addFundsApp);
     public void validateSim(String SerialNumber, String Token);
-    public void GetRateForPaymentPlan(String SerialNumber,int NoOfDay);
+    public void GetRateForPaymentPlan(String SerialNumber,int NoOfDay,int type,String MSISDN);
     public void validateMSISDN(String MSISDN, String Token);
     public  void GetSubscriber(String Token);
     public void  UpdateFundsMethod(UpdateFundReq updateFundReq);

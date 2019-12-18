@@ -2,16 +2,17 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-//import android.icu.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
-
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +21,21 @@ import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
+import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+import java.util.TimeZone;
+
+import static android.widget.Toast.LENGTH_LONG;
+
+//import android.icu.text.SimpleDateFormat;
 
 public class Recharge extends BaseActivity {
 
@@ -38,12 +47,15 @@ public class Recharge extends BaseActivity {
     double rate = 0.0;
     double Amount = 0.0;
     public BaseView baseView;
-    TextView todayDate;
+    TextView todayDate, errorMsg, contactCare, OK;
     String token;
     String MSISDN;
     TextView GoodUntil;
     String validityStartDate;
-    SimpleDateFormat formatter;
+    Boolean SpecialDealer = false;
+    Boolean SimValidAPIStatus = false;
+    androidx.appcompat.app.AlertDialog progressDialog;
+
 
     @Override
     protected int getLayout() {
@@ -54,23 +66,26 @@ public class Recharge extends BaseActivity {
     protected void onViewReady() {
         super.onViewReady();
         GoodUntil = findViewById(R.id.validDateLeftRC);
+        TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
         authenticationPresenter = new AuthenticationPresenter(this);
         todayDate = (TextView) findViewById(R.id.datePickerRecharge);
         totalAmountRecharge = findViewById(R.id.totalAmountRecharge);
-        UserDetails userDetails = new UserDetails(Recharge.this);
+        final UserDetails userDetails = new UserDetails(Recharge.this);
         token = userDetails.getTokenID();
         edtTextMSISDN = findViewById(R.id.edtMSISDN);
         edtTextMSISDN.setText(userDetails.getMSISDN());
         edtTextMSISDN.setFocusable(false);
         numberOfDaysRecharge = findViewById(R.id.txtnumberOfDaysRecharge);
-        UserDetails userDetails1 = new UserDetails(this);
         try {
-            Bundle extras = getIntent().getExtras();
             MSISDN = edtTextMSISDN.getText().toString();
             authenticationPresenter.validateMSISDN(MSISDN, token);
-
         } catch (Exception e) {
             showToast(e.toString());
+        }
+        try {
+            authenticationPresenter.GetRateForPaymentPlan("", 0, 2, userDetails.getMSISDN());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         numberOfDaysRecharge.addTextChangedListener(new TextWatcher() {
@@ -85,10 +100,10 @@ public class Recharge extends BaseActivity {
                 try {
                     if (numberOfDaysRecharge.getText().length() == 0) {
                         GoodUntil.setText("  ");
-                        totalAmountRecharge.setText(" ");
+                        totalAmountRecharge.setText("");
                         totalAmountRecharge.setHint("$ 0.00");
 
-                    } else {
+                    } else if (SpecialDealer.equals(false)) {
                         Amount = ((Integer.parseInt(Days)) * rate);
                         NumberFormat formatter = NumberFormat.getNumberInstance();
                         formatter.setMinimumFractionDigits(2);
@@ -96,17 +111,22 @@ public class Recharge extends BaseActivity {
                         String TotalAmount = formatter.format(Amount);
                         totalAmountRecharge.setText("$ " + TotalAmount);
                         getCurretDatePicker();
+                    } else if (SpecialDealer.equals(true)) {
+                        showToast("Special dealer");
+                        authenticationPresenter.GetRateForPaymentPlan("", Integer.parseInt(numberOfDaysRecharge.getText().toString()), 2, userDetails.getMSISDN());
+
+                    } else {
+                        totalAmountRecharge.setText("");
+                        GoodUntil.setText("");
+                        totalAmountRecharge.setText("");
+                        Toast.makeText(Recharge.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    if (edtTextMSISDN.getText().toString().isEmpty()) {
-//                        showToast("Please Enter SIM Serial Number");
-                        Toast.makeText(Recharge.this, R.string.textPleaseEnterSIMSerialNumber, Toast.LENGTH_LONG).show();
-                    } else
-//                        showToast("Invalid Number Of Day");
-                        Toast.makeText(Recharge.this, R.string.textInvalidNumberOfDay, Toast.LENGTH_LONG).show();
-
+                    if (numberOfDaysRecharge.getText().toString().isEmpty()) {
+                        Toast.makeText(Recharge.this, R.string.textPleaseEnterValidNumberOfDays, LENGTH_LONG).show();
+                        totalAmountRecharge.setText("$ 0.0");
+                    }
                 }
-
             }
 
             @Override
@@ -124,9 +144,9 @@ public class Recharge extends BaseActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
         }
     }
 
@@ -135,21 +155,56 @@ public class Recharge extends BaseActivity {
         switch (method3) {
             case "rechargeMSISDN": {
                 ActivateSimResponse obj = (ActivateSimResponse) response;
-
-
                 try {
-                    rate =obj.getmRatePerDay();
+                    rate = obj.getmRatePerDay();
                     String dateConverter = obj.getmLastValidityDate();
                     Date date1 = new SimpleDateFormat("dd-MMM-yyyy").parse(dateConverter);
                     SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
                     String strDate = formatter.format(date1);
                     todayDate.setText(strDate);
-
                     UserDetails userDetails = new UserDetails(this);
                     userDetails.setRechargeStatus(0);
+                    numberOfDaysRecharge.getText().clear();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            }
+
+            case "GetRateForPaymentPlan_SpecialPlan": {
+                GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response;
+                try {
+                    SimValidAPIStatus = true;
+                    SpecialDealer = true;
+                    totalAmountRecharge.setText("$ " + obj.getRate());
+                    getCurretDatePicker();
+                } catch (Exception e) {
+                    totalAmountRecharge.setText("");
+                    totalAmountRecharge.setText("$ 0.00");
+                    showToast(e.getMessage());
+                }
+                break;
+            }
+
+            case "GetRateForPaymentPlan_endUser": {
+                GetRateForPaymentPlan obj2 = (GetRateForPaymentPlan) response;
+                try {
+                    SimValidAPIStatus = true;
+                    rate = obj2.getRate();
+                    Amount = ((Integer.parseInt(Days)) * rate);
+                    NumberFormat formatter = NumberFormat.getNumberInstance();
+                    formatter.setMinimumFractionDigits(2);
+                    formatter.setMaximumFractionDigits(2);
+                    String TotalAmount = formatter.format(Amount);
+                    totalAmountRecharge.setText("$ " + TotalAmount);
+                    getCurretDatePicker();
+                } catch (Exception e) {
+                    totalAmountRecharge.setText("");
+                    numberOfDaysRecharge.getText().clear();
+                    showToast(e.getMessage());
+                }
+                break;
             }
         }
     }
@@ -158,7 +213,14 @@ public class Recharge extends BaseActivity {
     public void onServerError(String method2, String errorMessage) {
         switch (method2) {
             case "rechargeMSISDN": {
-                showToast(errorMessage);
+                SimValidAPIStatus = false;
+                ContactCarePopUp(errorMessage, getApplication().getString(R.string.textcontactCare));  //here is add popup scrrren to show the popoupmsg for any error
+                break;
+            }
+
+            case "GetRateForPaymentPlan": {
+                SimValidAPIStatus = false;
+                break;
             }
         }
     }
@@ -169,11 +231,10 @@ public class Recharge extends BaseActivity {
             if (edtTextMSISDN.getText().toString().isEmpty()) {
 //                throw new Exception("Please Enter SIM Serial Number");
                 throw new Exception(getResources().getString(R.string.textPleaseEnterSIMSerialNumber));
-            }
-            if (numberOfDaysRecharge.getText().toString().equals("0") || numberOfDaysRecharge.getText().toString().isEmpty()) {
+            } else if (numberOfDaysRecharge.getText().toString().equals("0") || numberOfDaysRecharge.getText().toString().isEmpty()) {
 //                throw new Exception("Please Enter Valid Number Of Days");
                 throw new Exception(getResources().getString(R.string.textPleaseEnterValidNumberOfDays));
-            } else {
+            } else if (SimValidAPIStatus) {
                 Days = numberOfDaysRecharge.getText().toString();
                 MSISDN = edtTextMSISDN.getText().toString();
                 Intent paymnetSummaryR = new Intent(Recharge.this, mPayment.class);
@@ -184,7 +245,7 @@ public class Recharge extends BaseActivity {
                 paymnetSummaryR.putExtra("AmountChargedR", String.valueOf(Amount));
                 paymnetSummaryR.putExtra("RequestedForDtTmR", validityStartDate);
                 paymnetSummaryR.putExtra("RefNoR", "1");
-                paymnetSummaryR.putExtra("RequestedDeviceR", "2");
+                paymnetSummaryR.putExtra("RequestedDeviceR", "Android|" + userDetails.getLanguageSelect());
                 startActivity(paymnetSummaryR);
             }
         } catch (Exception e) {
@@ -237,6 +298,42 @@ public class Recharge extends BaseActivity {
             hotspot.hotspotFxn(context);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addOn(View view) {
+        setURL("https://orders.skygowifi.com");
+    }
+
+    private void setURL(String getURL) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        startActivity(browserIntent);
+    }
+
+    private void ContactCarePopUp(String errorName, String ContactCare) {
+        try {
+            View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
+            androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(contactCarePopUp);
+            progressDialog = mBuilder.create();
+            progressDialog.setCancelable(false);
+            progressDialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            progressDialog.show();
+
+            //ID
+            errorMsg = contactCarePopUp.findViewById(R.id.errorMsg);
+            contactCare = contactCarePopUp.findViewById(R.id.contactCare);
+            OK = contactCarePopUp.findViewById(R.id.OK);
+            errorMsg.setText(errorName);
+
+            OK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progressDialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            showToast(e.getMessage());
         }
     }
 }

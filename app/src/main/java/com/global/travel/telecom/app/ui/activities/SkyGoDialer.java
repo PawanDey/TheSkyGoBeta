@@ -21,10 +21,12 @@ import androidx.gridlayout.widget.GridLayout;
 import com.global.travel.telecom.app.R;
 import com.mizuvoip.jvoip.SipStack;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SkyGoDialer extends AppCompatActivity {
     TextView phoneNumber, timeOnCall;
     GridLayout gridLayoutDailer, gridLayoutOnCall;
-    LinearLayout addcall, loadspeaker, hold, videocall, one, two, three, four, five, six, seven, eight, nine, zero, delete, star, mute, clickToCallButtonLayout;
+    LinearLayout loadspeaker, one, two, three, four, five, six, seven, eight, nine, zero, delete, star, mute, clickToCallButtonLayout;
     ImageView clickToCallButton, hangUp, loadspeakerImage, muteImage, holdImage, contacts;
 
     public static String LOGTAG = "AJVoIP";
@@ -44,12 +46,12 @@ public class SkyGoDialer extends AppCompatActivity {
     String[] notarray = null;
     Boolean checkMute = true;
     Boolean checkSpeaker = true;
+    Boolean oneTimeCall = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sky_go_dialer);
-
 
         //On click event
         ctx = this;
@@ -68,27 +70,24 @@ public class SkyGoDialer extends AppCompatActivity {
         star = findViewById(R.id.star);
         mute = findViewById(R.id.mute);
         hangUp = findViewById(R.id.hangup);
-        addcall = (LinearLayout) findViewById(R.id.addcall);
         contacts = findViewById(R.id.contacts);
-        loadspeaker = (LinearLayout) findViewById(R.id.loadspeaker);
-        hold = (LinearLayout) findViewById(R.id.hold);
-        videocall = (LinearLayout) findViewById(R.id.videocall);
-        clickToCallButton = (ImageView) findViewById(R.id.clickToCallButton);
-        gridLayoutDailer = (GridLayout) findViewById(R.id.gridLayoutDailer);
-        gridLayoutOnCall = (GridLayout) findViewById(R.id.gridLayoutOnCall);
-        phoneNumber = (TextView) findViewById(R.id.phoneNumber);
-        timeOnCall = (TextView) findViewById(R.id.timeOnCall);
+        loadspeaker = findViewById(R.id.loadspeaker);
+        clickToCallButton = findViewById(R.id.clickToCallButton);
+        gridLayoutDailer = findViewById(R.id.gridLayoutDailer);
+        gridLayoutOnCall = findViewById(R.id.gridLayoutOnCall);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        timeOnCall = findViewById(R.id.timeOnCall);
         clickToCallButtonLayout = findViewById(R.id.clickToCallButtonLayout);
         loadspeakerImage = findViewById(R.id.loadspeakerImage);
         muteImage = findViewById(R.id.muteImage);
         holdImage = findViewById(R.id.holdImage);
         DisplayLogs("oncreate");
 
+        //contact msges
         //SIP stack parameters separated by CRLF. Will be passed to AJVoIP with the SetParameters API call (you might also use the SetParameter API to pass the parameters separately)
         //Add other settings after your needs. See the documentation for the full list of available parameters.
-        String demoparameter = "serveraddress=voip.mizu-voip.com\r\nusername=ajvoiptest\r\npassword=ajvoip1234\r\nloglevel=5";
-
-        phoneNumber.setText("testivr3"); //default call-to number for our test (testivr3 is a music IVR access number on our test server at voip.mizu-voip.com)
+        String demoparameter = "serveraddress=sip.s.im\r\nusername=447624045000\r\npassword=1122\r\nloglevel=5";
+        phoneNumber.setText("");
 
         DisplayStatus("Ready.");
         try {
@@ -107,7 +106,7 @@ public class SkyGoDialer extends AppCompatActivity {
 
                 //start the SIP engine
                 mysipclient.Start();
-                //mysipclient.Register();
+                mysipclient.Register();
 
             } else {
                 DisplayLogs("SipStack already started");
@@ -215,23 +214,12 @@ public class SkyGoDialer extends AppCompatActivity {
                 if (mysipclient == null) {
                     DisplayStatus("ERROR, cannot initiate call because SipStack is not started");
                 } else {
-                    mysipclient.Call(-1, number);
                     clickToCallButton.setVisibility(View.GONE);
                     gridLayoutDailer.setVisibility(View.GONE);
                     gridLayoutOnCall.setVisibility(View.VISIBLE);
                     timeOnCall.setVisibility(View.VISIBLE);
-                    contacts.setVisibility(View.GONE);
+                    mysipclient.Call(-1, number);
                     checkTimeOnCall = true;
-                    handler = new Handler();
-                    updateTask = new Runnable() {
-                        @Override
-                        public void run() {
-                            TimeUpdateOnCall();
-                            handler.postDelayed(this, 1000);
-                        }
-                    };
-                    handler.postDelayed(updateTask, 1000);
-
                 }
             }
         });
@@ -243,11 +231,9 @@ public class SkyGoDialer extends AppCompatActivity {
                 if (mysipclient == null) {
                     DisplayStatus("ERROR, cannot hangup because SipStack is not started");
                 } else {
-
                     mysipclient.Hangup();
                     checkTimeOnCall = false;
                     TimeUpdateOnCall();
-                    contacts.setVisibility(View.VISIBLE);
                     clickToCallButtonLayout.setVisibility(View.VISIBLE);
                     clickToCallButton.setVisibility(View.VISIBLE);
                     gridLayoutDailer.setVisibility(View.VISIBLE);
@@ -301,34 +287,13 @@ public class SkyGoDialer extends AppCompatActivity {
             }
         });
 
-        addcall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pending();
-            }
-        });
-
-        hold.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkHold) {
-                    mysipclient.Hold(1, true);
-                    checkHold = false;
-                    holdImage.setImageResource(R.drawable.hold_blue);
-                } else {
-                    mysipclient.Hold(1, false);
-                    checkHold = true;
-                    holdImage.setImageResource(R.drawable.hold);
-                }
-            }
-        });
-
         contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     ContentResolver cr = getContentResolver();
-                    Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+                    @SuppressLint("Recycle") Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+                    assert cur != null;
                     if (cur.getCount() > 0) {
                         while (cur.moveToNext()) {
                             String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
@@ -340,6 +305,7 @@ public class SkyGoDialer extends AppCompatActivity {
                                         null,
                                         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                                         new String[]{id}, null);
+                                assert pCur != null;
                                 while (pCur.moveToNext()) {
                                     String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
@@ -357,14 +323,7 @@ public class SkyGoDialer extends AppCompatActivity {
             }
         });
 
-        videocall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pending();
-            }
-        });
     }
-
 
     @Override
     public void onResume() {
@@ -385,6 +344,144 @@ public class SkyGoDialer extends AppCompatActivity {
         notifThread = null;
     }
 
+    public class GetNotificationsThread extends Thread {
+        String sipnotifications = "";
+
+        public void run() {
+            try {
+                try {
+                    Thread.currentThread().setPriority(4);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }  //we are lowering this thread priority a bit to give more chance for our main GUI thread
+
+                while (!terminateNotifThread) {
+
+                    try {
+                        if (mysipclient != null) {
+                            //get notifications from the SIP stack
+                            sipnotifications = mysipclient.GetNotificationsSync();
+                            if (sipnotifications != null && sipnotifications.length() > 0) {
+                                // send notifications to Main thread using a Handler
+
+                                Message messageToMainThread = new Message();
+                                Bundle messageData = new Bundle();
+                                messageToMainThread.what = 0;
+                                messageData.putString("notifmessages", sipnotifications);
+                                messageToMainThread.setData(messageData);
+                                NotifThreadHandler.sendMessage(messageToMainThread);
+                            }
+                        }
+
+                        if ((sipnotifications == null || sipnotifications.length() < 1) && !terminateNotifThread) {
+                            //some error occured. sleep a bit just to be sure to avoid busy loop
+                            GetNotificationsThread.sleep(1);
+                        }
+
+                        continue;
+                    } catch (Throwable e) {
+                        Log.e(LOGTAG, "ERROR, WorkerThread on run()intern", e);
+                    }
+                    if (!terminateNotifThread) {
+                        GetNotificationsThread.sleep(10);
+                    }
+                }
+            } catch (Throwable e) {
+                Log.e(LOGTAG, "WorkerThread on run()");
+            }
+        }
+
+    }
+
+    //get the notifications from the GetNotificationsThread thread
+    @SuppressLint("HandlerLeak")
+    public static Handler NotifThreadHandler = new Handler() {
+        public void handleMessage(@NotNull android.os.Message msg) {
+            try {
+                if (msg.getData() == null) return;
+
+                Bundle resBundle = msg.getData();
+
+                String receivedNotif = msg.getData().getString("notifmessages");
+
+                if (receivedNotif != null && receivedNotif.length() > 0)
+                    instance.ReceiveNotifications(receivedNotif);
+
+            } catch (Throwable e) {
+                Log.e(LOGTAG, "NotifThreadHandler handle Message");
+            }
+        }
+    };
+
+    public void ReceiveNotifications(String notifs) {
+
+        if (notifs == null || notifs.length() < 1) return;
+        notarray = notifs.split("\r\n");
+
+        if (notarray == null || notarray.length < 1) return;
+
+
+        for (String s : notarray) {
+            if (s != null && s.length() > 0) {
+                ProcessNotifications(s);
+            }
+        }
+    }
+
+    public void ProcessNotifications(String line) {
+        DisplayStatus(line); //we just display them in this simple test application
+        //see the Notifications section in the documentation about the possible messages (parse the line string and process them after your needs)
+        String x = "____";
+        if (line.contains("Calling...")) {
+            Log.v(x, "Calling...");
+            timeOnCall.setText("Calling...");
+        } else if (line.contains("Ringing")) {
+            Log.v(x, "Ringing");
+            timeOnCall.setText("Ringing");
+        } else if (line.contains(",Speaking (0 sec)") && oneTimeCall) {
+            Log.v(x, ",Speaking (0 sec)");
+            oneTimeCall = false;
+            handler = new Handler();
+            updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    TimeUpdateOnCall();
+                    handler.postDelayed(this, 1000);
+                }
+            };
+            handler.postDelayed(updateTask, 1000);
+        } else if (line.contains("CallDisconnect")) {
+            Log.v(x, "CallDisconnect");
+        } else if (line.contains("Call Finished")) {
+            Log.v(x, "Call Finished");
+            checkTimeOnCall = false;
+            oneTimeCall = true;
+            TimeUpdateOnCall();
+            clickToCallButtonLayout.setVisibility(View.VISIBLE);
+            clickToCallButton.setVisibility(View.VISIBLE);
+            gridLayoutDailer.setVisibility(View.VISIBLE);
+            gridLayoutOnCall.setVisibility(View.GONE);
+            loadspeakerImage.setImageResource(R.drawable.loadspeaker);
+            muteImage.setImageResource(R.drawable.mute);
+            holdImage.setImageResource(R.drawable.hold);
+            checkMute = true;
+            checkSpeaker = true;
+            checkHold = true;
+            checkTimeOnCall = false;
+        }
+    }
+
+    public void DisplayStatus(String stat) {
+        if (stat == null) return;
+        if (mStatus != null) mStatus.setText(stat);
+        DisplayLogs("Status: " + stat);
+    }
+
+    public void DisplayLogs(String logmsg) {
+        Log.v(LOGTAG, logmsg);
+    }
+
+    @SuppressLint("SetTextI18n")
     private void TimeUpdateOnCall() {
         try {
             if (checkTimeOnCall) {
@@ -413,112 +510,11 @@ public class SkyGoDialer extends AppCompatActivity {
                 hou = 0;
                 handler.removeCallbacks(updateTask);
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             Toast.makeText(this, "CallOnTIme Error:" + e, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
-    }
-
-    public class GetNotificationsThread extends Thread {
-        String sipnotifications = "";
-
-        public void run() {
-            try {
-                try {
-                    Thread.currentThread().setPriority(4);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }  //we are lowering this thread priority a bit to give more chance for our main GUI thread
-
-                while (!terminateNotifThread) {
-
-                    try {
-                        sipnotifications = "";
-                        if (mysipclient != null) {
-                            //get notifications from the SIP stack
-                            sipnotifications = mysipclient.GetNotificationsSync();
-
-                            if (sipnotifications != null && sipnotifications.length() > 0) {
-                                // send notifications to Main thread using a Handler
-                                Message messageToMainThread = new Message();
-                                Bundle messageData = new Bundle();
-                                messageToMainThread.what = 0;
-                                messageData.putString("notifmessages", sipnotifications);
-                                messageToMainThread.setData(messageData);
-
-                                NotifThreadHandler.sendMessage(messageToMainThread);
-                            }
-                        }
-
-                        if ((sipnotifications == null || sipnotifications.length() < 1) && !terminateNotifThread) {
-                            //some error occured. sleep a bit just to be sure to avoid busy loop
-                            GetNotificationsThread.sleep(1);
-                        }
-
-                        continue;
-                    } catch (Throwable e) {
-                        Log.e(LOGTAG, "ERROR, WorkerThread on run()intern", e);
-                    }
-                    if (!terminateNotifThread) {
-                        GetNotificationsThread.sleep(10);
-                    }
-                }
-            } catch (Throwable e) {
-                Log.e(LOGTAG, "WorkerThread on run()");
-            }
-        }
-
-    }
-
-    //get the notifications from the GetNotificationsThread thread
-    @SuppressLint("HandlerLeak")
-    public static Handler NotifThreadHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            try {
-                if (msg == null || msg.getData() == null) return;
-
-                Bundle resBundle = msg.getData();
-
-                String receivedNotif = msg.getData().getString("notifmessages");
-
-                if (receivedNotif != null && receivedNotif.length() > 0)
-                    instance.ReceiveNotifications(receivedNotif);
-
-            } catch (Throwable e) {
-                Log.e(LOGTAG, "NotifThreadHandler handle Message");
-            }
-        }
-    };
-
-    public void ReceiveNotifications(String notifs) {
-        if (notifs == null || notifs.length() < 1) return;
-        notarray = notifs.split("\r\n");
-
-        if (notarray == null || notarray.length < 1) return;
-
-        for (int i = 0; i < notarray.length; i++) {
-            if (notarray[i] != null && notarray[i].length() > 0) {
-                ProcessNotifications(notarray[i]);
-            }
-        }
-    }
-
-    public void ProcessNotifications(String line) {
-        DisplayStatus(line); //we just display them in this simple test application
-        //see the Notifications section in the documentation about the possible messages (parse the line string and process them after your needs)
-    }
-
-    public void DisplayStatus(String stat) {
-        if (stat == null) return;
-        ;
-        if (mStatus != null) mStatus.setText(stat);
-        DisplayLogs("Status: " + stat);
-    }
-
-    public void DisplayLogs(String logmsg) {
-        Log.v(LOGTAG, logmsg);
     }
 
     public void Pending() {
@@ -526,5 +522,3 @@ public class SkyGoDialer extends AppCompatActivity {
     }
 
 }
-
-

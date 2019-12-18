@@ -390,8 +390,8 @@ public class Dashboard extends BaseActivity {
         setURL("https://www.iceplc.com");
     }
 
-    public void clickOnBuyAccessories(View view) {
-        setURL("https://www.google.com");
+    public void clickOnESimActivation(View view) {
+        setURL("https://www.skygo.celitech.app");
     }
 
     public void clickOnYelp(View view) {

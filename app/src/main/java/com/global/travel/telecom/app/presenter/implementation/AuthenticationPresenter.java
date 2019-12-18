@@ -1,6 +1,8 @@
 package com.global.travel.telecom.app.presenter.implementation;
 
+import android.content.res.Resources;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
@@ -71,7 +73,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     }
                 } else {
                     baseView.hideProgressBar();
-                    baseView.onServerError("loginUser", "");
+                    baseView.onServerError("loginUser", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -105,10 +107,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("ExtensionRequest", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("ExtensionRequest", "Something went wrong");
+                        baseView.onServerError("ExtensionRequest", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("activateSim", "");
+                    baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -142,10 +144,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("AddFundsViaAPP", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("AddFundsViaAPP", " " + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong) );
                     }
                 } else {
-                    baseView.onServerError("AddFundsViaAPP", "");
+                    baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -180,10 +182,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("UpdateFunds", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("UpdateFunds", "" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong) );
                     }
                 } else {
-                    baseView.onServerError("UpdateFunds", "");
+                    baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -218,10 +220,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("activateSim", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("activateSim", "" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong) );
                     }
                 } else {
-                    baseView.onServerError("activateSim", "");
+                    baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -264,10 +266,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("GetSubscriber", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("GetSubscriber", "" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("GetSubscriber", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("GetSubscriber", "");
+                    baseView.onServerError("GetSubscriber", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -307,10 +309,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("simvalidated", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("simvalidated", "" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("simvalidated", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("simvalidated", "");
+                    baseView.onServerError("simvalidated", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -324,9 +326,9 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     }
 
     @Override
-    public void GetRateForPaymentPlan(String SerialNumber, int NoOfDay) {
+    public void GetRateForPaymentPlan(String SerialNumber, int NoOfDay, int type, String MSISDN) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay);
+        Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -345,18 +347,21 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         String respondeMessage = table.getString("ResponseMessage");
                         if (respondeCode == 0) {
                             GetRateForPaymentPlan result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetRateForPaymentPlan.class);
-                            baseView.onSuccess("GetRateForPaymentPlan", result);
+                            baseView.onSuccess("GetRateForPaymentPlan_SpecialPlan", result);
                         } else if (respondeCode == 1) {
+                            GetRateForPaymentPlan result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetRateForPaymentPlan.class);
+                            baseView.onSuccess("GetRateForPaymentPlan_endUser", result);
+                        } else {
                             baseView.onServerError("GetRateForPaymentPlan", respondeMessage);
                         }
 
                     } catch (Exception e) {
-                        baseView.onServerError("GetRateForPaymentPlan", "_______" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("GetRateForPaymentPlan", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
 
 
                 } else {
-                    baseView.onServerError("GetRateForPaymentPlan", "");
+                    baseView.onServerError("GetRateForPaymentPlan", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -392,17 +397,16 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         if (respondeCode == 0) {
                             ActivateSimResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), ActivateSimResponse.class);
                             baseView.onSuccess("rechargeMSISDN", result);
-                        } else {
+                        } else if (respondeCode == 1) {
                             baseView.onServerError("rechargeMSISDN", respondeMessage);
                         }
-
                     } catch (Exception e) {
-                        baseView.onServerError("rechargeMSISDN", "" + R.string.textSorrySomethingwentwrong);
+                        baseView.onServerError("rechargeMSISDN", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
 
 
                 } else {
-                    baseView.onServerError("rechargeMSISDN", "");
+                    baseView.onServerError("rechargeMSISDN", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -453,7 +457,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                 } else {
                     baseView.hideProgressBar();
-                    baseView.onServerError("notification", "22nd");
+                    baseView.onServerError("notification", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -510,13 +514,13 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                             } catch (Exception e) {
                                 baseView.hideProgressBar();
-                                baseView.onServerError("translateAPI", "" + R.string.textSorrySomethingwentwrong);
+                                baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
                             }
 
 
                         } else {
                             baseView.hideProgressBar();
-                            baseView.onServerError("translateAPI", "");
+                            baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
                         }
                     }
 

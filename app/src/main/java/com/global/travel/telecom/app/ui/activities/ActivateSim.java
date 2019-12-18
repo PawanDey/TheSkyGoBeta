@@ -3,15 +3,18 @@ package com.global.travel.telecom.app.ui.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
+import android.net.Uri;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +24,6 @@ import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
-import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
@@ -30,35 +32,30 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-//import android.icu.text.SimpleDateFormat;
-
+import java.util.Objects;
+import java.util.TimeZone;
 
 public class ActivateSim extends BaseActivity {
 
     AuthenticationPresenter authenticationPresenter;
     static EditText edtSerialNumber;
     EditText txtnoOfDays;
-    TextView totalAmount;
+    TextView totalAmount,errorMsg,contactCare,OK;
     String Days = "0";
     Double rate = 0.0;
     Double Amount = 0.0;
-    //    public BaseView baseView;
     EditText todayDate;
     String token;
     String Serial;
-    NewActivationRequest newActivationRequest;
     TextView scannerData;
-    //    Button scannerDataLogo;
-    TextView ValidDays, validDateLeftAS;
+    TextView validDateLeftAS;
     DatePickerDialog picker;
-    Boolean ignoreChange = false;
     Boolean SimValidAPIStatus = false;
     Boolean SpecialDealer = false;
     String TotalAmount;
     Context context = this;
-    Date d = new Date();
-    CharSequence DateToday = DateFormat.format("d MMMM,yyyy", d.getTime());
+    String timeFormat = "d MMMM,yyyy";
+    androidx.appcompat.app.AlertDialog progressDialog;
 
     @Override
     protected int getLayout() {
@@ -68,11 +65,8 @@ public class ActivateSim extends BaseActivity {
     @Override
     protected void onViewReady() {
         super.onViewReady();
-        // authenticationPresenter = new AuthenticationPresenter(this);
         authenticationPresenter = new AuthenticationPresenter(this);
         todayDate = findViewById(R.id.datePickerActivateSim);
-        todayDate.setText(DateToday);
-        ValidDays = findViewById(R.id.validDateLeftAS);
         edtSerialNumber = findViewById(R.id.editSerial);
         scannerData = findViewById(R.id.scanner);
 //        edtSerialNumber.setOnFocusChangeListener(this);
@@ -80,10 +74,12 @@ public class ActivateSim extends BaseActivity {
         validDateLeftAS = findViewById(R.id.validDateLeftAS);
         UserDetails userDetails = new UserDetails(ActivateSim.this);
         token = userDetails.getTokenID();
-//        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFiYyIsIm5iZiI6MTU3NDk0NjM3MiwiZXhwIjoxNTc0OTgyMzcyLCJpYXQiOjE1NzQ5NDYzNzJ9.FYEgVkQQsKOMm3CZlWISGeTiGrxb5n9CS-oscRQomF0;";
         totalAmount = findViewById(R.id.totalAmountActivate);
-        WifiManager.LocalOnlyHotspotReservation mReservation;
-        Context context = this;
+        Date date = new Date();
+        TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
+        java.text.DateFormat df = new SimpleDateFormat(timeFormat);
+        System.out.println("Date and time in US/Eastern: " + df.format(date));
+        todayDate.setText(df.format(date));
 
         edtSerialNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,7 +105,6 @@ public class ActivateSim extends BaseActivity {
             }
         });
 
-
         txtnoOfDays.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,25 +115,24 @@ public class ActivateSim extends BaseActivity {
                 Days = txtnoOfDays.getText().toString();
                 txtnoOfDays.setHint("  ");
                 try {
-                    if (ignoreChange == false) {
-                        if (txtnoOfDays.getText().length() == 0) {
-                            validDateLeftAS.setText("  ");
-                            totalAmount.setText("");
-                            totalAmount.setHint("$ 0.00");
-                        } else if (SpecialDealer.equals(false)) {
-                            Amount = ((Integer.parseInt(Days)) * rate);
-                            txtnoOfDays.setFocusable(true);
-                            NumberFormat formatter = NumberFormat.getNumberInstance();
-                            formatter.setMinimumFractionDigits(2);
-                            formatter.setMaximumFractionDigits(2);
-                            TotalAmount = formatter.format(Amount);
-                            totalAmount.setText("$ " + TotalAmount);
-                            getCurretDatePicker();
-                        } else if (SpecialDealer.equals(true)) {
-//                            showToast("Special dealer");
-                            authenticationPresenter.GetRateForPaymentPlan(edtSerialNumber.getText().toString().trim(), Integer.parseInt(txtnoOfDays.getText().toString()));
-                        }
+                    if (txtnoOfDays.getText().length() == 0) {
+                        validDateLeftAS.setText("  ");
+                        totalAmount.setText("");
+                        totalAmount.setHint("$ 0.00");
+                    } else if (SpecialDealer.equals(false)) {
+                        Amount = ((Integer.parseInt(Days)) * rate);
+                        txtnoOfDays.setFocusable(true);
+                        NumberFormat formatter = NumberFormat.getNumberInstance();
+                        formatter.setMinimumFractionDigits(2);
+                        formatter.setMaximumFractionDigits(2);
+                        TotalAmount = formatter.format(Amount);
+                        totalAmount.setText("$ " + TotalAmount);
+                        getCurretDatePicker();
+                    } else if (SpecialDealer.equals(true)) {
+//                        showToast("Special dealer");
+                        authenticationPresenter.GetRateForPaymentPlan(edtSerialNumber.getText().toString().trim(), Integer.parseInt(txtnoOfDays.getText().toString()), 1, "");
                     }
+
                 } catch (Exception e) {
                     if (edtSerialNumber.getText().toString().isEmpty()) {
                         Toast.makeText(ActivateSim.this, R.string.textPleaseEnterSIMSerialNumber, Toast.LENGTH_LONG).show();
@@ -153,13 +147,6 @@ public class ActivateSim extends BaseActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-
-//        txtnoOfDays.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -183,31 +170,49 @@ public class ActivateSim extends BaseActivity {
 
                     } else {
                         showToast(obj.getResponseMessage());
-                        ignoreChange = false;
                         txtnoOfDays.setEnabled(true);
-                        txtnoOfDays.getText().clear();//
-                        // Days = txtnoOfDays.getText().toString();
-//                        Amount = ((Integer.parseInt(Days)) * rate);
-//                        NumberFormat formatter = NumberFormat.getNumberInstance();
-//                        formatter.setMinimumFractionDigits(2);
-//                        formatter.setMaximumFractionDigits(2);
-//                        String TotalAmount = formatter.format(Amount);
-//                        totalAmount.setText("$" + TotalAmount);
-//                        showToast(obj.getResponseMessage());
+                        txtnoOfDays.getText().clear();
                     }
                 } catch (Exception e) {
                     txtnoOfDays.setText("0");
                     totalAmount.setText("$ 0.00");
-                    showToast(e.toString());
+                    ContactCarePopUp(obj.getResponseMessage(),getResources().getString(R.string.textcontactCare));   //here is show popup for invlid sim and conatc skygo team
                 }
                 break;
             }
 
-            case "GetRateForPaymentPlan":
-                GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response; //change pojo classs name model
+            case "GetRateForPaymentPlan_SpecialPlan":
+                GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response;
                 try {
-                    totalAmount.setText("$ " + obj.getRate());
+                    SimValidAPIStatus = true;
+                    NumberFormat formatter = NumberFormat.getNumberInstance();
+                    formatter.setMinimumFractionDigits(2);
+                    formatter.setMaximumFractionDigits(2);
+                    TotalAmount = formatter.format(obj.getRate());
+                    totalAmount.setText("$ " + TotalAmount);
+                    getCurretDatePicker();
                 } catch (Exception e) {
+                    txtnoOfDays.setText("0");
+                    totalAmount.setText("$ 0.00");
+                    showToast(e.getMessage());
+                }
+                break;
+            case "GetRateForPaymentPlan_endUser":
+                GetRateForPaymentPlan obj2 = (GetRateForPaymentPlan) response;
+                try {
+                    SimValidAPIStatus = true;
+                    SpecialDealer = false;
+                    rate = obj2.getRate();
+                    Amount = ((Integer.parseInt(Days)) * rate);
+                    txtnoOfDays.setFocusable(true);
+                    NumberFormat formatter = NumberFormat.getNumberInstance();
+                    formatter.setMinimumFractionDigits(2);
+                    formatter.setMaximumFractionDigits(2);
+                    TotalAmount = formatter.format(Amount);
+                    totalAmount.setText("$ " + TotalAmount);
+                    getCurretDatePicker();
+                } catch (Exception e) {
+                    SimValidAPIStatus = false;
                     txtnoOfDays.setText("0");
                     totalAmount.setText("$ 0.00");
                     showToast(e.getMessage());
@@ -237,20 +242,18 @@ public class ActivateSim extends BaseActivity {
             case "simvalidated": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
                     showToast("Please Login again");
-
                     Intent intent = new Intent(ActivateSim.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
-                    showToast(errorMessage);
+                    ContactCarePopUp(errorMessage,getResources().getString(R.string.textcontactCare));
                     txtnoOfDays.getText().clear();
                     edtSerialNumber.getText().clear();
-                    ignoreChange = false;
                 }
                 break;
             }
             case "GetRateForPaymentPlan": {
-                showToast("Please Contact Customer Care: support@theskygo.com");
+                showToast("Please Contact Customer Care: support@theskygo.com");  //here is show popup for invalid sim or contact to skygo team
                 break;
             }
         }
@@ -320,7 +323,7 @@ public class ActivateSim extends BaseActivity {
                         String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                         try {
                             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                            SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
                             String strDate = formatter.format(date1);
                             todayDate.setText(strDate);
                             getCurretDatePicker();
@@ -350,7 +353,8 @@ public class ActivateSim extends BaseActivity {
                         String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                         try {
                             Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM,yyyy");
+                            SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
+                            assert date1 != null;
                             String strDate = formatter.format(date1);
                             todayDate.setText(strDate);
                             getCurretDatePicker();
@@ -368,7 +372,7 @@ public class ActivateSim extends BaseActivity {
     public void getCurretDatePicker() {
         String getDate = todayDate.getText().toString();
         try {
-            Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
+            Date date1 = new SimpleDateFormat(timeFormat).parse(getDate);
             SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
             String validityStartDate = formatter.format(date1);
             String getNoOfDays = txtnoOfDays.getText().toString();
@@ -395,6 +399,41 @@ public class ActivateSim extends BaseActivity {
         String MANUFACTURER = Build.MANUFACTURER;
         String model = Build.MODEL;
         return MANUFACTURER + "__" + model;
+    }
+
+    public void addOn(View view) {
+        setURL("https://orders.skygowifi.com");
+    }
+
+    private void setURL(String getURL) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        startActivity(browserIntent);
+    }
+
+    private void ContactCarePopUp(String errorName, String ContactCare) {
+        try {
+            View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
+            androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(contactCarePopUp);
+            progressDialog = mBuilder.create();
+            Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            progressDialog.show();
+
+            //ID
+            errorMsg = contactCarePopUp.findViewById(R.id.errorMsg);
+            contactCare = contactCarePopUp.findViewById(R.id.contactCare);
+            OK = contactCarePopUp.findViewById(R.id.OK);
+            errorMsg.setText(errorName);
+
+            OK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progressDialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            showToast(e.getMessage());
+        }
     }
 }
 

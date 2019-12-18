@@ -1,4 +1,5 @@
 <resources>
+    <string name="textcontactCare">カスタマーケアにお問い合わせください<font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
     <string name="welcome_to_gtt" translatable="false">The SkyGoへようこそ </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
@@ -68,10 +69,7 @@
     <string name="textDeliverPhone">電話を配達する</string>
     <string name="textcallmessages">電話メッセージ</string>
     <string name="textProcessPending">プロセス保留</string>
-
-    <!--updated by sourav 27 july-->
-
-    <string name="textSorrySomethingwentwrong">申し訳ございません。エラーが発生いたしました。</string>
+     <string name="textSorrySomethingwentwrong">申し訳ございません。エラーが発生いたしました。</string>
     <string name="textPleaseCheckYourInternetConnection">インターネット接続を確認してください</string>
     <string name="textLocationPermissionNotEnabled">位置情報共有許可が有効になっていません</string>
     <string name="textStatusPending">ステータス：保留</string>
@@ -105,7 +103,8 @@
     <string name="textno">いや</string>
     <string name="textextendvalidity">有効期限を延長</string>
     <string name="textyourmobilenumber">あなたの電話番号</string>
-    <string name="textAlreadyhaveanaccount">既にアカウントが存在します。</string>
-    <string name="textDonothaveanaccount">アカウントをお持ちでない場合、こちらから登録。</string>
+    <string name="textAlreadyhaveanaccount">すでにアカウントをお持ちですか？ <font fgcolor="#442EB4"><b><u>ここでログイン</u></b></font> </string>
+    <string name="textDonothaveanaccount">アカウントを持っていないのですか？<font fgcolor="#442EB4"><b><u>サインアップ</u></b></font> </string>
+    <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations">免責事項：LAX Ice Currency Locationsでのピック/ドロップのみ可能 </string>
 
 </resources>

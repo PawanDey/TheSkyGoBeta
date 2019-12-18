@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="textcontactCare">请联系客户服务 <font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
     <string name="welcome_to_gtt" translatable="false">欢迎来到The SkyGo</string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
@@ -69,8 +70,6 @@
     <string name="textDeliverPhone">提供电话</string>
     <string name="textcallmessages">来电留言</string>
     <string name="textProcessPending">流程待定</string>
-
-
     <string name="textSorrySomethingwentwrong">抱歉!有些不对劲</string>
     <string name="textPleaseCheckYourInternetConnection">请检查您的互联网连接</string>
     <string name="textLocationPermissionNotEnabled">位置权限未启用</string>
@@ -105,7 +104,8 @@
     <string name="textno">没有</string>
     <string name="textextendvalidity">延长有效期</string>
     <string name="textyourmobilenumber">你的电话号码</string>
-    <string name="textAlreadyhaveanaccount">Already have an account?<font fgcolor="#442EB4"><b><u>Login here</u></b>!</font> </string>
-    <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
+    <string name="textAlreadyhaveanaccount">已经有帐号了？<font fgcolor="#442EB4"><b><u>在此登录</u></b>!</font> </string>
+    <string name="textDonothaveanaccount">还没有帐号？ <font fgcolor="#442EB4"><b><u>注册</u></b></font> </string>
+    <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations"> 免责声明：仅可在LAX Ice Currency Locations取/放</string>
 
 </resources>

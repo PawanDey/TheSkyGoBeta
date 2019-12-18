@@ -1,6 +1,7 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -55,8 +57,11 @@ import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Random;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class mPayment extends BaseActivity implements
         ConnectionCallbacks,
@@ -64,20 +69,19 @@ public class mPayment extends BaseActivity implements
         LocationListener {
 
     Button payPalPaymentButton;
-    private mPayment mPayment;
     TextView m_response;
     PayPalConfiguration m_configuration;
-    String m_paypalClientId = "AenMZYOK_JJk-FKV7trJDtyyUSOiZJgvSc06FTf5ZH46qnW1xD16LzcJHThGeaSSkB-KMp5qbYYDVpRd";   //sandbox
-    //    String m_paypalClientId = " ";     // live
+    String m_paypalClientId = "AenMZYOK_JJk-FKV7trJDtyyUSOiZJgvSc06FTf5ZH46qnW1xD16LzcJHThGeaSSkB-KMp5qbYYDVpRd";   //the skygo production
+    //    String m_paypalClientId = "AZhqNfrQvabHK5ohCMmSzh6Rt6o2krELyVYr1wxYRPe4IEkX-LsLa0i3lRSdUB2mR1apFsrZko5e6kng";    //enk production
+    //    String m_paypalClientId = "Acl-zy7SQufyYeOKKROTM37taRJcpe7ige_orlofjY_0YnZuxQ-PWL9vfdzxXWNFEOuQwA5WDPqL3Csw";   //Sky USA Inc
     Intent m_service;
     int m_paypalRequestCode = 999;
     TextView SimNumber;
-    TextView Amount;
+    //    TextView Amount;
     TextView CartAmount;
     NewActivationRequest newActivationRequest;
     TextView Convenience;
     TextView AmountPayabale;
-    //    int convence_fee = 0;
     TextView NumberOfDays;
     TextView ActivationDate;
     AuthenticationPresenter authenticationPresenter;
@@ -86,13 +90,14 @@ public class mPayment extends BaseActivity implements
     Random random = new Random();
     String updateFundID = "";
     String sessionTxnID = "";
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    private double currentLatitude;
-    private double currentLongitude;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private SharedPreferences permissionStatus;
+    final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    double currentLatitude;
+    double currentLongitude;
+    static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    SharedPreferences permissionStatus;
+    String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
 
     @Override
     protected int getLayout() {
@@ -105,12 +110,19 @@ public class mPayment extends BaseActivity implements
             case "activateSim": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
 //                    showToast("Please Login again");
-                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
                     Intent intent = new Intent(mPayment.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                } else {
-                    //showToast(errorMessage);
+                }
+            }
+            case "ExtensionRequest": {
+                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
+//                    showToast("Please Login again");
+                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
+                    Intent intent = new Intent(mPayment.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
             }
         }
@@ -144,14 +156,14 @@ public class mPayment extends BaseActivity implements
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000);
+                .setFastestInterval(1000);
         //location and permission ends here
 
         addFundsApp = new AddFundsApp();
         Bundle extras = getIntent().getExtras();
         authenticationPresenter = new AuthenticationPresenter(this);
         SimNumber = findViewById(R.id.simNumber);
-        Amount = findViewById(R.id.textView7);
+//        Amount = findViewById(R.id.textView7);
         CartAmount = findViewById(R.id.textView9);
         Convenience = findViewById(R.id.textView11);
         AmountPayabale = findViewById(R.id.editAmount1);
@@ -159,15 +171,16 @@ public class mPayment extends BaseActivity implements
         ActivationDate = findViewById(R.id.activationFromDate);
         UserDetails userDetails = new UserDetails(this);
         if (userDetails.getRechargeStatus() == 1) {
+            assert extras != null;
             SimNumber.setText(extras.getString("SerialNumber"));
-            Amount.setText("$ " + extras.getString("AmountCharged"));
+//            Amount.setText("$ " + extras.getString("AmountCharged"));
             CartAmount.setText("$ " + extras.getString("AmountCharged"));
             AmountPayabale.setText("$ " + extras.getString("AmountCharged"));
             NumberOfDays.setText(extras.getString("NumberOfDays"));
             ActivationDate.setText(extras.getString("RequestedForDtTm"));
         } else if (userDetails.getRechargeStatus() == 0) {
             SimNumber.setText(extras.getString("MSISDN"));
-            Amount.setText("$ " + extras.getString("AmountChargedR"));
+//            Amount.setText("$ " + extras.getString("AmountChargedR"));
             CartAmount.setText("$ " + extras.getString("AmountChargedR"));
             AmountPayabale.setText("$ " + extras.getString("AmountChargedR"));
             NumberOfDays.setText(extras.getString("NumberOfDaysR"));
@@ -200,6 +213,7 @@ public class mPayment extends BaseActivity implements
         switch (method2) {
             case "activateSim": {
                 UserDetails userDetails = new UserDetails(this);
+
 //                Date d = new Date();
 //                CharSequence DateToday = DateFormat.format("MMMM d, yyyy ", d.getTime());
                 userDetails.setRechargeStatus(0);
@@ -222,13 +236,14 @@ public class mPayment extends BaseActivity implements
                 UserDetails userDetails = new UserDetails(this);
                 if (userDetails.getRechargeStatus() == 1) {
                     newActivationRequest = new NewActivationRequest();
+                    assert extras != null;
                     newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
                     newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
                     newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
                     newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
                     newActivationRequest.setToken(userDetails.getTokenID());
-                    newActivationRequest.setRefNo(extras.getString("RefNo"));
-                    newActivationRequest.setRequestedDevice("Mobile");
+                    newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+                    newActivationRequest.setRequestedDevice(getDeviceName());
                     newActivationRequest.setRequestedIP(IPaddress);
                     newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                     try {
@@ -240,15 +255,16 @@ public class mPayment extends BaseActivity implements
                 } else if (userDetails.getRechargeStatus() == 0) {
                     //Extension Request api
                     NewExtensionRequest newExtensionRequest = new NewExtensionRequest();
+                    assert extras != null;
                     newExtensionRequest.setNumberOfDays(extras.getString("NumberOfDaysR"));
                     newExtensionRequest.setMSISDN(extras.getString("MSISDN"));
                     newExtensionRequest.setAmountCharged(extras.getString("AmountChargedR"));
                     newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTmR"));
                     newExtensionRequest.setToken(userDetails.getTokenID());
-                    newExtensionRequest.setRefNo(extras.getString("RefNoR"));
-                    newExtensionRequest.setRequestedDevice(extras.getString("RequestedDeviceR"));
+                    newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+                    newExtensionRequest.setRequestedDevice(getDeviceName());
                     newExtensionRequest.setRequestedIP(extras.getString("RequestedIPR"));
-                    newExtensionRequest.setRequestedOS(extras.getString("RequestedOSR"));
+                    newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                     try {
                         authenticationPresenter.extensionRequest(newExtensionRequest);
                     } catch (Exception e) {
@@ -266,6 +282,7 @@ public class mPayment extends BaseActivity implements
                     updateFundID = addFundsResponse.getRequestId();
                     PayPalPayment payment;
                     try {
+                        assert extras != null;
                         payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "The SkyGo",
                                 PayPalPayment.PAYMENT_INTENT_SALE);
                     } catch (Exception e) {
@@ -288,56 +305,100 @@ public class mPayment extends BaseActivity implements
 
     void PayPalPaymentOnclick(View view) {
         Bundle extras = getIntent().getExtras();
+
         double Deduction = 0;
         try {
             try {
-                Deduction = Double.parseDouble(extras.getString("AmountCharged"));
+                assert extras != null;
+                Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
             } catch (Exception e) {
-                Deduction = Double.parseDouble(extras.getString("AmountChargedR"));
+                Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountChargedR")));
             }
-            String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
+            @SuppressLint("DefaultLocale")
+            UserDetails userDetails = new UserDetails(this);
+            sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
 
-            if ((Deduction > 0)) {
-
-                UserDetails userDetails = new UserDetails(this);
-                sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
-                addFundsApp.setAmountCharged(String.valueOf(Deduction));
-                addFundsApp.setDealerID("0");
-                addFundsApp.setIMEI(getDeviceIMEI());
-                addFundsApp.setLatitude(String.valueOf(currentLatitude));
-                addFundsApp.setLongitude(String.valueOf(currentLongitude));
-                addFundsApp.setMacID("");
-                addFundsApp.setPayPalRefNo("");
-                addFundsApp.setPaymentMode("2");
-                addFundsApp.setRemarks("Payment From Android APP");
-                addFundsApp.setRequestedDevice("Mobile");
-                addFundsApp.setRequestedIP(IPaddress);
-                addFundsApp.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                addFundsApp.setServiceCharge("0");
-                addFundsApp.setTokenID(userDetails.getTokenID());
-                addFundsApp.setTransactionReferenceID(sessionTxnID);
-                addFundsApp.setTransactionType("0");
-                try {
-                    authenticationPresenter.AddFundsAPI(addFundsApp);
-                } catch (Exception e) {
-                    showToast(e.toString());
+            if (userDetails.getRechargeStatus() == 1) {
+                if ((Deduction > 0)) {
+                    addFundsApp.setAmountCharged(String.valueOf(Deduction));
+                    addFundsApp.setDealerID("0");
+                    addFundsApp.setIMEI(getDeviceIMEI());
+                    addFundsApp.setLatitude(String.valueOf(currentLatitude));
+                    addFundsApp.setLongitude(String.valueOf(currentLongitude));
+                    addFundsApp.setMacID("");
+                    addFundsApp.setPayPalRefNo("");
+                    addFundsApp.setPaymentMode("2");
+                    addFundsApp.setRemarks("Payment From Android APP");
+                    addFundsApp.setRequestedDevice(getDeviceName());
+                    addFundsApp.setRequestedIP(IPaddress);
+                    addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
+                    addFundsApp.setServiceCharge("0");
+                    addFundsApp.setTokenID(userDetails.getTokenID());
+                    addFundsApp.setTransactionReferenceID(sessionTxnID);
+                    addFundsApp.setTransactionType("0");
+                    try {
+                        authenticationPresenter.AddFundsAPI(addFundsApp);
+                    } catch (Exception e) {
+                        showToast(e.toString());
+                    }
+                } else if (Deduction == 0) {
+                    newActivationRequest = new NewActivationRequest();
+                    newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
+                    newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
+                    newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
+                    newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
+                    newActivationRequest.setToken(userDetails.getTokenID());
+                    newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+                    newActivationRequest.setRequestedDevice(getDeviceName());
+                    newActivationRequest.setRequestedIP(IPaddress);
+                    newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
+                    try {
+                        authenticationPresenter.activateSim(newActivationRequest);   //if 0
+                    } catch (Exception e) {
+                        showToast(e.toString());
+                    }
                 }
-            } else if (Deduction == 0) {
-                newActivationRequest = new NewActivationRequest();
-                UserDetails userDetails = new UserDetails(this);
-                newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
-                newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
-                newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
-                newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-                newActivationRequest.setToken(userDetails.getTokenID());
-                newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
-                newActivationRequest.setRequestedDevice(extras.getString("RequestedDevice"));
-                newActivationRequest.setRequestedIP(IPaddress);
-                newActivationRequest.setRequestedOS(extras.getString("RequestedOS"));
-                try {
-                    authenticationPresenter.activateSim(newActivationRequest);   //if 0
-                } catch (Exception e) {
-                    showToast(e.toString());
+            } else if (userDetails.getRechargeStatus() == 0) {
+                if ((Deduction > 0)) {
+                    sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
+                    addFundsApp.setAmountCharged(String.valueOf(Deduction));
+                    addFundsApp.setDealerID("0");
+                    addFundsApp.setIMEI(getDeviceIMEI());
+                    addFundsApp.setLatitude(String.valueOf(currentLatitude));
+                    addFundsApp.setLongitude(String.valueOf(currentLongitude));
+                    addFundsApp.setMacID("");
+                    addFundsApp.setPayPalRefNo("");
+                    addFundsApp.setPaymentMode("2");
+                    addFundsApp.setRemarks("Payment From Android APP");
+                    addFundsApp.setRequestedDevice(getDeviceName());
+                    addFundsApp.setRequestedIP(IPaddress);
+                    addFundsApp.setRequestedOS("Android|" + userDetails.getLanguageSelect());
+                    addFundsApp.setServiceCharge("0");
+                    addFundsApp.setTokenID(userDetails.getTokenID());
+                    addFundsApp.setTransactionReferenceID(sessionTxnID);
+                    addFundsApp.setTransactionType("0");
+                    try {
+                        authenticationPresenter.AddFundsAPI(addFundsApp);
+                    } catch (Exception e) {
+                        showToast(e.toString());
+                    }
+                } else if (userDetails.getRechargeStatus() == 0) {
+                    //Extension Request api
+                    NewExtensionRequest newExtensionRequest = new NewExtensionRequest();
+                    newExtensionRequest.setNumberOfDays(extras.getString("NumberOfDaysR"));
+                    newExtensionRequest.setMSISDN(extras.getString("MSISDN"));
+                    newExtensionRequest.setAmountCharged(extras.getString("AmountChargedR"));
+                    newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTmR"));
+                    newExtensionRequest.setToken(userDetails.getTokenID());
+                    newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+                    newExtensionRequest.setRequestedDevice(getDeviceName());
+                    newExtensionRequest.setRequestedIP(extras.getString("RequestedIPR"));
+                    newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
+                    try {
+                        authenticationPresenter.extensionRequest(newExtensionRequest);
+                    } catch (Exception e) {
+                        showToast(e.toString());
+                    }
                 }
             }
         } catch (Exception e) {
@@ -353,6 +414,7 @@ public class mPayment extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == m_paypalRequestCode) {
             if (resultCode == Activity.RESULT_OK) {
+                assert data != null;
                 PaymentConfirmation configuration = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (configuration != null) {
                     UserDetails userDetails = new UserDetails(this);
@@ -361,7 +423,7 @@ public class mPayment extends BaseActivity implements
                         m_response.setText("payment Approved");
                         updateFundReq.setId(updateFundID);
                         updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId()); // send paypal id
-                        updateFundReq.setPayPalResponse("payment Approved");
+                        updateFundReq.setPayPalResponse("Payment Approved");
                         updateFundReq.setRequestStatusID("15");
                         updateFundReq.setTokenID(userDetails.getTokenID());
                         updateFundReq.setTransactionReferenceID(sessionTxnID);
@@ -375,7 +437,7 @@ public class mPayment extends BaseActivity implements
                         m_response.setText("not apporved");
                         updateFundReq.setId(updateFundID);
                         updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-                        updateFundReq.setPayPalResponse("not apporved");
+                        updateFundReq.setPayPalResponse("Not Approved");
                         updateFundReq.setRequestStatusID("16");
                         updateFundReq.setTransactionReferenceID(sessionTxnID);
                         try {
@@ -388,7 +450,7 @@ public class mPayment extends BaseActivity implements
                     m_response.setText("confirmation is null");
                     updateFundReq.setId(updateFundID);
                     updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-                    updateFundReq.setPayPalResponse("confirmation is null");
+                    updateFundReq.setPayPalResponse("Confirmation is null");
                     updateFundReq.setRequestStatusID("16");
                     updateFundReq.setTransactionReferenceID(sessionTxnID);
                     try {
@@ -400,9 +462,9 @@ public class mPayment extends BaseActivity implements
 
 
             } else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-                Toast.makeText(this, "Invalid ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid ", LENGTH_SHORT).show();
         } else if (requestCode == Activity.RESULT_CANCELED)
-            Toast.makeText(this, "Cancel ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cancel ", LENGTH_SHORT).show();
 
 
     }
@@ -414,9 +476,9 @@ public class mPayment extends BaseActivity implements
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
         }
     }
 
@@ -425,7 +487,6 @@ public class mPayment extends BaseActivity implements
         startActivity(i);
     }
 
-    private WifiManager.LocalOnlyHotspotReservation mReservation;
     Context context = this;
 
     public void hotspotButton(View view) {
@@ -477,13 +538,14 @@ public class mPayment extends BaseActivity implements
         boolean network_enabled = false;
 
         try {
+            assert lm != null;
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         if (!gps_enabled && !network_enabled) {
@@ -568,7 +630,7 @@ public class mPayment extends BaseActivity implements
                         // intent.setData(uri);
                         //startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
                         Toast.makeText(getBaseContext(), "Go to Permissions to Grant  Camera and Location/\n" +
-                                "अनुदान कैमरा और स्थान पर अनुमतियों पर जाएं", Toast.LENGTH_SHORT).show();
+                                "अनुदान कैमरा और स्थान पर अनुमतियों पर जाएं", LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Cancel/रद्द करना", new DialogInterface.OnClickListener() {
@@ -584,12 +646,9 @@ public class mPayment extends BaseActivity implements
             }
 
 
-            SharedPreferences.Editor editor = permissionStatus.edit();
+            SharedPreferences.Editor editor = permissionStatus.edit();    //here is bug (null point exception)
             editor.putBoolean(permissionsRequired[0], true);
-            editor.commit();
-        } else {
-            //You already have the permission, just go ahead.
-
+            editor.apply();
         }
     }
 
@@ -693,13 +752,12 @@ public class mPayment extends BaseActivity implements
         //  Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("HardwareIds")
     public String getDeviceIMEI() {
         String deviceUniqueIdentifier = null;
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         if (null != tm) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
                 //                                          int[] grantResults)
@@ -727,6 +785,7 @@ public class mPayment extends BaseActivity implements
 
         ConnectivityManager CM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        assert CM != null;
         NetworkInfo[] networkInfo = CM.getAllNetworkInfo();
 
         for (NetworkInfo netInfo : networkInfo) {
@@ -744,12 +803,12 @@ public class mPayment extends BaseActivity implements
                     MOBILE = true;
         }
 
-        if (WIFI == true) {
+        if (WIFI) {
             IPaddress = GetDeviceipWiFiData();
 
         }
 
-        if (MOBILE == true) {
+        if (MOBILE) {
 
             IPaddress = GetDeviceipMobileData();
 
@@ -781,12 +840,18 @@ public class mPayment extends BaseActivity implements
 
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
 
+        assert wm != null;
         @SuppressWarnings("deprecation")
-
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
         return ip;
 
+    }
+
+    public String getDeviceName() {
+        String MANUFACTURER = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        return MANUFACTURER + "__" + model;
     }
 
 }

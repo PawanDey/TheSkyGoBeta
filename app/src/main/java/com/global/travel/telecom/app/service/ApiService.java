@@ -22,7 +22,7 @@ public interface ApiService {
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);
 
     @GET("GetRateForPaymentPlan")
-    Call<ResponseBody> GetRateForPaymentPlan(@Query("serialnumber") String SerialNumber, @Query("activationdays") int NoOfDay);
+    Call<ResponseBody> GetRateForPaymentPlan(@Query("serialnumber") String SerialNumber, @Query("activationdays") int NoOfDay,@Query("type") int type,@Query("MSISDN") String MSISDN);
 
     @GET("GetSubscriberDetails")
     Call<ResponseBody> GetSubscriber(@Query("TokenID") String TokenID);

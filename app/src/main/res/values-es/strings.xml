@@ -1,5 +1,6 @@
 <!--3rd july updated by prateek sharma-->
 <resources>
+    <string name="textcontactCare">Por favor, póngase en contacto con Atención al cliente <font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
     <string name="welcome_to_gtt">Bienvenido a The SkyGo </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
@@ -27,7 +28,6 @@
     <string name="textMobileNumber">número de teléfono móvil</string>
     <string name="textBuyNow">compra ahora</string>
     <string name="textSomeOutstandingFeatures">Algunas características sobresalientes</string>
-
     <string name="texthintSIMNumber">Número de sim</string>
     <string name="textLanguage">Idioma</string>
     <string name="textSelectyourapplanguage">Seleccione el idioma de su aplicación</string>
@@ -52,7 +52,6 @@
     <string name="textYourOrderwasSuccessfullyProccessed">Su orden fue procesada exitosamente</string>
     <string name="textBACKTOHOME">DE VUELTA A CASA</string>
     <string name="textLoading">Cargando..</string>
-
     <string name="textAnd">y</string>
     <string name="textbackToDashboardButton">volver al botón del tablero</string>
     <string name="textComingSoon">Próximamente</string>
@@ -71,7 +70,6 @@
     <string name="textDeliverPhone">Entregar telefono</string>
     <string name="textcallmessages">mensajes de llamada</string>
     <string name="textProcessPending">Proceso pendiente</string>
-
     <string name="textSorrySomethingwentwrong">¡Lo siento! Algo salió mal</string>
     <string name="textPleaseCheckYourInternetConnection">Por favor revise su conexion a internet</string>
     <string name="textLocationPermissionNotEnabled">Permiso de ubicación no habilitado</string>
@@ -106,7 +104,8 @@
     <string name="textno">no</string>
     <string name="textextendvalidity">extender la validez</string>
     <string name="textyourmobilenumber">Su número de teléfono</string>
-    <string name="textAlreadyhaveanaccount">Already have an account?<font fgcolor="#442EB4"><b><u>Login here</u></b>!</font> </string>
-    <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
+    <string name="textAlreadyhaveanaccount">¿Ya tienes una cuenta?<font fgcolor="#442EB4"><b><u>Entre aquí</u></b>!</font> </string>
+    <string name="textDonothaveanaccount">¿No tienes una cuenta?<font fgcolor="#442EB4"><b><u>Regístrate</u></b></font> </string>
+    <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations"> Descargo de responsabilidad: solo disponible para recoger / soltar en ubicaciones de moneda de hielo de LAX</string>
 
 </resources>

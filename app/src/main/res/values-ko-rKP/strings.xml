@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="textcontactCare">고객 지원에 문의하십시오 <font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
     <string name="welcome_to_gtt" translatable="false">The SkyGo에 오신 것을 환영합니다. </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
@@ -69,8 +70,6 @@
     <string name="textDeliverPhone">전화 배달e</string>
     <string name="textcallmessages">전화 메시지</string>
     <string name="textProcessPending">처리 보류 중</string>
-
-
     <string name="textSorrySomethingwentwrong">죄송합니다! 문제가 발생했습니다.</string>
     <string name="textPleaseCheckYourInternetConnection">인터넷 연결을 확인하십시오.</string>
     <string name="textLocationPermissionNotEnabled">위치 사용 권한을 사용할 수 없음</string>
@@ -105,7 +104,8 @@
     <string name="textno">아니</string>
     <string name="textextendvalidity">유효 기간 연장</string>
     <string name="textyourmobilenumber">전화 번호</string>
-    <string name="textAlreadyhaveanaccount">Already have an account? <font fgcolor="#442EB4"><b><u> Login here</u></b></font></string>
-    <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
+    <string name="textAlreadyhaveanaccount">이미 계정이 있습니까?<font fgcolor="#442EB4"><b><u>여기에 로그인</u></b></font></string>
+    <string name="textDonothaveanaccount">계정이 없습니까? <font fgcolor="#442EB4"><b><u>가입</u></b></font> </string>
+    <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations">면책 조항 : LAX Ice Currency Locations에서만 픽업 / 드롭 가능</string>
 
 </resources>
