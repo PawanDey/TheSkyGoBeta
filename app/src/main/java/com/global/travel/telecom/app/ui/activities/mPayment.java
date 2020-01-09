@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,9 +28,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.interfaces.HttpResponseCallback;
+import com.braintreepayments.api.internal.HttpClient;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.AddFundsApp;
@@ -48,25 +61,22 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class mPayment extends BaseActivity implements
-        ConnectionCallbacks,
-        OnConnectionFailedListener,
-        LocationListener {
+public class mPayment extends BaseActivity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     Button payPalPaymentButton;
     TextView m_response;
@@ -98,6 +108,17 @@ public class mPayment extends BaseActivity implements
     static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     SharedPreferences permissionStatus;
     String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
+    private boolean sentToSettings = false;
+    String IPaddress;
+
+    // latest code for braintRee
+    final int REQUEST_CODE = 1;
+    final String get_token = "https://www.sirrat.com/BraintreePayments/include/main.php"; // braintree/main.php
+    final String send_payment_details = "https://www.sirrat.com/BraintreePayments/include/checkout.php"; //checkout.php
+    String token;
+    String amount;
+    HashMap<String, String> paramHash;
+    Boolean updateFundCheck = true;
 
     @Override
     protected int getLayout() {
@@ -105,38 +126,10 @@ public class mPayment extends BaseActivity implements
     }
 
     @Override
-    public void onServerError(String method2, String errorMessage) {
-        switch (method2) {
-            case "activateSim": {
-                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-//                    showToast("Please Login again");
-                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
-                    Intent intent = new Intent(mPayment.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-            case "ExtensionRequest": {
-                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-//                    showToast("Please Login again");
-                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
-                    Intent intent = new Intent(mPayment.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-        }
-    }
-
-    private boolean sentToSettings = false;
-    String IPaddress;
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
-
         //location and permission
         launchActivity();
         check();
@@ -205,7 +198,37 @@ public class mPayment extends BaseActivity implements
         m_service = new Intent(this, PayPalService.class);
         m_service.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, m_configuration);
         startService(m_service);
+        showProgressBar();
+        new HttpRequest().execute();
 
+    }
+
+    @Override
+    public void onServerError(String method2, String errorMessage) {
+        switch (method2) {
+            case "activateSim": {
+                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
+//                    showToast("Please Login again");
+                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
+                    Intent intent = new Intent(mPayment.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+            case "ExtensionRequest": {
+                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
+//                    showToast("Please Login again");
+                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
+                    Intent intent = new Intent(mPayment.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+            case "UpdateFunds":{
+                Toast.makeText(this,"Please try again", LENGTH_LONG).show();
+
+            }
+        }
     }
 
     @Override
@@ -233,6 +256,10 @@ public class mPayment extends BaseActivity implements
             case "UpdateFunds": {
                 AddFundsResponse addFundsResponse = (AddFundsResponse) response;
                 Bundle extras = getIntent().getExtras();
+                if (updateFundCheck == true) {
+
+                    break;
+                }
                 UserDetails userDetails = new UserDetails(this);
                 if (userDetails.getRechargeStatus() == 1) {
                     newActivationRequest = new NewActivationRequest();
@@ -263,7 +290,7 @@ public class mPayment extends BaseActivity implements
                     newExtensionRequest.setToken(userDetails.getTokenID());
                     newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
                     newExtensionRequest.setRequestedDevice(getDeviceName());
-                    newExtensionRequest.setRequestedIP(extras.getString("RequestedIPR"));
+                    newExtensionRequest.setRequestedIP(IPaddress);
                     newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                     try {
                         authenticationPresenter.extensionRequest(newExtensionRequest);
@@ -280,19 +307,27 @@ public class mPayment extends BaseActivity implements
                     AddFundsResponse addFundsResponse = (AddFundsResponse) response;
                     Bundle extras = getIntent().getExtras();
                     updateFundID = addFundsResponse.getRequestId();
-                    PayPalPayment payment;
-                    try {
-                        assert extras != null;
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "The SkyGo",
-                                PayPalPayment.PAYMENT_INTENT_SALE);
-                    } catch (Exception e) {
-                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "The SkyGo",
-                                PayPalPayment.PAYMENT_INTENT_SALE);
-                    }
-                    Intent intent = new Intent(this, PaymentActivity.class);
-                    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, m_configuration);
-                    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
-                    startActivityForResult(intent, m_paypalRequestCode);
+                    updateFundReq.setId(updateFundID);
+
+                    //old paypal function is start form here
+//                    PayPalPayment payment;
+//                    try {
+//                        assert extras != null;
+//                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "The SkyGo",
+//                                PayPalPayment.PAYMENT_INTENT_SALE);
+//                    } catch (Exception e) {
+//                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "The SkyGo",
+//                                PayPalPayment.PAYMENT_INTENT_SALE);
+//                    }
+//                    Intent intent = new Intent(this, PaymentActivity.class);
+//                    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, m_configuration);
+//                    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+//                    startActivityForResult(intent, m_paypalRequestCode);
+                    //end here
+
+                    DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                    startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
+
                 } catch (Exception e) {
                     showToast(e.toString());
                 }
@@ -301,7 +336,6 @@ public class mPayment extends BaseActivity implements
             }
         }
     }
-
 
     void PayPalPaymentOnclick(View view) {
         Bundle extras = getIntent().getExtras();
@@ -392,7 +426,7 @@ public class mPayment extends BaseActivity implements
                     newExtensionRequest.setToken(userDetails.getTokenID());
                     newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
                     newExtensionRequest.setRequestedDevice(getDeviceName());
-                    newExtensionRequest.setRequestedIP(extras.getString("RequestedIPR"));
+                    newExtensionRequest.setRequestedIP(IPaddress);
                     newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
                     try {
                         authenticationPresenter.extensionRequest(newExtensionRequest);
@@ -409,64 +443,105 @@ public class mPayment extends BaseActivity implements
     }
 
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == m_paypalRequestCode) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                assert data != null;
+//                PaymentConfirmation configuration = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+//                if (configuration != null) {
+//                    UserDetails userDetails = new UserDetails(this);
+//                    String state = configuration.getProofOfPayment().getState();
+//                    if (state.equals("approved")) {
+//                        m_response.setText("payment Approved");
+//                        updateFundReq.setId(updateFundID);
+//                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId()); // send paypal id
+//                        updateFundReq.setPayPalResponse("Payment Approved");
+//                        updateFundReq.setRequestStatusID("15");
+//                        updateFundReq.setTokenID(userDetails.getTokenID());
+//                        updateFundReq.setTransactionReferenceID(sessionTxnID);
+//                        try {
+//                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
+//                        } catch (Exception e) {
+//                            showToast(e.toString());
+//                        }
+//                        //Update Funds API
+//                    } else {
+//                        m_response.setText("not apporved");
+//                        updateFundReq.setId(updateFundID);
+//                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
+//                        updateFundReq.setPayPalResponse("Not Approved");
+//                        updateFundReq.setRequestStatusID("16");
+//                        updateFundReq.setTransactionReferenceID(sessionTxnID);
+//                        try {
+//                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
+//                        } catch (Exception e) {
+//                            showToast(e.toString());
+//                        }
+//                    }
+//                } else {
+//                    m_response.setText("confirmation is null");
+//                    updateFundReq.setId(updateFundID);
+//                    updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
+//                    updateFundReq.setPayPalResponse("Confirmation is null");
+//                    updateFundReq.setRequestStatusID("16");
+//                    updateFundReq.setTransactionReferenceID(sessionTxnID);
+//                    try {
+//                        authenticationPresenter.UpdateFundsMethod(updateFundReq);
+//                    } catch (Exception e) {
+//                        showToast(e.toString());
+//                    }
+//                }
+//
+//
+//            } else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
+//                Toast.makeText(this, "Invalid ", LENGTH_SHORT).show();
+//        } else if (requestCode == Activity.RESULT_CANCELED)
+//            Toast.makeText(this, "Cancel ", LENGTH_SHORT).show();
+//
+//
+//    }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == m_paypalRequestCode) {
+        showProgressBar();
+        if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                assert data != null;
-                PaymentConfirmation configuration = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if (configuration != null) {
-                    UserDetails userDetails = new UserDetails(this);
-                    String state = configuration.getProofOfPayment().getState();
-                    if (state.equals("approved")) {
-                        m_response.setText("payment Approved");
-                        updateFundReq.setId(updateFundID);
-                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId()); // send paypal id
-                        updateFundReq.setPayPalResponse("Payment Approved");
-                        updateFundReq.setRequestStatusID("15");
-                        updateFundReq.setTokenID(userDetails.getTokenID());
-                        updateFundReq.setTransactionReferenceID(sessionTxnID);
-                        try {
-                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
-                        } catch (Exception e) {
-                            showToast(e.toString());
-                        }
-                        //Update Funds API
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                PaymentMethodNonce nonce = result.getPaymentMethodNonce();
+                String stringNonce = nonce.getNonce();
+                Log.d("mylog", "Result: " + stringNonce);
+                // Send payment price with the nonce
+                // use the result to update your UI and send the payment method nonce to your server
+                try {
+                    if (!AmountPayabale.getText().toString().isEmpty()) {
+                        amount = AmountPayabale.getText().toString().replace("$", "").trim();
+                        paramHash = new HashMap<>();
+                        paramHash.put("amount", amount);
+                        paramHash.put("nonce", stringNonce);
+                        sendPaymentDetails();
                     } else {
-                        m_response.setText("not apporved");
-                        updateFundReq.setId(updateFundID);
-                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-                        updateFundReq.setPayPalResponse("Not Approved");
-                        updateFundReq.setRequestStatusID("16");
-                        updateFundReq.setTransactionReferenceID(sessionTxnID);
-                        try {
-                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
-                        } catch (Exception e) {
-                            showToast(e.toString());
-                        }
+                        Toast.makeText(mPayment.this, "amount+nonce error: else", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    m_response.setText("confirmation is null");
-                    updateFundReq.setId(updateFundID);
-                    updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-                    updateFundReq.setPayPalResponse("Confirmation is null");
-                    updateFundReq.setRequestStatusID("16");
-                    updateFundReq.setTransactionReferenceID(sessionTxnID);
-                    try {
-                        authenticationPresenter.UpdateFundsMethod(updateFundReq);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
+                } catch (Exception e) {
+                    Toast.makeText(mPayment.this, "amount+nonce error:" + e, Toast.LENGTH_SHORT).show();
                 }
-
-
-            } else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-                Toast.makeText(this, "Invalid ", LENGTH_SHORT).show();
-        } else if (requestCode == Activity.RESULT_CANCELED)
-            Toast.makeText(this, "Cancel ", LENGTH_SHORT).show();
-
-
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // the user canceled
+                Log.d("mylog", "user canceled");
+                showToast(getApplication().getString(R.string.textCancel));
+                hideProgressBar();
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("mylog", "Error : " + error.toString());
+                showToast(getApplication().getString(R.string.textSorrySomethingwentwrong));
+                hideProgressBar();
+            }
+        }
     }
 
     @Override
@@ -514,7 +589,6 @@ public class mPayment extends BaseActivity implements
         }
     }
 
-
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
@@ -552,9 +626,9 @@ public class mPayment extends BaseActivity implements
             // notify user
             AlertDialog.Builder dialog = new AlertDialog.Builder(mPayment.this);
 //            dialog.setMessage("Gps is not enabled");
-            dialog.setMessage(R.string.textGPSisnotenabled);
+            dialog.setMessage(getResources().getString(R.string.textGPSisnotenabled));
 //            dialog.setPositiveButton("Open Setting", new DialogInterface.OnClickListener()
-            dialog.setPositiveButton(R.string.textOpensettings, new DialogInterface.OnClickListener() {
+            dialog.setPositiveButton(getResources().getString(R.string.textOpensettings), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     // TODO Auto-generated method stub
@@ -564,13 +638,11 @@ public class mPayment extends BaseActivity implements
                 }
             });
 //            dialog.setNegativeButton("if you cancel your app will be closed", new DialogInterface.OnClickListener() {
-            dialog.setNegativeButton(R.string.textifyoucancelyourappwillbeclosed, new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(getResources().getString(R.string.textifyoucancelyourappwillbeclosed), new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
 
-//                @Override
-//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     finish();
 
                 }
@@ -578,7 +650,6 @@ public class mPayment extends BaseActivity implements
             dialog.show();
         }
     }
-
 
     private static final int PERMISSION_CALLBACK_CONSTANT = 100;
     String[] permissionsRequired = new String[]{
@@ -652,7 +723,6 @@ public class mPayment extends BaseActivity implements
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -704,7 +774,6 @@ public class mPayment extends BaseActivity implements
             //      Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
         }
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -776,7 +845,6 @@ public class mPayment extends BaseActivity implements
         return deviceUniqueIdentifier;
     }
 
-
     private void NetwordDetect() {
 
         boolean WIFI = false;
@@ -817,7 +885,6 @@ public class mPayment extends BaseActivity implements
 
     }
 
-
     public String GetDeviceipMobileData() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
@@ -854,5 +921,146 @@ public class mPayment extends BaseActivity implements
         return MANUFACTURER + "__" + model;
     }
 
+    private class HttpRequest extends AsyncTask {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            HttpClient client = new HttpClient();
+            client.get(get_token, new HttpResponseCallback() {
+                @Override
+                public void success(String responseBody) {
+                    Log.d("mylog", responseBody);
+                    token = responseBody;
+                    hideProgressBar();
+                }
+
+                @Override
+                public void failure(Exception exception) {
+                    final Exception ex = exception;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mPayment.this, "Failed to get token: " + ex.toString(), Toast.LENGTH_LONG).show();
+                            hideProgressBar();
+                        }
+
+                    });
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+        }
+    }
+
+    private void sendPaymentDetails() {
+
+        RequestQueue queue = Volley.newRequestQueue(mPayment.this);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, send_payment_details,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.contains("Braintree\\Result\\Successful")) {
+                            Toast.makeText(mPayment.this, "Payment Successful", Toast.LENGTH_LONG).show();
+                            try {
+                                updateFundCheck = false;
+                                UserDetails userDetails = new UserDetails(mPayment.this);
+                                String x = response;
+                                String str[] = x.split(",");
+                                List<String> al;
+                                al = Arrays.asList(str);
+                                for (String s : al) {
+                                    System.out.println(s);
+                                }
+                                String str1[] = al.get(0).split("=");
+                                String tnxID = str1[1];
+                                m_response.setText("payment Approved");
+                                updateFundReq.setId(updateFundID);
+                                updateFundReq.setPaypalReferenceID(tnxID); // send paypal id
+                                updateFundReq.setPayPalResponse("Payment Approved");
+                                updateFundReq.setRequestStatusID("15");
+                                updateFundReq.setTokenID(userDetails.getTokenID());
+                                updateFundReq.setTransactionReferenceID(sessionTxnID);
+                                try {
+                                    authenticationPresenter.UpdateFundsMethod(updateFundReq);
+                                } catch (Exception e) {
+                                    showToast(e.toString());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (response.contains("Braintree\\Result\\Error")) {
+                            Toast.makeText(mPayment.this, "Payment Failed", Toast.LENGTH_LONG).show();
+                            try {
+                                updateFundCheck = true;
+                                UserDetails userDetails = new UserDetails(mPayment.this);
+                                String x = response;
+                                String str[] = x.split("message=");
+                                List<String> al;
+                                al = Arrays.asList(str);
+                                for (String s : al) {
+                                    System.out.println(s);
+                                }
+                                String str1[] = al.get(1).split(",");
+                                String error = str1[0];
+//                                m_response.setText("not apporved");
+                                updateFundReq.setId(updateFundID);
+                                updateFundReq.setPaypalReferenceID("");   //not null ethe error
+                                updateFundReq.setPayPalResponse("Not Approved");
+                                updateFundReq.setRequestStatusID("16");
+                                updateFundReq.setTokenID(userDetails.getTokenID());
+                                updateFundReq.setTransactionReferenceID(sessionTxnID);
+                                try {
+                                    authenticationPresenter.UpdateFundsMethod(updateFundReq);
+                                } catch (Exception e) {
+                                    showToast(e.toString());
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Volley error : " + error.toString());
+                updateFundCheck = true;
+                Toast.makeText(mPayment.this, "Volley error Payment:" + error.toString(), Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                if (paramHash == null)
+                    return null;
+                Map<String, String> params = new HashMap<>();
+                for (String key : paramHash.keySet()) {
+                    params.put(key, paramHash.get(key));
+                    Log.d("mylog", "Key : " + key + " Value : " + paramHash.get(key));
+                }
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
 }
 

@@ -6,10 +6,13 @@ import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 
+import bolts.Task;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -22,7 +25,7 @@ public interface ApiService {
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);
 
     @GET("GetRateForPaymentPlan")
-    Call<ResponseBody> GetRateForPaymentPlan(@Query("serialnumber") String SerialNumber, @Query("activationdays") int NoOfDay,@Query("type") int type,@Query("MSISDN") String MSISDN);
+    Call<ResponseBody> GetRateForPaymentPlan(@Query("serialnumber") String SerialNumber, @Query("activationdays") int NoOfDay, @Query("type") int type, @Query("MSISDN") String MSISDN);
 
     @GET("GetSubscriberDetails")
     Call<ResponseBody> GetSubscriber(@Query("TokenID") String TokenID);
@@ -51,5 +54,7 @@ public interface ApiService {
 
     @GET("translatorAPI.php")
     Call<ResponseBody> TranslateAPI(@Query("inputlang") String inputlang, @Query("outputlang") String outputlang, @Query("text") String text);
+
+
 
 }

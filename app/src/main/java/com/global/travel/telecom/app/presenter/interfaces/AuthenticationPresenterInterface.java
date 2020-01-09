@@ -9,8 +9,9 @@ import com.global.travel.telecom.app.model.UpdateFundReq;
 
 import java.util.List;
 
-public interface AuthenticationPresenterInterface {
+import okhttp3.RequestBody;
 
+public interface AuthenticationPresenterInterface {
     public void loginUser(String userEmail, LoginRequestTypeId regTypeID, String gcmToken );
     public void activateSim(NewActivationRequest newActivationRequest );
     public void AddFundsAPI(AddFundsApp addFundsApp);
@@ -22,6 +23,6 @@ public interface AuthenticationPresenterInterface {
     public void extensionRequest(NewExtensionRequest newExtensionRequest);
     public void ListNotifications(String TokenID, String Condition);
     public void TranslateAPI(String inputlang, String outputlang, String text);
-
+    public void GetCurrentBalance(String data);
 
 }

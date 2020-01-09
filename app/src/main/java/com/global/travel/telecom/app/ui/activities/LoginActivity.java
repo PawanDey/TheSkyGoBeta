@@ -210,7 +210,6 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-
     public void FacebookLoginButtton(View view) {
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.performClick();
@@ -286,7 +285,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void ownEmailLoginButton(View view) {
-        View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen,null);
+        View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen, null);
         androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(mViewSiginScreen);
         progressDialog = mBuilder.create();
         Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -325,16 +324,16 @@ public class LoginActivity extends BaseActivity {
                     }
                     processBar.setVisibility(View.VISIBLE);
                     user = firebaseAuth.getCurrentUser();
-                    firebaseAuth.signInWithEmailAndPassword(input_login_email.getText().toString().trim(), input_login_password.getText().toString().trim())
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    firebaseAuth.signInWithEmailAndPassword(input_login_email.getText().toString().trim(), input_login_password.getText().toString().trim()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            try {
+                                if (user != null) {
                                     if (task.isSuccessful()) {
                                         if (!user.isEmailVerified()) {
-                                            Toast.makeText(getApplicationContext(), " Your email is not verified ", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            user.isEmailVerified();
-
+                                            Toast.makeText(getApplicationContext(), " Your Email is not Verified ", Toast.LENGTH_SHORT).show();
+                                        } else if (user.isEmailVerified()) {
                                             //go to dashboard activity
                                             FirebaseInstanceId.getInstance().getInstanceId()
                                                     .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -351,6 +350,9 @@ public class LoginActivity extends BaseActivity {
 
 
                                             Toast.makeText(getApplicationContext(), " Login Succesful: Verified " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), " Connection Error! Please Try Again", Toast.LENGTH_SHORT).show();
+
                                         }
                                     } else if (task.isComplete()) {
                                         Toast.makeText(getApplicationContext(), " Email/password is invalid", Toast.LENGTH_SHORT).show();
@@ -358,8 +360,17 @@ public class LoginActivity extends BaseActivity {
                                         Toast.makeText(getApplicationContext(), " Authentication Cancle ", Toast.LENGTH_SHORT).show();
                                     }
                                     processBar.setVisibility(View.GONE);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Connection Error! Please Try Again", LENGTH_LONG).show();
+                                    processBar.setVisibility(View.GONE);
                                 }
-                            });
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), e.getMessage(), LENGTH_LONG).show();
+                                processBar.setVisibility(View.GONE);
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
                 }
             });

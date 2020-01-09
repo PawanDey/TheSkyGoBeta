@@ -22,7 +22,6 @@ public class ActivateSimResponse {
 
     public void setmLastValidityDate (String LastDate) {mLastValidityDate=LastDate;}
 
-
     public String getNumberOfDays () {return  mNumberOfDays;}
 
     public void setNumberOfDays (String NumberOfDays) {mNumberOfDays=NumberOfDays;}

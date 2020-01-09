@@ -77,7 +77,7 @@ public class UserDetails {
     }
 
     public void setRechargeStatus(int rechargeStatus) {
-        sharedPreferences.edit().putInt("RechargeStatus", RechargeStatus).commit();
+        sharedPreferences.edit().putInt("RechargeStatus", rechargeStatus).commit();
     }
 
 

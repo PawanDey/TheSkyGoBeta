@@ -2,8 +2,6 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -30,7 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -112,7 +109,7 @@ public class Recharge extends BaseActivity {
                         totalAmountRecharge.setText("$ " + TotalAmount);
                         getCurretDatePicker();
                     } else if (SpecialDealer.equals(true)) {
-                        showToast("Special dealer");
+//                        showToast("Special dealer");
                         authenticationPresenter.GetRateForPaymentPlan("", Integer.parseInt(numberOfDaysRecharge.getText().toString()), 2, userDetails.getMSISDN());
 
                     } else {
@@ -176,8 +173,10 @@ public class Recharge extends BaseActivity {
                 GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response;
                 try {
                     SimValidAPIStatus = true;
+
                     SpecialDealer = true;
                     totalAmountRecharge.setText("$ " + obj.getRate());
+                    Amount=obj.getRate();
                     getCurretDatePicker();
                 } catch (Exception e) {
                     totalAmountRecharge.setText("");
@@ -273,7 +272,7 @@ public class Recharge extends BaseActivity {
             validityStartDate = formatter.format(date1);
 
             String getNoOfDays = numberOfDaysRecharge.getText().toString();
-            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.equals("000")) {
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.length()==0 || getNoOfDays.equals("000")) {
                 GoodUntil.setText("  ");
 
             } else {

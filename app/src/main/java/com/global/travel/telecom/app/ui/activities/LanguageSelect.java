@@ -3,14 +3,9 @@ package com.global.travel.telecom.app.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
@@ -73,6 +68,7 @@ public class LanguageSelect extends BaseActivity {
         callMethod("ko");
 
     }
+
     public void SelectSPANISH(View view) {
         callMethod("es");
     }

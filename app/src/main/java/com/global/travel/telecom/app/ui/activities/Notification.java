@@ -25,11 +25,10 @@ public class Notification extends BaseActivity {
 
     imageGalleryAdapterNotification adapter;
     ImageGalleryAdapterNotificationEN adapter2;
-    public BaseView baseView;
     RecyclerView recyclerView;
     String mName, mMsg, mTime;
     int num = 0;
-    ArrayList<String> translatePaasData = new ArrayList<String>();
+    ArrayList<String> translatePaasData = new ArrayList<>();
     List<translatPassdata> list = new ArrayList<>();
 
 
@@ -53,7 +52,6 @@ public class Notification extends BaseActivity {
 
     }
 
-    private WifiManager.LocalOnlyHotspotReservation mReservation;
     Context context = this;
 
     public void hotspotButton(View view) {
@@ -90,46 +88,39 @@ public class Notification extends BaseActivity {
 
                 userDetails.getLanguageSelect();
 
-                if (userDetails.getLanguageSelect().equals("en")) {
+//                if (userDetails.getLanguageSelect().equals("en")) {
                     List<GetNotifications> result = (List<GetNotifications>) response;
                     recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                     adapter2 = new ImageGalleryAdapterNotificationEN(result, getApplication());
                     recyclerView.setAdapter(adapter2);
                     recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
-                } else {
-                    List<GetNotifications> result = (List<GetNotifications>) response;
-                    mName = result.get(0).mDealerName;
-                    for (int i = 0; i < result.size(); i++) {
-                        translatePaasData.add(result.get(i).mMessage);
-                        translatePaasData.add(result.get(i).mAlertTime);
-                    }
-                    for (int j = 0; j < translatePaasData.size(); j++) {
-                        try {
-                            TranslateaApiCall(translatePaasData.get(j));
-                            Thread.sleep(650);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+//                } else {
+//                    List<GetNotifications> result = (List<GetNotifications>) response;
+//                    mName = result.get(0).mDealerName;
+//                    for (int i = 0; i < result.size(); i++) {
+//                        translatePaasData.add(result.get(i).mMessage);
+//                        translatePaasData.add(result.get(i).mAlertTime);
+//                    }
+//                    for (int j = 0; j < translatePaasData.size(); j++) {
+//                        try {
+//                            TranslateaApiCall(translatePaasData.get(j));
+//                            Thread.sleep(650);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
                 break;
             }
 
             case "translateAPI": {
-                GetNotifications getNotifications = new GetNotifications();
-                UserDetails userDetails = new UserDetails(this);
-
                 if (num == 0) {
                     mMsg = response.toString();
                     num = 1;
                 } else {
                     mTime = response.toString();
                     num = 0;
-
-//                String translateDone[] = response.toString().split("");
-
                     list.add(new translatPassdata(mName, mMsg, mTime));
-                    recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                     adapter = new imageGalleryAdapterNotification(list, getApplication());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));

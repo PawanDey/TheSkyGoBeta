@@ -108,6 +108,7 @@ public class Dashboard extends BaseActivity {
             }
 
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            assert location != null;
             onLocationCahange(location);
             log_func(location);
 
@@ -206,6 +207,18 @@ public class Dashboard extends BaseActivity {
 //                validity.setText(obj.getGoodUntil());
                 break;
             }
+            case "GetSubscriber3": {
+                LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
+                LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
+                RecentExtensionLayout.setVisibility(View.GONE);
+                ActivationLayout.setVisibility(View.VISIBLE);
+                UserDetails userDetails = new UserDetails(this);
+                userDetails.setRechargeStatus(1);
+                userDetails.setMSISDN(null);
+                userDetails.setActivationDate(null);
+                userDetails.setPaypalTransactionFee(null);
+                break;
+            }
         }
     }
 
@@ -234,8 +247,8 @@ public class Dashboard extends BaseActivity {
     }
 
     public void allTypeOfBookingSoonFunction(View view) {
-        Intent i = new Intent(Dashboard.this, ComingSoon.class);
-        startActivity(i);
+//        Intent i = new Intent(Dashboard.this, VoipLogin.class);
+//        startActivity(i);
     }
 
     private void onLocationCahange(Location location) {

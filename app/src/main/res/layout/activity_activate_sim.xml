@@ -262,7 +262,7 @@
                     android:gravity="center|left"
                     android:text="@string/textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations"
                     android:textColor="#333232"
-                    android:textSize="15dp"
+                    android:textSize="12dp"
                     android:padding="10dp"
                     android:textStyle="normal" />
 

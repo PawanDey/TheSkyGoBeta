@@ -8,13 +8,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 
 import com.global.travel.telecom.app.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,8 +37,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         latitude = extras.getDouble("latitude");
         try {
             checkLocationAccess();
-        }catch (Exception e){
-            Log.d("here is error--->","error",e);
+        } catch (Exception e) {
+            Log.d("here is error--->", "error", e);
         }
 
         try {
@@ -59,6 +58,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             map.addMarker(new MarkerOptions().position(mapLocation).title("You are here"));
             map.moveCamera(CameraUpdateFactory.newLatLng(mapLocation));
             map.animateCamera(CameraUpdateFactory.zoomTo(11));
+//            map.setMapType(4);       for setalite view (0=none/default,1=norma,2,3=stalite,4=hybrd)
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions

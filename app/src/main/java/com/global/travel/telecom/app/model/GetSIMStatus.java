@@ -12,6 +12,8 @@ public class GetSIMStatus {
     @SerializedName("SerialNumber")
     private String mSerialNumber;
 
+    @SerializedName("SimStatus")
+    private String SimStatus;
 
     public String getmSerialNumber() {
         return mSerialNumber;
@@ -21,6 +23,14 @@ public class GetSIMStatus {
         this.mSerialNumber = mSerialNumber;
     }
 
+
+    public String getSimStatus() {
+        return SimStatus;
+    }
+
+    public void setSimStatus(String SimStatus) {
+        this.SimStatus = SimStatus;
+    }
 
     public String getmValue() {
         return mValue;

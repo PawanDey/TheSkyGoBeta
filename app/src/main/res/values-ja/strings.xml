@@ -37,7 +37,6 @@
     <string name="textSPANISH">スペイン語</string>
     <string name="textNEXT">次</string>
     <string name="textPaymentSummary">支払い概要</string>
-    <string name="textSIMhash">SIM#</string>
     <string name="texthinthereisnumber">こお電話番号</string>
     <string name="texthintAmount">金額</string>
     <string name="textCartAmount">カート金額</string>
@@ -60,7 +59,7 @@
     <string name="textNotifications">お知らせ</string>
     <string name="texthotspotButton">ホットスポットボタン</string>
     <string name="textRecharge">充電</string>
-    <string name="textSIMHash">SIM#</string>
+    <string name="textSIMHash">MSISDN番号</string>
     <string name="textValiditydate">有効期限</string>
     <string name="textAvailableSoon">近日公開</string>
     <string name="textVoiceoverIPVoIP">国際電話（VoIP）</string>

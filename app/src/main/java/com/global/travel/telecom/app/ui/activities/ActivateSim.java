@@ -169,6 +169,7 @@ public class ActivateSim extends BaseActivity {
                         getCurretDatePicker();
 
                     } else {
+                        SpecialDealer = false;
                         showToast(obj.getResponseMessage());
                         txtnoOfDays.setEnabled(true);
                         txtnoOfDays.getText().clear();

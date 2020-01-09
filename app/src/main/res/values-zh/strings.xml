@@ -38,7 +38,6 @@
     <string name="textSPANISH">西班牙语</string>
     <string name="textNEXT">下一个</string>
     <string name="textPaymentSummary">付款摘要</string>
-    <string name="textSIMhash">手机号码 #</string>
     <string name="texthinthereisnumber">这是数字</string>
     <string name="texthintAmount">量</string>
     <string name="textCartAmount">购物车金额</string>
@@ -61,7 +60,7 @@
     <string name="textNotifications">通知</string>
     <string name="texthotspotButton">热点按钮</string>
     <string name="textRecharge">充值</string>
-    <string name="textSIMHash">sim＃</string>
+    <string name="textSIMHash">MSISDN号码</string>
     <string name="textValiditydate">有效期</string>
     <string name="textAvailableSoon">即将推出</string>
     <string name="textVoiceoverIPVoIP">IP语音（VoIP）</string>

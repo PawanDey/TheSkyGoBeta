@@ -3,6 +3,7 @@ package com.global.travel.telecom.app.ui.activities;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class SkyGoDialer extends AppCompatActivity {
     TextView phoneNumber, timeOnCall;
     GridLayout gridLayoutDailer, gridLayoutOnCall;
-    LinearLayout loadspeaker, one, two, three, four, five, six, seven, eight, nine, zero, delete, star, mute, clickToCallButtonLayout;
+    LinearLayout loadspeaker, one, two, three, four, five, six, seven, eight, nine, zero, delete, plus, mute, clickToCallButtonLayout;
     ImageView clickToCallButton, hangUp, loadspeakerImage, muteImage, holdImage, contacts;
 
     public static String LOGTAG = "AJVoIP";
@@ -67,7 +68,7 @@ public class SkyGoDialer extends AppCompatActivity {
         nine = findViewById(R.id.nine);
         zero = findViewById(R.id.zero);
         delete = findViewById(R.id.delete);
-        star = findViewById(R.id.star);
+        plus = findViewById(R.id.plus);
         mute = findViewById(R.id.mute);
         hangUp = findViewById(R.id.hangup);
         contacts = findViewById(R.id.contacts);
@@ -187,7 +188,7 @@ public class SkyGoDialer extends AppCompatActivity {
             }
 
         });
-        star.setOnClickListener(new View.OnClickListener() {
+        plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phoneNumber.append("+");
@@ -197,8 +198,10 @@ public class SkyGoDialer extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String deleteLastChar = phoneNumber.getText().toString().trim();
-                phoneNumber.setText(deleteLastChar.substring(0, deleteLastChar.length() - 1));
+                if (phoneNumber.length() > 0) {
+                    String deleteLastChar = phoneNumber.getText().toString().trim();
+                    phoneNumber.setText(deleteLastChar.substring(0, deleteLastChar.length() - 1));
+                }
             }
 
         });
@@ -342,6 +345,15 @@ public class SkyGoDialer extends AppCompatActivity {
 
         mysipclient = null;
         notifThread = null;
+    }
+
+    public void backToDashboardButton(View view) {
+        finish();
+    }
+
+    public void notificationButton(View view) {
+        Intent i = new Intent(SkyGoDialer.this, Notification.class);
+        startActivity(i);
     }
 
     public class GetNotificationsThread extends Thread {
@@ -508,7 +520,9 @@ public class SkyGoDialer extends AppCompatActivity {
                 min = 0;
                 sec = 0;
                 hou = 0;
-                handler.removeCallbacks(updateTask);
+                if(updateTask!=null) {
+                    handler.removeCallbacks(updateTask);
+                }
             }
         } catch (Exception e) {
             Toast.makeText(this, "CallOnTIme Error:" + e, Toast.LENGTH_SHORT).show();
@@ -520,5 +534,6 @@ public class SkyGoDialer extends AppCompatActivity {
     public void Pending() {
         Toast.makeText(this, "ComingSoon", Toast.LENGTH_SHORT).show();
     }
+
 
 }

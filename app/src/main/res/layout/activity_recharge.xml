@@ -250,7 +250,7 @@
                     android:gravity="center|left"
                     android:text="Disclaimer :Only available to pick/drop at LAX Ice Currency Locations"
                     android:textColor="#333232"
-                    android:textSize="15dp"
+                    android:textSize="12dp"
                     android:padding="10dp"
                     android:textStyle="normal" />
 

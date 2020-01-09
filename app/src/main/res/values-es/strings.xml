@@ -38,7 +38,6 @@
     <string name="textSPANISH">ESPAÑOL</string>
     <string name="textNEXT">siguiente</string>
     <string name="textPaymentSummary">Resumen de pago</string>
-    <string name="textSIMhash">SIM#</string>
     <string name="texthinthereisnumber">aquí está el número</string>
     <string name="texthintAmount">Cantidad</string>
     <string name="textCartAmount">Cantidad de carro</string>
@@ -61,7 +60,7 @@
     <string name="textNotifications">Notificaciones</string>
     <string name="texthotspotButton">botón de punto de acceso</string>
     <string name="textRecharge">Recargar</string>
-    <string name="textSIMHash">SIM #</string>
+    <string name="textSIMHash">Número MSISDN</string>
     <string name="textValiditydate">Fecha de validez</string>
     <string name="textAvailableSoon">Disponible pronto</string>
     <string name="textVoiceoverIPVoIP">Voz sobre IP (VoIP)</string>

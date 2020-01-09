@@ -337,8 +337,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="135dp"
-                        android:background="@drawable/skygomap_map"
                         android:gravity="center"
+                        android:background="@drawable/skygomap_map1"
                         android:onClick="skyGoDailer">
 
                         <ImageView

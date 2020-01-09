@@ -1,8 +1,6 @@
 package com.global.travel.telecom.app.presenter.implementation;
 
-import android.content.res.Resources;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
@@ -10,6 +8,7 @@ import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
+import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.model.GetSIMStatus;
@@ -25,11 +24,16 @@ import com.global.travel.telecom.app.ui.activities.Dashboard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import fr.arnaudguyon.xmltojsonlib.XmlToJson;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -144,7 +148,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("AddFundsViaAPP", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong) );
+                        baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
                     baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong));
@@ -177,12 +181,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         if (respondeCode == 0) {
                             AddFundsResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), AddFundsResponse.class);
                             baseView.onSuccess("UpdateFunds", result);
-                            baseView.onSuccess("UpdateFunds", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
                             baseView.onServerError("UpdateFunds", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong) );
+                        baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
                     baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong));
@@ -217,10 +220,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             ActivateSimResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), ActivateSimResponse.class);
                             baseView.onSuccess("activateSim", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
-                            baseView.onServerError("activateSim", respondeMessage);
+                                baseView.onServerError("activateSim", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong) );
+                        baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
                     baseView.onServerError("activateSim", getResources().getString(R.string.textSorrySomethingwentwrong));
@@ -258,8 +261,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             String mValue = table1.getString("Value");
                             GetSIMStatus result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetSIMStatus.class);
                             if (mValue.equals("3")) {
-                                GetSubscriberResponse result2 = new Gson().fromJson(responseBody.getJSONArray("Table2").get(0).toString(), GetSubscriberResponse.class);
-                                baseView.onSuccess("GetSubscriber2", result2);
+                                String mSimStatus = table1.getString("SimStatus");
+                                if (mSimStatus.contains("Active")) {
+                                    GetSubscriberResponse result2 = new Gson().fromJson(responseBody.getJSONArray("Table2").get(0).toString(), GetSubscriberResponse.class);
+                                    baseView.onSuccess("GetSubscriber2", result2);
+                                } else if (mSimStatus.contains("Suspension Request") || mSimStatus.contains("Used")) {
+                                    baseView.onSuccess("GetSubscriber3", "");
+                                } else {
+                                    showToast("Error in GetSubscriber: value 3 ");
+                                }
                             } else
                                 baseView.onSuccess("GetSubscriber", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
@@ -331,7 +341,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 baseView.hideProgressBar();
 
@@ -380,7 +390,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().validateMSISDN(MSISDN, Token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 baseView.hideProgressBar();
 
@@ -434,6 +444,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     try {
 
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
 
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
@@ -480,44 +491,17 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 call.enqueue(new Callback<ResponseBody>() {
 
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
 
 
                         if (response.isSuccessful()) {
                             try {
-//                                ResponseBody body = response.body();
-//                                JSONObject responseBody = new JSONObject(body.string());
-////                                JSONObject table = (JSONObject) responseBody.getJSONArray("Payload").get(0);
-//                                int respondeCode = responseBody.getInt("ResponseCode");
-//                                String respondeMessage = responseBody.getString("Response");
-
                                 ResponseBody body = response.body();
-                                JSONObject responseBody = new JSONObject(body.string());
-
-                                int respondeCode = responseBody.getInt("responseCode");
-                                String respondeMessage = responseBody.getString("message");
-                                if (respondeCode == 1) {
-
-//                                    Type listType = new TypeToken<List<GetNotifications>>() {
-//                                    }.getType();
-//                                    List<GetNotifications> result = new Gson().fromJson(responseBody.getJSONArray("Payload").toString(), listType);
-                                    //this is for single reponse get .get(0).toString()
-                                    String result1 = responseBody.getString("Payload").replace("[", "").replace("]", "").replace("\"", "");
-                                    baseView.onSuccess("translateAPI", result1);
-                                    baseView.hideProgressBar();
-
-
-                                } else {
-                                    baseView.hideProgressBar();
-                                    baseView.onServerError("translateAPI", respondeMessage);
-                                }
-
+                                baseView.onSuccess("translateAPI",body);
                             } catch (Exception e) {
                                 baseView.hideProgressBar();
                                 baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
                             }
-
-
                         } else {
                             baseView.hideProgressBar();
                             baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
@@ -525,7 +509,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(@NotNull Call<ResponseBody> call, Throwable t) {
                         baseView.hideProgressBar();
                         baseView.onFailure();
                     }
@@ -536,6 +520,44 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
         } catch (Exception e) {
 //            baseView.hideProgressBar();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void GetCurrentBalance(String requestBody) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = APIClient.getVoiPService(requestBody);
+            try {
+                client.newCall(request).enqueue(new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
+                        try {
+                            ResponseBody responseBody = response.body();
+                            String mMessage = response.body().string();
+                            XmlToJson jsonObject = new XmlToJson.Builder(mMessage).build();
+
+                            CurrentBalance result = new Gson().fromJson(jsonObject.toJson().toString(), CurrentBalance.class);
+                            baseView.onSuccess("CurrentBalance", result);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+
+
+            } catch (Exception e) {
+                baseView.hideProgressBar();
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
