@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -79,125 +78,125 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class mPayment extends BaseActivity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     Button payPalPaymentButton;
-    TextView m_response;
+    TextView Convenience, AmountPayabale, NumberOfDays, ActivationDate, SimNumber, CartAmount, m_response, misidn_serial_voip_text, activationDetails;
+
     PayPalConfiguration m_configuration;
     String m_paypalClientId = "AenMZYOK_JJk-FKV7trJDtyyUSOiZJgvSc06FTf5ZH46qnW1xD16LzcJHThGeaSSkB-KMp5qbYYDVpRd";   //the skygo production
     //    String m_paypalClientId = "AZhqNfrQvabHK5ohCMmSzh6Rt6o2krELyVYr1wxYRPe4IEkX-LsLa0i3lRSdUB2mR1apFsrZko5e6kng";    //enk production
-    //    String m_paypalClientId = "Acl-zy7SQufyYeOKKROTM37taRJcpe7ige_orlofjY_0YnZuxQ-PWL9vfdzxXWNFEOuQwA5WDPqL3Csw";   //Sky USA Inc
+//    String m_paypalClientId = "Acl-zy7SQufyYeOKKROTM37taRJcpe7ige_orlofjY_0YnZuxQ-PWL9vfdzxXWNFEOuQwA5WDPqL3Csw";   //Sky USA Inc
     Intent m_service;
-    int m_paypalRequestCode = 999;
-    TextView SimNumber;
-    //    TextView Amount;
-    TextView CartAmount;
-    NewActivationRequest newActivationRequest;
-    TextView Convenience;
-    TextView AmountPayabale;
-    TextView NumberOfDays;
-    TextView ActivationDate;
+//    int m_paypalRequestCode = 999;
+
+    UserDetails userDetails;
+    Bundle extras;
     AuthenticationPresenter authenticationPresenter;
     AddFundsApp addFundsApp;
+    NewActivationRequest newActivationRequest;
     UpdateFundReq updateFundReq = new UpdateFundReq();
     Random random = new Random();
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    SharedPreferences permissionStatus;
+
     String updateFundID = "";
     String sessionTxnID = "";
     final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    double currentLatitude;
-    double currentLongitude;
+
+    double currentLatitude, currentLongitude;
+    double Deduction = 0;
+
     static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    SharedPreferences permissionStatus;
     String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
-    private boolean sentToSettings = false;
     String IPaddress;
+    Context context = this;
 
     // latest code for braintRee
     final int REQUEST_CODE = 1;
     final String get_token = "https://www.sirrat.com/BraintreePayments/include/main.php"; // braintree/main.php
     final String send_payment_details = "https://www.sirrat.com/BraintreePayments/include/checkout.php"; //checkout.php
-    String token;
-    String amount;
+    String amount, token;
     HashMap<String, String> paramHash;
     Boolean updateFundCheck = true;
+    String AppPaymentType = "";
 
     @Override
     protected int getLayout() {
         return R.layout.activity_m_payment;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
-        //location and permission
+
         launchActivity();
         check();
         checkPlayServices();
         NetwordDetect();
-        permissionStatus = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                // The next two lines tell the new client that “this” current class will handle connection stuff
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                //fourth line adds the LocationServices API endpoint from GooglePlayServices
-                .addApi(LocationServices.API)
-                .build();
 
-        // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1000);
-        //location and permission ends here
+        permissionStatus = PreferenceManager.getDefaultSharedPreferences(this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
+        mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(10 * 1000).setFastestInterval(1000);
 
+        userDetails = new UserDetails(this);
         addFundsApp = new AddFundsApp();
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         authenticationPresenter = new AuthenticationPresenter(this);
+        newActivationRequest = new NewActivationRequest();
+
+        activationDetails = findViewById(R.id.activationDetails);
         SimNumber = findViewById(R.id.simNumber);
-//        Amount = findViewById(R.id.textView7);
         CartAmount = findViewById(R.id.textView9);
         Convenience = findViewById(R.id.textView11);
         AmountPayabale = findViewById(R.id.editAmount1);
         NumberOfDays = findViewById(R.id.textView17);
         ActivationDate = findViewById(R.id.activationFromDate);
-        UserDetails userDetails = new UserDetails(this);
-        if (userDetails.getRechargeStatus() == 1) {
-            assert extras != null;
-            SimNumber.setText(extras.getString("SerialNumber"));
-//            Amount.setText("$ " + extras.getString("AmountCharged"));
-            CartAmount.setText("$ " + extras.getString("AmountCharged"));
-            AmountPayabale.setText("$ " + extras.getString("AmountCharged"));
-            NumberOfDays.setText(extras.getString("NumberOfDays"));
-            ActivationDate.setText(extras.getString("RequestedForDtTm"));
-        } else if (userDetails.getRechargeStatus() == 0) {
-            SimNumber.setText(extras.getString("MSISDN"));
-//            Amount.setText("$ " + extras.getString("AmountChargedR"));
-            CartAmount.setText("$ " + extras.getString("AmountChargedR"));
-            AmountPayabale.setText("$ " + extras.getString("AmountChargedR"));
-            NumberOfDays.setText(extras.getString("NumberOfDaysR"));
-            ActivationDate.setText(extras.getString("RequestedForDtTmR"));
-        }
-//        Convenience.setText(convence_fee);
-
-
         payPalPaymentButton = findViewById(R.id.payPalPaymentActivityButton);
         m_response = findViewById(R.id.text1);
-        m_configuration = new PayPalConfiguration()
-                .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION)
-                .clientId(m_paypalClientId).rememberUser(false);
-        payPalPaymentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PayPalPaymentOnclick(v);
-            }
-        });
+        misidn_serial_voip_text = findViewById(R.id.misidn_serial_voip_text);
 
+        assert extras != null;
+        AppPaymentType = extras.getString("AppPaymentType");   //1 =activation    2= extension     3= voip
 
+        CartAmount.setText("$ " + extras.getString("AmountCharged"));
+        AmountPayabale.setText("$ " + extras.getString("AmountCharged"));
+        NumberOfDays.setText(extras.getString("NumberOfDays"));
+        ActivationDate.setText(extras.getString("RequestedForDtTm"));
+
+        assert AppPaymentType != null;
+        switch (AppPaymentType) {
+            case "1":
+                misidn_serial_voip_text.setText(R.string.textSIMSerialNo);
+                SimNumber.setText(extras.getString("Number"));
+                break;
+            case "2":
+                misidn_serial_voip_text.setText(R.string.textMobileNumber);
+                SimNumber.setText(extras.getString("Number"));
+                break;
+            case "3":
+                misidn_serial_voip_text.setText("Voip Plan");
+                SimNumber.setText(extras.getString("Number"));
+                activationDetails.setText("Voip Plan Detail");
+                break;
+            default:
+                showToast("Error to select payment type i.e.(1,2,3)");
+                break;
+
+        }
+
+        m_configuration = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION).clientId(m_paypalClientId).rememberUser(false);
         m_service = new Intent(this, PayPalService.class);
         m_service.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, m_configuration);
         startService(m_service);
+
+        payPalPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PayPalPaymentOnclick();
+            }
+        });
+
         showProgressBar();
         new HttpRequest().execute();
 
@@ -206,27 +205,34 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     @Override
     public void onServerError(String method2, String errorMessage) {
         switch (method2) {
-            case "activateSim": {
+            case "ActivationExtensionRequest": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-//                    showToast("Please Login again");
                     Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
                     Intent intent = new Intent(mPayment.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
+                break;
             }
-            case "ExtensionRequest": {
+            case "UpdateFunds": {
+                Toast.makeText(this, "Please try again", LENGTH_LONG).show();
+                break;
+            }
+            case "AddFundsViaAPP": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-//                    showToast("Please Login again");
-                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
+//                    showToast(" "+R.string.textSorrySomethingwentwrong);
+                    Toast.makeText(mPayment.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mPayment.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                } else {
+                    showToast(errorMessage);
                 }
+                break;
             }
-            case "UpdateFunds":{
-                Toast.makeText(this,"Please try again", LENGTH_LONG).show();
-
+            case "ApplyPromotion": {
+                showToast(errorMessage);
+                break;
             }
         }
     }
@@ -235,10 +241,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     public void onSuccess(String method2, Object response) {
         switch (method2) {
             case "activateSim": {
-                UserDetails userDetails = new UserDetails(this);
-
-//                Date d = new Date();
-//                CharSequence DateToday = DateFormat.format("MMMM d, yyyy ", d.getTime());
                 userDetails.setRechargeStatus(0);
                 Intent i = new Intent(mPayment.this, PaymentSucessfull.class);
                 startActivity(i);
@@ -246,7 +248,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 break;
             }
 
-            case "ExtensionRequest": {
+            case "ExtensionRequest":
+
+            case "ApplyPromotion": {
                 Intent paymentsuccess = new Intent(mPayment.this, PaymentSucessfull.class);
                 startActivity(paymentsuccess);
                 finish();
@@ -254,79 +258,44 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
             }
 
             case "UpdateFunds": {
-                AddFundsResponse addFundsResponse = (AddFundsResponse) response;
-                Bundle extras = getIntent().getExtras();
-                if (updateFundCheck == true) {
-
+                if (updateFundCheck) {
                     break;
                 }
-                UserDetails userDetails = new UserDetails(this);
-                if (userDetails.getRechargeStatus() == 1) {
-                    newActivationRequest = new NewActivationRequest();
-                    assert extras != null;
-                    newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
-                    newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
-                    newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
-                    newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-                    newActivationRequest.setToken(userDetails.getTokenID());
-                    newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
-                    newActivationRequest.setRequestedDevice(getDeviceName());
-                    newActivationRequest.setRequestedIP(IPaddress);
-                    newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                    try {
-                        authenticationPresenter.activateSim(newActivationRequest);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                    break;
-                } else if (userDetails.getRechargeStatus() == 0) {
-                    //Extension Request api
-                    NewExtensionRequest newExtensionRequest = new NewExtensionRequest();
-                    assert extras != null;
-                    newExtensionRequest.setNumberOfDays(extras.getString("NumberOfDaysR"));
-                    newExtensionRequest.setMSISDN(extras.getString("MSISDN"));
-                    newExtensionRequest.setAmountCharged(extras.getString("AmountChargedR"));
-                    newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTmR"));
-                    newExtensionRequest.setToken(userDetails.getTokenID());
-                    newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
-                    newExtensionRequest.setRequestedDevice(getDeviceName());
-                    newExtensionRequest.setRequestedIP(IPaddress);
-                    newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                    try {
-                        authenticationPresenter.extensionRequest(newExtensionRequest);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                    break;
+                switch (AppPaymentType) {
+                    case "1":
+                        activateSim();
+                        break;
+                    case "2":
+                        extensionRequest();
+                        break;
+                    case "3":
+                        VoipPlanRecharge();
+                        break;
                 }
                 break;
             }
 
             case "AddFundsViaAPP": {
                 try {
-                    AddFundsResponse addFundsResponse = (AddFundsResponse) response;
-                    Bundle extras = getIntent().getExtras();
-                    updateFundID = addFundsResponse.getRequestId();
-                    updateFundReq.setId(updateFundID);
 
-                    //old paypal function is start form here
-//                    PayPalPayment payment;
-//                    try {
-//                        assert extras != null;
-//                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountCharged")), "USD", "The SkyGo",
-//                                PayPalPayment.PAYMENT_INTENT_SALE);
-//                    } catch (Exception e) {
-//                        payment = new PayPalPayment(new BigDecimal(extras.getString("AmountChargedR")), "USD", "The SkyGo",
-//                                PayPalPayment.PAYMENT_INTENT_SALE);
-//                    }
-//                    Intent intent = new Intent(this, PaymentActivity.class);
-//                    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, m_configuration);
-//                    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
-//                    startActivityForResult(intent, m_paypalRequestCode);
-                    //end here
-
-                    DropInRequest dropInRequest = new DropInRequest().clientToken(token);
-                    startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
+                    if (Deduction == 0) {
+                        switch (AppPaymentType) {
+                            case "1":
+                                activateSim();
+                                break;
+                            case "2":
+                                extensionRequest();
+                                break;
+                            case "3":
+                                VoipPlanRecharge();
+                                break;
+                        }
+                    } else {
+                        AddFundsResponse addFundsResponse = (AddFundsResponse) response;
+                        updateFundID = addFundsResponse.getRequestId();
+                        DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                        startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
+                    }
 
                 } catch (Exception e) {
                     showToast(e.toString());
@@ -337,172 +306,36 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         }
     }
 
-    void PayPalPaymentOnclick(View view) {
-        Bundle extras = getIntent().getExtras();
 
-        double Deduction = 0;
+    void PayPalPaymentOnclick() {
         try {
-            try {
-                assert extras != null;
-                Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
-            } catch (Exception e) {
-                Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountChargedR")));
-            }
-            @SuppressLint("DefaultLocale")
-            UserDetails userDetails = new UserDetails(this);
-            sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
+            assert extras != null;
+            Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
 
-            if (userDetails.getRechargeStatus() == 1) {
-                if ((Deduction > 0)) {
-                    addFundsApp.setAmountCharged(String.valueOf(Deduction));
-                    addFundsApp.setDealerID("0");
-                    addFundsApp.setIMEI(getDeviceIMEI());
-                    addFundsApp.setLatitude(String.valueOf(currentLatitude));
-                    addFundsApp.setLongitude(String.valueOf(currentLongitude));
-                    addFundsApp.setMacID("");
-                    addFundsApp.setPayPalRefNo("");
-                    addFundsApp.setPaymentMode("2");
-                    addFundsApp.setRemarks("Payment From Android APP");
-                    addFundsApp.setRequestedDevice(getDeviceName());
-                    addFundsApp.setRequestedIP(IPaddress);
-                    addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
-                    addFundsApp.setServiceCharge("0");
-                    addFundsApp.setTokenID(userDetails.getTokenID());
-                    addFundsApp.setTransactionReferenceID(sessionTxnID);
-                    addFundsApp.setTransactionType("0");
-                    try {
-                        authenticationPresenter.AddFundsAPI(addFundsApp);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                } else if (Deduction == 0) {
-                    newActivationRequest = new NewActivationRequest();
-                    newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
-                    newActivationRequest.setSerialNumber(extras.getString("SerialNumber"));
-                    newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
-                    newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-                    newActivationRequest.setToken(userDetails.getTokenID());
-                    newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
-                    newActivationRequest.setRequestedDevice(getDeviceName());
-                    newActivationRequest.setRequestedIP(IPaddress);
-                    newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                    try {
-                        authenticationPresenter.activateSim(newActivationRequest);   //if 0
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                }
-            } else if (userDetails.getRechargeStatus() == 0) {
-                if ((Deduction > 0)) {
-                    sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
-                    addFundsApp.setAmountCharged(String.valueOf(Deduction));
-                    addFundsApp.setDealerID("0");
-                    addFundsApp.setIMEI(getDeviceIMEI());
-                    addFundsApp.setLatitude(String.valueOf(currentLatitude));
-                    addFundsApp.setLongitude(String.valueOf(currentLongitude));
-                    addFundsApp.setMacID("");
-                    addFundsApp.setPayPalRefNo("");
-                    addFundsApp.setPaymentMode("2");
-                    addFundsApp.setRemarks("Payment From Android APP");
-                    addFundsApp.setRequestedDevice(getDeviceName());
-                    addFundsApp.setRequestedIP(IPaddress);
-                    addFundsApp.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                    addFundsApp.setServiceCharge("0");
-                    addFundsApp.setTokenID(userDetails.getTokenID());
-                    addFundsApp.setTransactionReferenceID(sessionTxnID);
-                    addFundsApp.setTransactionType("0");
-                    try {
-                        authenticationPresenter.AddFundsAPI(addFundsApp);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                } else if (userDetails.getRechargeStatus() == 0) {
-                    //Extension Request api
-                    NewExtensionRequest newExtensionRequest = new NewExtensionRequest();
-                    newExtensionRequest.setNumberOfDays(extras.getString("NumberOfDaysR"));
-                    newExtensionRequest.setMSISDN(extras.getString("MSISDN"));
-                    newExtensionRequest.setAmountCharged(extras.getString("AmountChargedR"));
-                    newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTmR"));
-                    newExtensionRequest.setToken(userDetails.getTokenID());
-                    newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
-                    newExtensionRequest.setRequestedDevice(getDeviceName());
-                    newExtensionRequest.setRequestedIP(IPaddress);
-                    newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
-                    try {
-                        authenticationPresenter.extensionRequest(newExtensionRequest);
-                    } catch (Exception e) {
-                        showToast(e.toString());
-                    }
-                }
-            }
+            sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
+            addFundsApp.setAmountCharged(String.valueOf(Deduction));
+            addFundsApp.setDealerID("0");
+            addFundsApp.setIMEI(getDeviceIMEI());
+            addFundsApp.setLatitude(String.valueOf(currentLatitude));
+            addFundsApp.setLongitude(String.valueOf(currentLongitude));
+            addFundsApp.setMacID("");
+            addFundsApp.setPayPalRefNo("");
+            addFundsApp.setPaymentMode("2");
+            addFundsApp.setRemarks("Payment From Android APP");
+            addFundsApp.setRequestedDevice(getDeviceName());
+            addFundsApp.setRequestedIP(IPaddress);
+            addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
+            addFundsApp.setServiceCharge("0");
+            addFundsApp.setTokenID(userDetails.getTokenID());
+            addFundsApp.setTransactionReferenceID(sessionTxnID);
+            addFundsApp.setTransactionType("0");
+            authenticationPresenter.AddFundsAPI(addFundsApp);
         } catch (Exception e) {
             showToast(e.toString());
         }
 
 
     }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == m_paypalRequestCode) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                assert data != null;
-//                PaymentConfirmation configuration = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-//                if (configuration != null) {
-//                    UserDetails userDetails = new UserDetails(this);
-//                    String state = configuration.getProofOfPayment().getState();
-//                    if (state.equals("approved")) {
-//                        m_response.setText("payment Approved");
-//                        updateFundReq.setId(updateFundID);
-//                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId()); // send paypal id
-//                        updateFundReq.setPayPalResponse("Payment Approved");
-//                        updateFundReq.setRequestStatusID("15");
-//                        updateFundReq.setTokenID(userDetails.getTokenID());
-//                        updateFundReq.setTransactionReferenceID(sessionTxnID);
-//                        try {
-//                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
-//                        } catch (Exception e) {
-//                            showToast(e.toString());
-//                        }
-//                        //Update Funds API
-//                    } else {
-//                        m_response.setText("not apporved");
-//                        updateFundReq.setId(updateFundID);
-//                        updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-//                        updateFundReq.setPayPalResponse("Not Approved");
-//                        updateFundReq.setRequestStatusID("16");
-//                        updateFundReq.setTransactionReferenceID(sessionTxnID);
-//                        try {
-//                            authenticationPresenter.UpdateFundsMethod(updateFundReq);
-//                        } catch (Exception e) {
-//                            showToast(e.toString());
-//                        }
-//                    }
-//                } else {
-//                    m_response.setText("confirmation is null");
-//                    updateFundReq.setId(updateFundID);
-//                    updateFundReq.setPaypalReferenceID(configuration.getProofOfPayment().getTransactionId());
-//                    updateFundReq.setPayPalResponse("Confirmation is null");
-//                    updateFundReq.setRequestStatusID("16");
-//                    updateFundReq.setTransactionReferenceID(sessionTxnID);
-//                    try {
-//                        authenticationPresenter.UpdateFundsMethod(updateFundReq);
-//                    } catch (Exception e) {
-//                        showToast(e.toString());
-//                    }
-//                }
-//
-//
-//            } else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-//                Toast.makeText(this, "Invalid ", LENGTH_SHORT).show();
-//        } else if (requestCode == Activity.RESULT_CANCELED)
-//            Toast.makeText(this, "Cancel ", LENGTH_SHORT).show();
-//
-//
-//    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -511,7 +344,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                assert result != null;
                 PaymentMethodNonce nonce = result.getPaymentMethodNonce();
+                assert nonce != null;
                 String stringNonce = nonce.getNonce();
                 Log.d("mylog", "Result: " + stringNonce);
                 // Send payment price with the nonce
@@ -527,7 +362,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                         Toast.makeText(mPayment.this, "amount+nonce error: else", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(mPayment.this, "amount+nonce error:" + e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mPayment.this, "amount+nonce error catch:" + e, Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // the user canceled
@@ -537,8 +372,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
             } else {
                 // handle errors here, an exception may be available in
                 Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-                Log.d("mylog", "Error : " + error.toString());
-                showToast(getApplication().getString(R.string.textSorrySomethingwentwrong));
+                Log.d("mylog", "Error : " + error);
+                showToast("Payment Error:" + getApplication().getString(R.string.textSorrySomethingwentwrong));
                 hideProgressBar();
             }
         }
@@ -561,8 +396,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         Intent i = new Intent(mPayment.this, Notification.class);
         startActivity(i);
     }
-
-    Context context = this;
 
     public void hotspotButton(View view) {
         try {
@@ -614,14 +447,15 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         try {
             assert lm != null;
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         if (!gps_enabled && !network_enabled) {
             // notify user
             AlertDialog.Builder dialog = new AlertDialog.Builder(mPayment.this);
@@ -695,7 +529,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
-                        sentToSettings = true;
                         // Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         // Uri uri = Uri.fromParts("package", getPackageName(), null);
                         // intent.setData(uri);
@@ -746,9 +579,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
     }
 
-    /**
-     * If connected get lat and long
-     */
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -808,17 +638,10 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         }
     }
 
-    /**
-     * If locationChanges change lat and long
-     *
-     * @param location
-     */
     @Override
     public void onLocationChanged(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
-
-        //  Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
     }
 
     @SuppressLint("HardwareIds")
@@ -834,8 +657,11 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 // for ActivityCompat#requestPermissions for more details.
 
             } else {
-                deviceUniqueIdentifier = tm.getDeviceId();
-
+                try {
+                    deviceUniqueIdentifier = tm.getDeviceId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
                 deviceUniqueIdentifier = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -956,8 +782,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
         }
+
     }
 
     private void sendPaymentDetails() {
@@ -972,17 +798,14 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                             Toast.makeText(mPayment.this, "Payment Successful", Toast.LENGTH_LONG).show();
                             try {
                                 updateFundCheck = false;
-                                UserDetails userDetails = new UserDetails(mPayment.this);
-                                String x = response;
-                                String str[] = x.split(",");
+                                String[] str = response.split(",");
                                 List<String> al;
                                 al = Arrays.asList(str);
                                 for (String s : al) {
                                     System.out.println(s);
                                 }
-                                String str1[] = al.get(0).split("=");
+                                String[] str1 = al.get(0).split("=");
                                 String tnxID = str1[1];
-                                m_response.setText("payment Approved");
                                 updateFundReq.setId(updateFundID);
                                 updateFundReq.setPaypalReferenceID(tnxID); // send paypal id
                                 updateFundReq.setPayPalResponse("Payment Approved");
@@ -1002,20 +825,16 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                             Toast.makeText(mPayment.this, "Payment Failed", Toast.LENGTH_LONG).show();
                             try {
                                 updateFundCheck = true;
-                                UserDetails userDetails = new UserDetails(mPayment.this);
-                                String x = response;
-                                String str[] = x.split("message=");
+                                String[] str = response.split("message=");
                                 List<String> al;
                                 al = Arrays.asList(str);
                                 for (String s : al) {
                                     System.out.println(s);
                                 }
-                                String str1[] = al.get(1).split(",");
-                                String error = str1[0];
-//                                m_response.setText("not apporved");
+                                String[] str1 = al.get(1).split(",");
                                 updateFundReq.setId(updateFundID);
                                 updateFundReq.setPaypalReferenceID("");   //not null ethe error
-                                updateFundReq.setPayPalResponse("Not Approved");
+                                updateFundReq.setPayPalResponse("Not Approved|" + Arrays.toString(str1));
                                 updateFundReq.setRequestStatusID("16");
                                 updateFundReq.setTokenID(userDetails.getTokenID());
                                 updateFundReq.setTransactionReferenceID(sessionTxnID);
@@ -1024,7 +843,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                                 } catch (Exception e) {
                                     showToast(e.toString());
                                 }
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1054,7 +872,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 return params;
@@ -1062,5 +880,51 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         };
         queue.add(stringRequest);
     }
+
+    private void activateSim() {
+        newActivationRequest = new NewActivationRequest();
+        newActivationRequest.setNumberOfDays(extras.getString("NumberOfDays"));
+        newActivationRequest.setSerialNumber(extras.getString("Number"));
+        newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
+        newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
+        newActivationRequest.setToken(userDetails.getTokenID());
+        newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+        newActivationRequest.setRequestedDevice(getDeviceName());
+        newActivationRequest.setRequestedIP(IPaddress);
+        newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
+        authenticationPresenter.activateSim(newActivationRequest);
+    }
+
+    private void extensionRequest() {
+        NewExtensionRequest newExtensionRequest = new NewExtensionRequest();
+        assert extras != null;
+        newExtensionRequest.setNumberOfDays(extras.getString("NumberOfDays"));
+        newExtensionRequest.setMSISDN(extras.getString("Number"));
+        newExtensionRequest.setAmountCharged(extras.getString("AmountCharged"));
+        newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
+        newExtensionRequest.setToken(userDetails.getTokenID());
+        newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+        newExtensionRequest.setRequestedDevice(getDeviceName());
+        newExtensionRequest.setRequestedIP(IPaddress);
+        newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
+        authenticationPresenter.extensionRequest(newExtensionRequest);
+
+    }
+
+    private void VoipPlanRecharge() {
+        String xmlApplyPromotion = "<apply-promotion version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>skygo.api</username>\n" +
+                "<password>54321@123</password>\n" +
+                "</authentication>\n" +
+//                "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
+                "<subscriberid>13799728</subscriberid>" +
+                "<promotion>" + extras.getString("MonikerValue") + "</promotion> " +
+                "<start-time>" + extras.getString("RequestedForDtTm") + "</start-time>" +
+                "<notify-on-depletion>no</notify-on-depletion>" +
+                "</apply-promotion>";
+        authenticationPresenter.VoIPAPICall(xmlApplyPromotion, "ApplyPromotion");
+    }
+
 }
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:background="@drawable/dashboardgredient2"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/menu_validityWithMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/menu_plan_Details"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:text="Validity 5 days (100 mins)"
+            android:textColor="#FFFFFF"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/plan_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/sf_old_republic_bold"
+            android:text="Price $10"
+            android:textColor="@color/colorRed"
+            android:textSize="20dp" />
+
+
+        <TextView
+            android:id="@+id/menu_plan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/plan_price"
+            android:layout_marginRight="4dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:text="$5 Plan 100min  japan"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/menu_plan_Details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/menu_plan_name"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:text="Here is the plain detailsHere is the plain detailsHere is the plain details "
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+

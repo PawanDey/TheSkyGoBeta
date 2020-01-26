@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/menu_linearLayoutMain"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:id="@+id/menu_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/currentBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:text="$ 00"
+                    android:textColor="@color/colorRed"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/currentBalance"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="1dp"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:text="Available balance"
+                    android:textColor="@color/bt_blue_pressed"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/menu_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="22dp"
+                    android:text="Virtuzo Infosystem"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/voipNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/menu_name"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:text="0120 2546 28763"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/menu_listView"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:background="@color/white"
+                android:layout_height="wrap_content"
+                android:divider="@color/white"
+                android:dividerHeight="9dp"
+                android:scrollbars="none" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/menu_progressBar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp" />
+
+
+</LinearLayout>

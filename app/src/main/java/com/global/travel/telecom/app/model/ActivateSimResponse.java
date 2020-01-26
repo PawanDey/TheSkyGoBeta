@@ -11,20 +11,36 @@ public class ActivateSimResponse {
     private String mResponseMessage;
     @SerializedName("RatePerDay")
     private double mRatePerDay;
-
     @SerializedName("NumberOfDays")
     private String mNumberOfDays;
-
     @SerializedName("LastValidityDate")
     private String mLastValidityDate;
+    @SerializedName("PromotionName")
+    private String mPromotionName;
 
-    public String getmLastValidityDate () {return mLastValidityDate;}
+    public String getmPromotionName() {
+        return mPromotionName;
+    }
 
-    public void setmLastValidityDate (String LastDate) {mLastValidityDate=LastDate;}
+    public void setmPromotionName(String mPromotionName) {
+        this.mPromotionName = mPromotionName;
+    }
 
-    public String getNumberOfDays () {return  mNumberOfDays;}
+    public String getmLastValidityDate() {
+        return mLastValidityDate;
+    }
 
-    public void setNumberOfDays (String NumberOfDays) {mNumberOfDays=NumberOfDays;}
+    public void setmLastValidityDate(String LastDate) {
+        mLastValidityDate = LastDate;
+    }
+
+    public String getNumberOfDays() {
+        return mNumberOfDays;
+    }
+
+    public void setNumberOfDays(String NumberOfDays) {
+        mNumberOfDays = NumberOfDays;
+    }
 
     public Long getResponseCode() {
         return mResponseCode;
@@ -42,7 +58,11 @@ public class ActivateSimResponse {
         mResponseMessage = responseMessage;
     }
 
-    public  double  getmRatePerDay () {return  mRatePerDay;}
+    public double getmRatePerDay() {
+        return mRatePerDay;
+    }
 
-    public void setmRatePerDay (double ratePerDay) {mRatePerDay=ratePerDay;}
+    public void setmRatePerDay(double ratePerDay) {
+        mRatePerDay = ratePerDay;
+    }
 }

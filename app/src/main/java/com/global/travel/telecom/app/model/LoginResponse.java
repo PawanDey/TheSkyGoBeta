@@ -17,6 +17,8 @@ public class LoginResponse {
     private String mTxnSeriesPrefix;
     @SerializedName("UserName")
     private String mUserName;
+    @SerializedName("DealerID")
+    private String mDealerID;
 
     public String getDealerName() {
         return mDealerName;
@@ -66,4 +68,11 @@ public class LoginResponse {
         mUserName = userName;
     }
 
+    public String getDealerID() {
+        return mDealerID;
+    }
+
+    public void setDealerID(String DealerID) {
+        mDealerID = DealerID;
+    }
 }

@@ -4,10 +4,14 @@
     <color name="colorPrimaryDark">#442EB4</color>
     <color name="colorAccent">#442EB4</color>
     <color name="lightGrey">#BBBBBB</color>
-    <color name="gray">#F5F5F5</color>
+    <color name="gray">#E2ECE9E9</color>
     <color name="grayLogin">#F1F1F1</color>
     <color name="datePickerColor">#4F58FF</color>
     <color name="colorRed">#FC3E52</color>
+    <color name="white">#ffffff</color>
+    <color name="darkgrey">#8A8585</color>
+    <color name="black">#000000</color>
+
 
 
 </resources>

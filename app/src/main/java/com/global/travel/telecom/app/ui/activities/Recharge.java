@@ -237,14 +237,11 @@ public class Recharge extends BaseActivity {
                 Days = numberOfDaysRecharge.getText().toString();
                 MSISDN = edtTextMSISDN.getText().toString();
                 Intent paymnetSummaryR = new Intent(Recharge.this, mPayment.class);
-                paymnetSummaryR.putExtra("MSISDN", MSISDN);
-                paymnetSummaryR.putExtra("NumberOfDaysR", Days);
-                paymnetSummaryR.putExtra("RequestedIPR", "24");
-                paymnetSummaryR.putExtra("RequestedOSR", "Android|" + userDetails.getLanguageSelect());
-                paymnetSummaryR.putExtra("AmountChargedR", String.valueOf(Amount));
-                paymnetSummaryR.putExtra("RequestedForDtTmR", validityStartDate);
-                paymnetSummaryR.putExtra("RefNoR", "1");
-                paymnetSummaryR.putExtra("RequestedDeviceR", "Android|" + userDetails.getLanguageSelect());
+                paymnetSummaryR.putExtra("Number", MSISDN);
+                paymnetSummaryR.putExtra("NumberOfDays", Days);
+                paymnetSummaryR.putExtra("AmountCharged", String.valueOf(Amount));
+                paymnetSummaryR.putExtra("RequestedForDtTm", validityStartDate);
+                paymnetSummaryR.putExtra("AppPaymentType", "2");
                 startActivity(paymnetSummaryR);
             }
         } catch (Exception e) {

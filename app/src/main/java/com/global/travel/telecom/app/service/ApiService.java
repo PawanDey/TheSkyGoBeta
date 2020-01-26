@@ -6,13 +6,10 @@ import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 
-import bolts.Task;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -55,6 +52,8 @@ public interface ApiService {
     @GET("translatorAPI.php")
     Call<ResponseBody> TranslateAPI(@Query("inputlang") String inputlang, @Query("outputlang") String outputlang, @Query("text") String text);
 
+    @GET("GetVoIPPlans")
+    Call<ResponseBody> GetVoipPlan();
 
 
 }

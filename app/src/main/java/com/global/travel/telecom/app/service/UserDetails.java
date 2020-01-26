@@ -3,14 +3,15 @@ package com.global.travel.telecom.app.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.global.travel.telecom.app.ui.activities.Recharge;
-
-import java.util.Date;
-
 public class UserDetails {
 
     Context context;
     SharedPreferences sharedPreferences;
+    private int RechargeStatus;
+    private String ActivationDate, LanguageSelect, MacAddress, MSISDN,
+            PaypalTransactionFee, TxnSeriesPrefix, UserName, TokenID,
+            VoipCustomerID, VoipSubcriberID, UserId;
+
 
     public void removeTokenID() {
         sharedPreferences.edit().clear().commit();
@@ -26,6 +27,7 @@ public class UserDetails {
         sharedPreferences.edit().putString("TokenID", TokenID).commit();
 
     }
+
 
     public String getUserName() {
         UserName = sharedPreferences.getString("UserName", "");
@@ -46,6 +48,7 @@ public class UserDetails {
         sharedPreferences.edit().putString("TxnSeriesPrefix", TxnSeriesPrefix).commit();
     }
 
+
     public String getPaypalTransactionFee() {
         PaypalTransactionFee = sharedPreferences.getString("PaypalTransactionFee", "");
         return PaypalTransactionFee;
@@ -55,10 +58,6 @@ public class UserDetails {
         sharedPreferences.edit().putString("PaypalTransactionFee", paypalTransactionFee).commit();
     }
 
-    private String TokenID;
-    private String UserName;
-    private String TxnSeriesPrefix;
-    private String PaypalTransactionFee;
 
     public String getLanguageSelect() {
         LanguageSelect = sharedPreferences.getString("LanguageSelect", "");
@@ -69,7 +68,6 @@ public class UserDetails {
         sharedPreferences.edit().putString("LanguageSelect", LanguageSelect).commit();
     }
 
-    private  String LanguageSelect;
 
     public int getRechargeStatus() {
         RechargeStatus = sharedPreferences.getInt("RechargeStatus", 1);
@@ -90,9 +88,6 @@ public class UserDetails {
         sharedPreferences.edit().putString("MSISDN", MSISDN).commit();
     }
 
-    private String MSISDN;
-    private int RechargeStatus;
-    private String MacAddress;
 
     public String getActivationDate() {
         ActivationDate = sharedPreferences.getString("SIMActivationDate", "");
@@ -104,7 +99,6 @@ public class UserDetails {
 
     }
 
-    private String ActivationDate;
 
     public String getMacAddress() {
         MacAddress = sharedPreferences.getString("MacAddress", "");
@@ -116,10 +110,40 @@ public class UserDetails {
 
     }
 
+
+    public String getVoipCustomerID() {
+        VoipCustomerID = sharedPreferences.getString("VoipCustomerID", "");
+        return VoipCustomerID;
+    }
+
+    public void setVoipCustomerID(String VoipCustomerID) {
+        sharedPreferences.edit().putString("VoipCustomerID", VoipCustomerID).commit();
+
+    }
+
+    public String getVoipSubcriberID() {
+        VoipSubcriberID = sharedPreferences.getString("VoipSubscriberID", "");
+        return VoipSubcriberID;
+    }
+
+    public void setVoipSubcriberID(String VoipSubcriberID) {
+        sharedPreferences.edit().putString("VoipSubscriberID", VoipSubcriberID).commit();
+
+    }
+
+    public String getUserId() {
+        UserId = sharedPreferences.getString("UserId", "");
+        return UserId;
+    }
+
+    public void setUserId(String UserId) {
+        sharedPreferences.edit().putString("UserId", UserId).commit();
+    }
+
     public UserDetails(Context context) {
         this.context = context;
-        sharedPreferences = context.getSharedPreferences("LanguageSelect",Context.MODE_PRIVATE);
-        sharedPreferences = context.getSharedPreferences("SIMActivationDate",Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("LanguageSelect", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("SIMActivationDate", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("MacAddress", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("RechargeStatus", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("MSISDN", Context.MODE_PRIVATE);
@@ -127,6 +151,9 @@ public class UserDetails {
         sharedPreferences = context.getSharedPreferences("PaypalTransactionFee", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("TokenID", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("UserName", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("VoipSubscriberID", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("VoipCustomerID", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("UserId", Context.MODE_PRIVATE);
     }
 
 }

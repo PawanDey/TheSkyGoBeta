@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
@@ -37,9 +36,7 @@ import java.util.Locale;
 
 
 public class Dashboard extends BaseActivity {
-
-    //for current location
-    public static TextView currentLocation, Button;
+    public static TextView currentLocation;
     private LocationManager locationManager;
     private double logitude;
     private double latitude;
@@ -47,17 +44,10 @@ public class Dashboard extends BaseActivity {
     TextView validity;
     ImageView skygoDialerLogo;
     boolean doubleBackToExitPressedOnce;
-    public BaseView baseView;
     Context context = this;
-    String isHotspotEnabled;
     String country, pincode, city, adress1, adress2, adress3, adress4, adress5, adress6;
     public ImageView setImageOnHotspot;
-    //end location
     AuthenticationPresenter authenticationPresenter;
-
-
-    //end location
-
 
     @Override
     protected int getLayout() {
@@ -127,7 +117,6 @@ public class Dashboard extends BaseActivity {
 
     }
 
-
     @Override
     public void onFailure() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -165,10 +154,10 @@ public class Dashboard extends BaseActivity {
     public void onSuccess(String method2, Object response) {
         switch (method2) {
             case "GetSubscriber": {
+                GetSIMStatus obj = (GetSIMStatus) response;
                 UserDetails userDetails = new UserDetails(this);
                 TextView SimStatus = findViewById(R.id.activateSim);
                 TextView SIMSerialNumber = findViewById(R.id.hideActivationtext);
-                GetSIMStatus obj = (GetSIMStatus) response;
 
                 switch (obj.getmValue()) {
                     case "1": {
@@ -219,46 +208,8 @@ public class Dashboard extends BaseActivity {
                 userDetails.setPaypalTransactionFee(null);
                 break;
             }
+
         }
-    }
-
-
-    //end location
-
-
-    public void btnActivateSIMClick(View view) {
-        UserDetails userDetails = new UserDetails(this);
-        if (userDetails.getRechargeStatus() == 1) {
-            Intent intent = new Intent(Dashboard.this, ActivateSim.class);
-            intent.putExtra("Token", token);
-            startActivity(intent);
-        }
-    }
-
-    public void notificationButton(View view) {
-        Intent i = new Intent(Dashboard.this, Notification.class);
-        startActivity(i);
-    }
-
-    public void skyGoDailer(View view) {
-        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
-        intent.putExtra("Token", token);
-        startActivity(intent);
-    }
-
-    public void allTypeOfBookingSoonFunction(View view) {
-//        Intent i = new Intent(Dashboard.this, VoipLogin.class);
-//        startActivity(i);
-    }
-
-    private void onLocationCahange(Location location) {
-        logitude = location.getLongitude();
-        latitude = location.getLatitude();
-    }
-
-    public void btnExtendMSISDNClick(View view) {
-        Intent intent = new Intent(Dashboard.this, Recharge.class);
-        startActivity(intent);
     }
 
     @Override
@@ -276,6 +227,7 @@ public class Dashboard extends BaseActivity {
             }
         }, 2000);
     }
+
 
     private void log_func(Location location) {
 
@@ -420,4 +372,39 @@ public class Dashboard extends BaseActivity {
         startActivity(browserIntent);
     }
 
+    public void allTypeOfBookingSoonFunction(View view) {
+//        Intent i = new Intent(Dashboard.this, VoipLogin.class);
+//        startActivity(i);
+    }
+
+    private void onLocationCahange(Location location) {
+        logitude = location.getLongitude();
+        latitude = location.getLatitude();
+    }
+
+    public void btnExtendMSISDNClick(View view) {
+        Intent intent = new Intent(Dashboard.this, Recharge.class);
+        startActivity(intent);
+    }
+
+    public void btnActivateSIMClick(View view) {
+        UserDetails userDetails = new UserDetails(this);
+        if (userDetails.getRechargeStatus() == 1) {
+            Intent intent = new Intent(Dashboard.this, ActivateSim.class);
+            intent.putExtra("Token", token);
+            startActivity(intent);
+        }
+    }
+
+    public void notificationButton(View view) {
+        Intent i = new Intent(Dashboard.this, Notification.class);
+        startActivity(i);
+    }
+
+    public void skyGoDailer(View view) {
+//        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
+//        intent.putExtra("Token", token);
+//        startActivity(intent);
+        Toast.makeText(this, R.string.textComingSoon, Toast.LENGTH_SHORT).show();
+    }
 }

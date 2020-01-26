@@ -13,8 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activities.VoipLogin" />
-
+        <activity android:name=".ui.activities.VoipOnCall" />
         <activity
             android:name=".ui.activities.GoogleMapActivity"
             android:screenOrientation="portrait" />
@@ -95,6 +94,7 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -116,6 +116,7 @@
             </intent-filter>
         </service>
     </application>
+
     <uses-feature
         android:name="android.hardware.audio.low_latency"
         android:required="false" />
@@ -153,6 +154,7 @@
     <uses-feature
         android:name="android.software.webview"
         android:required="false" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -173,7 +175,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
 </manifest>

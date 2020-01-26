@@ -3,12 +3,9 @@ package com.global.travel.telecom.app.ui.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,7 +37,7 @@ public class ActivateSim extends BaseActivity {
     AuthenticationPresenter authenticationPresenter;
     static EditText edtSerialNumber;
     EditText txtnoOfDays;
-    TextView totalAmount,errorMsg,contactCare,OK;
+    TextView totalAmount, errorMsg, contactCare, OK;
     String Days = "0";
     Double rate = 0.0;
     Double Amount = 0.0;
@@ -78,7 +75,7 @@ public class ActivateSim extends BaseActivity {
         Date date = new Date();
         TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
         java.text.DateFormat df = new SimpleDateFormat(timeFormat);
-        System.out.println("Date and time in US/Eastern: " + df.format(date));
+        System.out.println("Date and timsimvalidatedsimvalidatedsimvalidatede in US/Eastern: " + df.format(date));
         todayDate.setText(df.format(date));
 
         edtSerialNumber.addTextChangedListener(new TextWatcher() {
@@ -132,7 +129,6 @@ public class ActivateSim extends BaseActivity {
 //                        showToast("Special dealer");
                         authenticationPresenter.GetRateForPaymentPlan(edtSerialNumber.getText().toString().trim(), Integer.parseInt(txtnoOfDays.getText().toString()), 1, "");
                     }
-
                 } catch (Exception e) {
                     if (edtSerialNumber.getText().toString().isEmpty()) {
                         Toast.makeText(ActivateSim.this, R.string.textPleaseEnterSIMSerialNumber, Toast.LENGTH_LONG).show();
@@ -158,12 +154,12 @@ public class ActivateSim extends BaseActivity {
                     rate = obj.getmRatePerDay();
                     SimValidAPIStatus = true;
 
-                    if (Integer.parseInt(obj.getNumberOfDays()) > 0) {
+                    if (!obj.getmPromotionName().equals("")) {
                         SpecialDealer = true;
                         Days = obj.getNumberOfDays();
-                        Amount = 0.0;
+//                        Amount = 0.0;
                         txtnoOfDays.setText(Days);
-                        totalAmount.setText("$ 0.0");
+//                        totalAmount.setText("$ 0.0");
                         TotalAmount = "0";
                         showToast(obj.getResponseMessage());
                         getCurretDatePicker();
@@ -177,7 +173,7 @@ public class ActivateSim extends BaseActivity {
                 } catch (Exception e) {
                     txtnoOfDays.setText("0");
                     totalAmount.setText("$ 0.00");
-                    ContactCarePopUp(obj.getResponseMessage(),getResources().getString(R.string.textcontactCare));   //here is show popup for invlid sim and conatc skygo team
+                    ContactCarePopUp(obj.getResponseMessage(), getResources().getString(R.string.textcontactCare));   //here is show popup for invlid sim and conatc skygo team
                 }
                 break;
             }
@@ -247,7 +243,7 @@ public class ActivateSim extends BaseActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
-                    ContactCarePopUp(errorMessage,getResources().getString(R.string.textcontactCare));
+                    ContactCarePopUp(errorMessage, getResources().getString(R.string.textcontactCare));
                     txtnoOfDays.getText().clear();
                     edtSerialNumber.getText().clear();
                 }
@@ -280,14 +276,11 @@ public class ActivateSim extends BaseActivity {
                 Days = txtnoOfDays.getText().toString();
                 Serial = edtSerialNumber.getText().toString();
                 Intent PaymentSummary = new Intent(ActivateSim.this, mPayment.class);
-                PaymentSummary.putExtra("SerialNumber", Serial);
+                PaymentSummary.putExtra("Number", Serial);
                 PaymentSummary.putExtra("NumberOfDays", Days);
-                PaymentSummary.putExtra("RequestedIP", "ipAddress");
-                PaymentSummary.putExtra("RequestedOS", getDeviceName());
                 PaymentSummary.putExtra("AmountCharged", TotalAmount);
                 PaymentSummary.putExtra("RequestedForDtTm", todayDate.getText().toString());
-                PaymentSummary.putExtra("RefNo", "1");
-                PaymentSummary.putExtra("RequestedDevice", "Android|" + userDetails.getLanguageSelect());
+                PaymentSummary.putExtra("AppPaymentType", "1");
                 startActivity(PaymentSummary);
             }
         } catch (Exception e) {
@@ -394,12 +387,6 @@ public class ActivateSim extends BaseActivity {
     }
 
     public void noOFdaysHide(View view) {
-    }
-
-    public String getDeviceName() {
-        String MANUFACTURER = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        return MANUFACTURER + "__" + model;
     }
 
     public void addOn(View view) {
