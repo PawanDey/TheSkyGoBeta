@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +31,21 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.mCountry_wise_rateList;
 
 public class Fragment_menu extends Fragment {
-    private TextView menu_name, voipNumber, currentBalance;
+    private TextView menu_name, voipNumber, currentBalance, countryWiseRateDiscription;
     private LinearLayout menu_linearLayoutMain;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ListView listViewVoipPlan;
     public ArrayList<VoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
     ProgressBar progressBar;
+    Spinner snipper_country;
     DatePickerDialog picker;
     String timeFormat = "d MMMM,yyyy";
     androidx.appcompat.app.AlertDialog progressDialog;
     DatePicker datePicker;
+    public Country_wise_price_adapter mCountry_wise_price_adapter;
 
     @Nullable
     @Override
@@ -54,7 +58,8 @@ public class Fragment_menu extends Fragment {
         listViewVoipPlan = view.findViewById(R.id.menu_listView);
         menu_linearLayoutMain = view.findViewById(R.id.menu_linearLayoutMain);
         progressBar = view.findViewById(R.id.menu_progressBar);
-
+        countryWiseRateDiscription = view.findViewById(R.id.countryWiseRateDiscription);
+        snipper_country = view.findViewById(R.id.snipper_country_wise_rate);
         try {
             if (SkyGoDialer.userBalance.equals("")) {
                 new Thread(new Runnable() {
@@ -128,6 +133,12 @@ public class Fragment_menu extends Fragment {
             e.printStackTrace();
         }
 
+        try {
+            mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
+            snipper_country.setAdapter(mCountry_wise_price_adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         listViewVoipPlan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -180,6 +191,18 @@ public class Fragment_menu extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        snipper_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Country_wise_rate_list co = (Country_wise_rate_list) parent.getItemAtPosition(position);
+                countryWiseRateDiscription.setText(co.getmPrice());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

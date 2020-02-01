@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 import okhttp3.OkHttpClient;
@@ -48,7 +49,6 @@ import retrofit2.Response;
 public class AuthenticationPresenter extends Dashboard implements AuthenticationPresenterInterface {
 
     public BaseView baseView;
-    String Token;
     String requestApiName;
 
     public AuthenticationPresenter(BaseActivity baseView) {
@@ -62,11 +62,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().signUp(userEmail, regTypeID.getValue(), gcmToken);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
-                        int UserID = 0;
+                        int UserID;
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         JSONObject table1 = (JSONObject) responseBody.getJSONArray("Table1").get(0);
@@ -98,7 +99,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -111,11 +112,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().extensionRequest(newExtensionRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 baseView.hideProgressBar();
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
@@ -135,7 +137,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -148,10 +150,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().AddFundsViaAPP(addFundsApp);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
@@ -177,7 +180,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -190,11 +193,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().UpdateFundsMethod(updateFundReq);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 baseView.hideProgressBar();
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
@@ -214,7 +218,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -227,17 +231,17 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().activationRequest(newActivationRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 baseView.hideProgressBar();
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
                         if (respondeCode == 0) {
-                            String MSISDN = table.getString("MSISDN");
                             ActivateSimResponse result = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), ActivateSimResponse.class);
                             baseView.onSuccess("activateSim", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
@@ -253,7 +257,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -266,13 +270,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().GetSubscriber(Token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-//                baseView.hideProgressBar();
-
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
@@ -284,13 +286,8 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onSuccess("SetDataInDashboard", setDataInDashboard);
                             GetSIMStatus result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetSIMStatus.class);
                             if (mValue.equals("3")) {
-                                String mSimStatus = table1.getString("SimStatus");
-                                if (mSimStatus.contains("Active")) {
-                                    GetSubscriberResponse result2 = new Gson().fromJson(responseBody.getJSONArray("Table2").get(0).toString(), GetSubscriberResponse.class);
-                                    baseView.onSuccess("GetSubscriber2", result2);
-                                } else if (mSimStatus.contains("Suspension Request") || mSimStatus.contains("Used")) {
-                                    baseView.onSuccess("GetSubscriber3", "");
-                                }
+                                GetSubscriberResponse result2 = new Gson().fromJson(responseBody.getJSONArray("Table2").get(0).toString(), GetSubscriberResponse.class);
+                                baseView.onSuccess("GetSubscriber2", result2);
                             } else
                                 baseView.onSuccess("GetSubscriber", result);
                         } else if (respondeCode == 1 || respondeCode == 3) {
@@ -306,7 +303,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
 //                baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -319,17 +316,13 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().validateSim(SerialNumber, Token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 baseView.hideProgressBar();
-
                 if (response.isSuccessful()) {
-
                     try {
-
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
-
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
@@ -349,7 +342,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -362,7 +355,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
 
                 baseView.hideProgressBar();
 
@@ -371,6 +364,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     try {
 
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
 
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
@@ -411,7 +405,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().validateMSISDN(MSISDN, Token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
 
                 baseView.hideProgressBar();
 
@@ -444,7 +438,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -495,7 +489,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.hideProgressBar();
                 baseView.onFailure();
             }
@@ -508,10 +502,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().createVoipCustomerSkyGo(createVoipCustomerSkyGo);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         int respondeCode = table.getInt("ResponseCode");
@@ -531,7 +526,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.onFailure();
             }
         });
@@ -547,7 +542,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 call.enqueue(new Callback<ResponseBody>() {
 
                     @Override
-                    public void onResponse(@NotNull Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
 
 
                         if (response.isSuccessful()) {
@@ -565,7 +560,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     }
 
                     @Override
-                    public void onFailure(@NotNull Call<ResponseBody> call, Throwable t) {
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                         baseView.hideProgressBar();
                         baseView.onFailure();
                     }
@@ -585,11 +580,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         Call<ResponseBody> call = APIClient.getApiService().GetVoipPlan();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
+                        assert body != null;
                         JSONObject responseBody = new JSONObject(body.string());
 
                         Type listType = new TypeToken<List<GetVoipPlans>>() {
@@ -606,7 +602,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 baseView.onFailure();
             }
         });
@@ -623,23 +619,23 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 client.newCall(request).enqueue(new okhttp3.Callback() {
 
                     @Override
-                    public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
+                    public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
                         try {
 //                            ResponseBody responseBody = response.body();
-                            String mMessage = response.body().string();
+                            String mMessage = Objects.requireNonNull(response.body()).string();
                             XmlToJson jsonObject = new XmlToJson.Builder(mMessage).build();
                             switch (requestApiName) {
                                 case "getCurrentBalance": {
-                                    CurrentBalance result = new Gson().fromJson(jsonObject.toJson().toString(), CurrentBalance.class);
+                                    CurrentBalance result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), CurrentBalance.class);
                                     baseView.onSuccess("CurrentBalance", result);
                                     break;
                                 }
                                 case "createCustomerAndSubscriber": {
                                     if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
-                                        VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberError.class);
+                                        VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), VoipCreateCustomerAndSubscriberError.class);
                                         baseView.onSuccess("CreateCustomerAndSubscriberError", result);
                                     } else if (mMessage.contains("create-customer-and-subscriber-response")) {   //code for success reponse from VoiP api
-                                        VoipCreateCustomerAndSubscriberGood result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberGood.class);
+                                        VoipCreateCustomerAndSubscriberGood result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), VoipCreateCustomerAndSubscriberGood.class);
                                         baseView.onSuccess("CreateCustomerAndSubscriberGood", result);
                                     }
                                     break;
@@ -665,7 +661,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 case "getRecentCallHistory": {
                                     try {
                                         if (mMessage.contains("get-subscriber-call-history-response")) {
-                                            RecentCallHistoryModel result = new Gson().fromJson(jsonObject.toJson().toString(), RecentCallHistoryModel.class);
+                                            RecentCallHistoryModel result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), RecentCallHistoryModel.class);
                                             baseView.onSuccess("getRecentCallHistory", result);
                                         } else if (mMessage.contains("get-subscriber-call-history-error")) {
                                             baseView.onServerError("getRecentCallHistory", "getRecentCallHistory API Error:");
@@ -686,8 +682,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                     @Override
                     public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-
-                        String a=requestApiName;
                     }
 
                 });

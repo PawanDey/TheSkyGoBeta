@@ -75,6 +75,45 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="Check Country Wise Price"
+                android:layout_marginBottom="5dp"
+                android:textSize="16dp" />
+
+            <Spinner
+                android:id="@+id/snipper_country_wise_rate"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dialog"
+                android:drawSelectorOnTop="true"
+                android:divider="@color/white"
+                android:layoutMode="opticalBounds"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:backgroundTintMode="add"
+
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Loading...."
+                android:id="@+id/countryWiseRateDiscription"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:textSize="14dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
             android:orientation="vertical">

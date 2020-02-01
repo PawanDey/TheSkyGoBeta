@@ -30,7 +30,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -54,6 +53,9 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
 
     List<VoipPlanModel> list = null;
     List<RecentSetDataModel> recentList = null;
+    public static ArrayList<Country_wise_rate_list> mCountry_wise_rateList;
+    public Country_wise_price_adapter mCountry_wise_price_adapter;
+
 
     @Override
 
@@ -65,7 +67,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sky_go_dialer);
-
+        initList();
         userDetails = new UserDetails(this);
         userID = userDetails.getUserId();
         String username = userDetails.getVoipCredentailuserName();
@@ -314,5 +316,42 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
             e.printStackTrace();
         }
         return recentList;
+    }
+
+    private void initList() {
+        mCountry_wise_rateList = new ArrayList<>();
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@39p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@9p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@393p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@339p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@319p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@3`9p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@139p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@439p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@539p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@75739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@86739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@6439p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@46739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@35749p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@35475669p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@378678768789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@377686789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@36786789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@36869p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
+        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
+
     }
 }

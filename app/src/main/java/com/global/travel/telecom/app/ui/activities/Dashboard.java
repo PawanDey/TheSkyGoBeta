@@ -37,11 +37,10 @@ import java.util.Locale;
 
 
 public class Dashboard extends BaseActivity {
-    public static TextView currentLocation;
-    private LocationManager locationManager;
     private double logitude;
     private double latitude;
     String token;
+    TextView currentLocation;
     TextView validity;
     ImageView skygoDialerLogo;
     boolean doubleBackToExitPressedOnce;
@@ -92,7 +91,7 @@ public class Dashboard extends BaseActivity {
         try {
             //for location
             currentLocation = findViewById(R.id.hereIsLocation);
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -190,7 +189,6 @@ public class Dashboard extends BaseActivity {
                         break;
                     }
                 }
-
                 break;
 
             }
@@ -207,22 +205,8 @@ public class Dashboard extends BaseActivity {
                 RecentExtensionLayout.setVisibility(View.VISIBLE);
                 MSISDN.setText(obj.getMSISDN());
                 validityLeft.setText(obj.getActDate());
-//                validity.setText(obj.getGoodUntil());
                 break;
             }
-            case "GetSubscriber3": {
-                LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
-                LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
-                RecentExtensionLayout.setVisibility(View.GONE);
-                ActivationLayout.setVisibility(View.VISIBLE);
-                userDetails = new UserDetails(this);
-                userDetails.setRechargeStatus(1);
-                userDetails.setMSISDN(null);
-                userDetails.setActivationDate(null);
-                userDetails.setPaypalTransactionFee(null);
-                break;
-            }
-
         }
     }
 
@@ -262,7 +246,6 @@ public class Dashboard extends BaseActivity {
             adress5 = addresses.get(0).getAddressLine(0);
             adress6 = addresses.get(0).getPremises();
             userDetails = new UserDetails(this);
-//            currentLocation.setText(city + ", " + adress1 + ", " + country);
             currentLocation.setText(adress5);
 
 
@@ -296,48 +279,43 @@ public class Dashboard extends BaseActivity {
             e.printStackTrace();
         }
         String languageCode = userDetails.getLanguageSelect();
-        //eng
-        if (languageCode.equals("en")) {
+        switch (languageCode) {
+            case "en":
 
-        }
-        //che
-        else if (languageCode.equals("zh")) {
-            try {
-                skygoDialerLogo.setImageResource(R.drawable.skygodialer_che);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (languageCode.equals("ja")) {
-            try {
-                skygoDialerLogo.setImageResource(R.drawable.skygodialer_jep);
-            } catch (Exception e) {
-                e.printStackTrace();
+                break;
+            case "zh":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_che);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "ja":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_jep);
+                } catch (Exception e) {
+                    e.printStackTrace();
 
-            }
+                }
+                break;
+            case "ko":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_kor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "es":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygo_es);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                showToast(" no logo select ");
+                break;
         }
-        //kor
-        else if (languageCode.equals("ko")) {
-            try {
-                skygoDialerLogo.setImageResource(R.drawable.skygodialer_kor);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        //es(spanish need to be added)
-        else if (languageCode.equals("es")) {
-            try {
-                skygoDialerLogo.setImageResource(R.drawable.skygo_es);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            showToast(" no logo select ");
-
-        }
-    }
-
-    public static void setLocation(String result) {
-        currentLocation.setText(result);
     }
 
     public void googleMapOpen(View view) {
