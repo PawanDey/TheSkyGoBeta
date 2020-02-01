@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:fontFamily="@font/sf_old_republic_font"
             android:padding="3dp"
             android:layout_marginTop="15dp"
             android:text="@string/textTabTheSetpHotspot" />
@@ -33,6 +34,7 @@
             android:layout_width="29dp"
             android:layout_height="29dp"
             android:layout_marginTop="15dp"
+            android:fontFamily="@font/sf_old_republic_font"
             android:gravity="center"
             android:text="@string/textOK"
             android:textSize="18dp"

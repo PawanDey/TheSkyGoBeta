@@ -15,6 +15,8 @@ import android.graphics.drawable.ColorDrawable;
 
 import com.global.travel.telecom.app.R;
 
+import java.util.TimeZone;
+
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
     protected abstract int getLayout();

@@ -10,6 +10,7 @@
         android:layout_height="50dp"
         android:layout_margin="15dp"
         android:padding="2dp"
+        android:background="@drawable/voip_gredient_contact_circle"
         android:src="@drawable/userimage" />
 
     <LinearLayout
@@ -23,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:fontFamily="@font/segoe_bold"
+            android:fontFamily="@font/sf_old_republic_font"
             android:text="Jhon Deo"
             android:textSize="18dp" />
 
@@ -32,9 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:fontFamily="@font/segoe_semi_light"
+            android:fontFamily="@font/sf_old_republic_font"
             android:text="9805198061"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
 
     </LinearLayout>

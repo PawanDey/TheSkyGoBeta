@@ -20,6 +20,7 @@
             android:src="@drawable/hotspotoff" />
 
         <TextView
+            android:fontFamily="@font/sf_old_republic_font"
             android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
             android:id="@+id/textOk"
             android:layout_width="29dp"
             android:layout_height="29dp"
+            android:fontFamily="@font/sf_old_republic_font"
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="@string/textOK"

@@ -45,7 +45,6 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.AddFundsApp;
-import com.global.travel.telecom.app.model.AddFundsResponse;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
@@ -277,26 +276,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
             case "AddFundsViaAPP": {
                 try {
-
-                    if (Deduction == 0) {
-                        switch (AppPaymentType) {
-                            case "1":
-                                activateSim();
-                                break;
-                            case "2":
-                                extensionRequest();
-                                break;
-                            case "3":
-                                VoipPlanRecharge();
-                                break;
-                        }
-                    } else {
-                        AddFundsResponse addFundsResponse = (AddFundsResponse) response;
-                        updateFundID = addFundsResponse.getRequestId();
-                        DropInRequest dropInRequest = new DropInRequest().clientToken(token);
-                        startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
-                    }
-
+                    DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                    startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
                 } catch (Exception e) {
                     showToast(e.toString());
                 }
@@ -308,32 +289,47 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
 
     void PayPalPaymentOnclick() {
+
         try {
+
             assert extras != null;
             Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
-
             sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
-            addFundsApp.setAmountCharged(String.valueOf(Deduction));
-            addFundsApp.setDealerID("0");
-            addFundsApp.setIMEI(getDeviceIMEI());
-            addFundsApp.setLatitude(String.valueOf(currentLatitude));
-            addFundsApp.setLongitude(String.valueOf(currentLongitude));
-            addFundsApp.setMacID("");
-            addFundsApp.setPayPalRefNo("");
-            addFundsApp.setPaymentMode("2");
-            addFundsApp.setRemarks("Payment From Android APP");
-            addFundsApp.setRequestedDevice(getDeviceName());
-            addFundsApp.setRequestedIP(IPaddress);
-            addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
-            addFundsApp.setServiceCharge("0");
-            addFundsApp.setTokenID(userDetails.getTokenID());
-            addFundsApp.setTransactionReferenceID(sessionTxnID);
-            addFundsApp.setTransactionType("0");
-            authenticationPresenter.AddFundsAPI(addFundsApp);
+
+            if (Deduction == 0) {
+                switch (AppPaymentType) {
+                    case "1":
+                        activateSim();
+                        break;
+                    case "2":
+                        extensionRequest();
+                        break;
+                    case "3":
+                        VoipPlanRecharge();
+                        break;
+                }
+            } else {
+                addFundsApp.setAmountCharged(String.valueOf(Deduction));
+                addFundsApp.setDealerID("0");
+                addFundsApp.setIMEI(getDeviceIMEI());
+                addFundsApp.setLatitude(String.valueOf(currentLatitude));
+                addFundsApp.setLongitude(String.valueOf(currentLongitude));
+                addFundsApp.setMacID("");
+                addFundsApp.setPayPalRefNo("");
+                addFundsApp.setPaymentMode("2");
+                addFundsApp.setRemarks("Payment From Android APP");
+                addFundsApp.setRequestedDevice(getDeviceName());
+                addFundsApp.setRequestedIP(IPaddress);
+                addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
+                addFundsApp.setServiceCharge("0");
+                addFundsApp.setTokenID(userDetails.getTokenID());
+                addFundsApp.setTransactionReferenceID(sessionTxnID);
+                addFundsApp.setTransactionType("0");
+                authenticationPresenter.AddFundsAPI(addFundsApp);
+            }
         } catch (Exception e) {
             showToast(e.toString());
         }
-
 
     }
 

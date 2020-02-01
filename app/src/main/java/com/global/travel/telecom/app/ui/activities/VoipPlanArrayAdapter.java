@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.model.VoipPlanModel;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,6 @@ public class VoipPlanArrayAdapter extends ArrayAdapter<VoipPlanModel> {
         String PlanMin = getItem(position).getPlanMin();
         String Validity = getItem(position).getValidity();
         String MonikerValue = getItem(position).getMonikerValue();
-
-        VoipPlanModel voipPlanModel = new VoipPlanModel(PlanName, PlanDetails, AmountCharge, PlanMin, Validity, MonikerValue);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResouce, parent, false);

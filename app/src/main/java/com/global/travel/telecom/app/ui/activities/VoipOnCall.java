@@ -3,6 +3,7 @@ package com.global.travel.telecom.app.ui.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,9 +23,9 @@ import com.mizuvoip.jvoip.SipStack;
 import org.jetbrains.annotations.NotNull;
 
 public class VoipOnCall extends AppCompatActivity {
-    TextView phoneNumber, timeOnCall, ContactPersonname, firstChar;
-    LinearLayout loadspeaker, mute;
-    ImageView hangUp;
+    TextView phoneNumber, timeOnCall, ContactPersonname, firstChar, loadspeakerTextColorChange, holdTextColorChange, muteTextColorChange;
+    LinearLayout loadspeaker, mute, hold;
+    ImageView hangUp, loadspeakerImageColorChange, holdImageColorChange, muteImageColorChange;
 
     public static String LOGTAG = "AJVoIP";
     TextView mStatus = null;
@@ -34,6 +35,7 @@ public class VoipOnCall extends AppCompatActivity {
     public static VoipOnCall instance = null;
     boolean terminateNotifThread = false;
     Boolean checkHold = true;
+    Boolean checkLoadspeaker = true;
     Boolean checkTimeOnCall = false;
     int sec = 0;
     int min = 0;
@@ -42,7 +44,6 @@ public class VoipOnCall extends AppCompatActivity {
     Runnable updateTask;
     String[] notarray = null;
     Boolean checkMute = true;
-    Boolean checkSpeaker = true;
     Boolean oneTimeCall = true;
     String CallingNumber, CallingName, firstCharector;
 
@@ -57,6 +58,7 @@ public class VoipOnCall extends AppCompatActivity {
 
         ctx = this;
         instance = this;
+        hold = findViewById(R.id.hold);
         mute = findViewById(R.id.mute);
         hangUp = findViewById(R.id.hangup);
         loadspeaker = findViewById(R.id.loadspeaker);
@@ -64,6 +66,13 @@ public class VoipOnCall extends AppCompatActivity {
         timeOnCall = findViewById(R.id.timeOnCall);
         firstChar = findViewById(R.id.firstChar);
         ContactPersonname = findViewById(R.id.ContactPersonname);
+        loadspeakerImageColorChange = findViewById(R.id.loadspeakerImageColorChange);
+        loadspeakerTextColorChange = findViewById(R.id.loadspeakerTextColorChange);
+        holdImageColorChange = findViewById(R.id.holdImageColorChange);
+        holdTextColorChange = findViewById(R.id.holdTextColorChange);
+        muteImageColorChange = findViewById(R.id.muteImageColorChange);
+        muteTextColorChange = findViewById(R.id.muteTextColorChange);
+
         if (CallingName == null || CallingName.length() == 0) {
             CallingName = "Unknown Name";
             ContactPersonname.setText("Unknown Name");
@@ -132,13 +141,41 @@ public class VoipOnCall extends AppCompatActivity {
                 if (mysipclient == null) {
                     DisplayStatus("ERROR, SipStack not started");
                 } else {
-                    if (checkSpeaker) {
-                        checkSpeaker = false;
-                    } else {
-                        checkSpeaker = true;
-                    }
                     mysipclient.SetSpeakerMode(!mysipclient.IsLoudspeaker());
+                    if (checkLoadspeaker) {
+                        loadspeakerImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.loadspeaker_blue));
+                        loadspeakerTextColorChange.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        loadspeakerTextColorChange.setTypeface(Typeface.DEFAULT_BOLD);
+                        loadspeakerTextColorChange.setTextSize(12);
+                        checkLoadspeaker = false;
+                    } else {
+                        loadspeakerImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.loadspeaker));
+                        loadspeakerTextColorChange.setTextColor(getResources().getColor(R.color.black));
+                        loadspeakerTextColorChange.setTypeface(Typeface.DEFAULT);
+                        loadspeakerTextColorChange.setTextSize(10);
+                        checkLoadspeaker = true;
+                    }
                 }
+            }
+        });
+
+        hold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int checkpoint = mysipclient.IsOnHold(-2);
+                int a = -1;
+                if (checkHold) {
+                    mysipclient.Hold(a, true);
+                    holdImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.hold_blue));
+                    holdTextColorChange.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    checkHold = false;
+                } else {
+                    holdImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.hold));
+                    holdTextColorChange.setTextColor(getResources().getColor(R.color.black));
+                    mysipclient.Hold(a, false);
+                    checkHold = true;
+                }
+
             }
         });
 
@@ -148,12 +185,25 @@ public class VoipOnCall extends AppCompatActivity {
                 if (mysipclient == null) {
                     DisplayStatus("ERROR, SipStack not started");
                 } else {
-                    if (checkMute) {
-                        mysipclient.Mute(-2, true, 0);
-                        checkMute = false;
+                    if (!oneTimeCall) {
+                        if (checkMute) {
+                            mysipclient.Mute(-2, true, 0);
+                            muteImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.mute_blue));
+                            muteTextColorChange.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                            muteTextColorChange.setTypeface(Typeface.DEFAULT_BOLD);
+                            muteTextColorChange.setTextSize(12);
+                            checkMute = false;
+                        } else {
+                            mysipclient.Mute(-2, false, 0);
+                            muteImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.mute));
+                            muteTextColorChange.setTextColor(getResources().getColor(R.color.black));
+                            muteTextColorChange.setTypeface(Typeface.DEFAULT);
+                            muteTextColorChange.setTextSize(10);
+                            checkMute = true;
+                        }
                     } else {
-                        mysipclient.Mute(-2, false, 0);
-                        checkMute = true;
+                        Toast.makeText(ctx, "" +
+                                "Waiting for Pick the Call", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

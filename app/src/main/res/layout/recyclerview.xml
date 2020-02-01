@@ -27,7 +27,7 @@
             android:layout_toStartOf="@+id/textView14"
             android:layout_toLeftOf="@+id/textView14"
             android:layout_toEndOf="@+id/imageNotificationButton"
-            android:fontFamily="@font/segoe_semi_light"
+            android:fontFamily="@font/sf_old_republic_font"
             android:text="Welcome to The SkyGO. Ready to use"
             android:textColor="#5A5A5A"
             android:textSize="10dp" />
@@ -39,7 +39,7 @@
             android:layout_alignTop="@+id/imageNotificationButton"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/imageNotificationButton"
-            android:fontFamily="@font/segoe_bold"
+            android:fontFamily="@font/sf_old_republic_font"
             android:text="Jhon Deo"
             android:textSize="18dp" />
 
@@ -50,6 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="16dp"
+            android:fontFamily="@font/sf_old_republic_italic"
             android:gravity="right"
             android:text="10 min ago"
             android:textColor="#5A5A5A"

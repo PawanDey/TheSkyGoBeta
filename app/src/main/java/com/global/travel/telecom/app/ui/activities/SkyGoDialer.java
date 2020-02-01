@@ -6,9 +6,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,31 +16,44 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
+import com.global.travel.telecom.app.model.Call;
+import com.global.travel.telecom.app.model.ContactsModel;
 import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetVoipPlans;
+import com.global.travel.telecom.app.model.RecentCallHistoryModel;
+import com.global.travel.telecom.app.model.RecentSetDataModel;
+import com.global.travel.telecom.app.model.VoipPlanModel;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 public class SkyGoDialer extends BaseActivity implements Serializable {
     ImageView voip_menu, voip_phone, voip_recent, voip_contacts;
     ViewPager viewPager;
     PagerViewAdepter pagerViewAdepter;
-    public static ArrayList<ContactsModel> mobileArray = null;
-    List<GetVoipPlans> result = null;
-
+    AuthenticationPresenter authenticationPresenter;
+    UserDetails userDetails;
     Context cotxt = this;
+
+    List<GetVoipPlans> result = null;
+    List<Call> CallHistoryData = null;
+
     public static String userBalance = "";
     public static String userID = "";
+
+    public static ArrayList<ContactsModel> mobileArray = null;
     public static ArrayList<VoipPlanModel> VoipPlan = null;
-    AuthenticationPresenter authenticationPresenter;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    public static ArrayList<RecentSetDataModel> recentCallHistoryModels = null;
+
     List<VoipPlanModel> list = null;
-    public static Boolean GetVoipPlan_api = false;
-    public static Boolean getCurrentBalance_api = false;
+    List<RecentSetDataModel> recentList = null;
 
     @Override
 
@@ -56,8 +66,11 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sky_go_dialer);
 
-        UserDetails userDetails = new UserDetails(this);
+        userDetails = new UserDetails(this);
         userID = userDetails.getUserId();
+        String username = userDetails.getVoipCredentailuserName();
+        String password = userDetails.getVoipCredentailPassword();
+
         voip_menu = findViewById(R.id.voip_menu);
         voip_phone = findViewById(R.id.voip_phone);
         voip_recent = findViewById(R.id.voip_recent);
@@ -68,12 +81,13 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         viewPager.setAdapter(pagerViewAdepter);
         authenticationPresenter = new AuthenticationPresenter(this);
 
+
         String getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
                 "<authentication>\n" +
-                "<username>skygo.api</username>\n" +
-                "<password>54321@123</password>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
                 "</authentication>\n" +
-                "<subscriberid>13799728</subscriberid>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
                 "</get-customer-balance>";
         try {
             authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
@@ -173,14 +187,38 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "CurrentBalance": {
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, +1);
+                String endDate = dateFormat.format(calendar.getTime());
+                calendar.add(Calendar.DATE, -30);
+                String startDate = dateFormat.format(calendar.getTime());
+                String getRecentCallHistory = "<get-subscriber-call-history version=\"1\">\n" +
+                        "<authentication>\n" +
+                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                        "</authentication>\n" +
+                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+//                        "<subscriberid>13823200</subscriberid>\n" +
+                        "<start>" + startDate + "</start>\n" +
+                        "<end>" + endDate + "</end>\n" +
+                        "</get-subscriber-call-history>";
+                authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
+
                 CurrentBalance currentBalance = (CurrentBalance) response;
                 userBalance = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
-                getCurrentBalance_api = true;
                 break;
             }
             case "GetVoipPlanList": {
                 result = (List<GetVoipPlans>) response;
-                GetVoipPlan_api = true;
+                break;
+            }
+            case "getRecentCallHistory": {
+                RecentCallHistoryModel re = (RecentCallHistoryModel) response;
+                CallHistoryData = re.getGetSubscriberCallHistoryResponse().getCallHistory().getCall();
+
                 break;
             }
         }
@@ -232,14 +270,15 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     private class AsyscGetContact extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] objects) {
-            VoipPlan = (ArrayList<VoipPlanModel>) getAllPlans(cotxt);
+            VoipPlan = (ArrayList<VoipPlanModel>) getAllPlans();
             mobileArray = (ArrayList<ContactsModel>) getAllContacts(cotxt);
+            recentCallHistoryModels = (ArrayList<RecentSetDataModel>) getRecentCallHistory();
             return 0;
         }
     }
 
 
-    private List<VoipPlanModel> getAllPlans(Context ctx) {
+    private List<VoipPlanModel> getAllPlans() {
 
         list = new ArrayList<>();
         try {
@@ -251,9 +290,29 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 list.add(info);
             }
         } catch (Exception e) {
-            Toast.makeText(this, "get voip plan list error:" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return list;
+    }
+
+    private List<RecentSetDataModel> getRecentCallHistory() {
+
+        recentList = new ArrayList<>();
+        try {
+            while (CallHistoryData == null) {
+                Thread.sleep(200);
+            }
+            for (int i = 0; i < CallHistoryData.size(); i++) {
+                RecentSetDataModel info = new RecentSetDataModel(CallHistoryData.get(i).getCreateTime(), CallHistoryData.get(i).getDuration(), CallHistoryData.get(i).getLeg2(), CallHistoryData.get(i).getOutcome(), CallHistoryData.get(i).getRetailCharge().getContent());
+                recentList.add(info);
+
+            }
+
+
+        } catch (Exception e) {
+            Toast.makeText(this, "getRecentCallHistory list error:" + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return recentList;
     }
 }

@@ -30,6 +30,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/verifyuseric"
+            android:fontFamily="@font/sf_old_republic_font"
             android:paddingLeft="3dp"
             android:textColor="#00CD00"
             android:textSize="13dp" />
@@ -76,6 +77,7 @@
                 <EditText
                     android:id="@+id/input_email_signin"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress" />
@@ -89,6 +91,7 @@
                 <EditText
                     android:id="@+id/input_password_signin"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textPassword" />
@@ -102,6 +105,7 @@
                 <EditText
                     android:id="@+id/confrom_input_password_signin"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
                     android:hint="Confirm Password"
                     android:inputType="textPassword" />
@@ -114,8 +118,8 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:background="@drawable/gredientmodify"
-                android:fontFamily="@font/segoe"
                 android:gravity="center"
                 android:onClick="CreateAccount"
                 android:text="Create an account"
@@ -126,6 +130,7 @@
                 android:layout_height="18dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:gravity="center"
                 android:text="@string/textAlreadyhaveanaccount"
                 android:textSize="14dp" />
@@ -160,6 +165,7 @@
                 android:layout_marginBottom="8dp">
                 <EditText android:id="@+id/input_email_loginIn"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
                     android:hint="Email" />
@@ -174,6 +180,7 @@
                 <EditText android:id="@+id/input_password_loginIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_old_republic_font"
                     android:inputType="textPassword"
                     android:hint="Password"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -194,6 +201,7 @@
                 android:id="@+id/text_below_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="24dp"
                 android:gravity="center"

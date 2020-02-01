@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/menu_linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/menu_linearLayoutMain"
         android:padding="5dp">
 
         <LinearLayout
@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="$ 00"
+                    android:text="$ --"
                     android:textColor="@color/colorRed"
                     android:textSize="22dp" />
 
@@ -52,9 +52,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:fontFamily="@font/sf_old_republic_font"
+                    android:text="Loading"
                     android:textColor="@color/colorAccent"
                     android:textSize="22dp"
-                    android:text="Virtuzo Infosystem"
                     android:textStyle="bold" />
 
                 <TextView
@@ -65,7 +65,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="0120 2546 28763"
+                    android:text=" "
                     android:textColor="@color/black"
                     android:textSize="20dp" />
 
@@ -82,24 +82,30 @@
             <ListView
                 android:id="@+id/menu_listView"
                 android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:background="@color/white"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:divider="@color/white"
                 android:dividerHeight="9dp"
-                android:scrollbars="none" />
+                android:scrollbars="none"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </LinearLayout>
 
 
-    <ProgressBar
-        android:id="@+id/menu_progressBar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="70dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <ProgressBar
+            android:id="@+id/menu_progressBar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

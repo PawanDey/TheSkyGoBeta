@@ -1,7 +1,7 @@
 package com.global.travel.telecom.app.model;
 
 
-class ContactsModel {
+public class ContactsModel {
     public String name;
     public String mobileNumber;
 

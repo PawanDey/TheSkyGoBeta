@@ -24,9 +24,9 @@
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:background="@drawable/voip_gredient_circle"
-            android:fontFamily="@font/roboto_rugular"
+            android:fontFamily="@font/sf_old_republic_font"
             android:gravity="center"
-            android:text="S"
+            android:text="U"
             android:textColor="@color/white"
             android:textSize="70dp" />
 
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/roboto_rugular"
+            android:fontFamily="@font/sf_old_republic_font"
             android:text="Calling..." />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="2dp"
-            android:fontFamily="@font/roboto_rugular"
+            android:fontFamily="@font/sf_old_republic_font"
             android:gravity="center"
             android:singleLine="true"
             android:text="Unknown Name"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/roboto_rugular"
+            android:fontFamily="@font/sf_old_republic_font"
             android:singleLine="true"
             android:text="Phone number"
             android:textColor="@color/darkgrey"
@@ -84,15 +84,17 @@
             android:padding="10dp">
 
             <ImageView
+                android:id="@+id/loadspeakerImageColorChange"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/loadspeaker" />
 
             <TextView
+                android:id="@+id/loadspeakerTextColorChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/roboto_rugular"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:text="Speaker" />
         </LinearLayout>
 
@@ -104,18 +106,21 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:visibility="invisible">
 
             <ImageView
+                android:id="@+id/holdImageColorChange"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/hold" />
 
             <TextView
+                android:id="@+id/holdTextColorChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/roboto_rugular"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:text="Hold" />
         </LinearLayout>
 
@@ -130,15 +135,17 @@
             android:padding="10dp">
 
             <ImageView
+                android:id="@+id/muteImageColorChange"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/mute" />
 
             <TextView
+                android:id="@+id/muteTextColorChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/roboto_rugular"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:text="Mute" />
         </LinearLayout>
 

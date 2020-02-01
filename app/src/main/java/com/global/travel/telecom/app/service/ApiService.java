@@ -2,6 +2,7 @@ package com.global.travel.telecom.app.service;
 
 
 import com.global.travel.telecom.app.model.AddFundsApp;
+import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
@@ -45,6 +46,9 @@ public interface ApiService {
 
     @POST("NewExtensionRequest")
     Call<ResponseBody> extensionRequest(@Body NewExtensionRequest newExtensionRequest);
+
+    @POST("SpinsertVoIPCustomer")
+    Call<ResponseBody> createVoipCustomerSkyGo(@Body CreateVoipCustomerSkyGo createVoipCustomerSkyGo);
 
     @GET("ListAlertMessage")
     Call<ResponseBody> ListNotifications(@Query("TokenID") String TokenID, @Query("Condition") String Condition);

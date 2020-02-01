@@ -38,6 +38,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
+import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberError;
@@ -80,6 +81,9 @@ public class LoginActivity extends BaseActivity {
     androidx.appcompat.app.AlertDialog progressDialog;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
+    LoginResponse obj;
+    UserDetails userDetails;
+    CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
 
     @Override
     protected int getLayout() {
@@ -143,6 +147,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onViewReady() {
         super.onViewReady();
+        userDetails = new UserDetails(this);
         fb = findViewById(R.id.facebookCustom);
         google = findViewById(R.id.google_sign_in_button);
         linkedin = findViewById(R.id.linkedin_button);
@@ -169,10 +174,10 @@ public class LoginActivity extends BaseActivity {
         switch (method) {
             case "loginUser": {
                 Toast.makeText(LoginActivity.this, R.string.textLoginSuccessful, LENGTH_LONG).show();
-                LoginResponse obj = (LoginResponse) response;
+                obj = (LoginResponse) response;
                 UserDetails userDetails = new UserDetails(LoginActivity.this);
                 userDetails.setTokenID(obj.getTokenID());
-                userDetails.setUserId(obj.getDealerID());
+                userDetails.setUserId(obj.getUserID());
                 userDetails.setUserName(obj.getUserName());
                 userDetails.setPaypalTransactionFee(obj.getTxnSeriesPrefix());
                 userDetails.setTxnSeriesPrefix("SKY");
@@ -183,87 +188,144 @@ public class LoginActivity extends BaseActivity {
                 break;
             }
             case "CreateVoipAccount": {
-                LoginResponse obj = (LoginResponse) response;
-                String createCustomerAndSubscriber = "<create-customer-and-subscriber version=\"1\">\n" +
-                        "<authentication>\n" +
-                        "<username>skygo.api</username>\n" +
-                        "<password>54321@123</password>\n" +
-                        "</authentication>\n" +
-                        "<customer>\n" +
-                        "<name>SkyGo:" + obj.getDealerID() + "</name>\n" +
-                        "<customer-reference>SkyGo:" + obj.getDealerID() + "</customer-reference>\n" +
-                        "<distributor-id>10028260</distributor-id>\n" +
-                        "<status>active</status>\n" +
-                        "<credit-basis>pre-paid</credit-basis>\n" +
-                        "<credit-limit>0</credit-limit>\n" +
-                        "<warning-trigger>0</warning-trigger>\n" +
-                        "<customer-group>10488</customer-group>\n" +
-                        "<email-address></email-address>\n" +
-                        "<contact-number></contact-number>\n" +
-                        "<address-line-1></address-line-1>\n" +
-                        "<address-line-2></address-line-2>\n" +
-                        "<address-line-3></address-line-3>\n" +
-                        "<address-line-4></address-line-4>\n" +
-                        "<postcode></postcode>\n" +
-                        "<country>USA</country>\n" +
-                        "</customer>\n" +
-                        "<subscriber>\n" +
-                        "<first-name></first-name>\n" +
-                        "<middle-initials></middle-initials>\n" +
-                        "<surname>SkyGo</surname>\n" +
-                        "<title>Mr</title>\n" +
-                        "<status>active</status>\n" +
-                        "<enable-sip-registrations>yes</enable-sip-registrations>\n" +
-                        "<prefer-sip>yes</prefer-sip>\n" +
-                        "<voicemail-enabled>no</voicemail-enabled>\n" +
-                        "<voicemail-timeout>30</voicemail-timeout>\n" +
-                        "<notify-missed-calls>no</notify-missed-calls>\n" +
-                        "<send-charge-notifications>no</send-charge-notifications>\n" +
-                        "<send-credit-notifications>no</send-credit-notifications>\n" +
-                        "<forward-to></forward-to>\n" +
-                        "<withhold-cli>no</withhold-cli>\n" +
-                        "<email-address></email-address>\n" +
-                        "<subscriber-reference>" + obj.getDealerID() + "</subscriber-reference>\n" +
-                        "<forward-callback>no</forward-callback>\n" +
-                        "<auto-cli>yes</auto-cli>\n" +
-                        "<block-gprs>yes</block-gprs>\n" +
-                        "</subscriber>\n" +
-                        "</create-customer-and-subscriber>";
-                Toast.makeText(this, "test pass", LENGTH_LONG).show();
                 try {
+                    obj = (LoginResponse) response;
+
+                    String VoIpName = "SkyGo:" + obj.getUserID().trim();
+
+                    //set in share prefence
+                    userDetails.setUserId(obj.getUserID());
+                    userDetails.setVoipCredentailuserName(obj.getVoIPUserName());
+                    userDetails.setVoipCredentailPassword(obj.getVoIPPassword());
+                    userDetails.setVoipUserName(VoIpName);
+
+                    //set data for create a customer in skygo database
+                    createVoipCustomerSkyGo.setmTokenID(obj.getTokenID());
+                    createVoipCustomerSkyGo.setmVoIPId_SIPId("");
+                    createVoipCustomerSkyGo.setmAmount(obj.getVoIPCreditLimit());
+                    createVoipCustomerSkyGo.setmCLINumber("");
+                    createVoipCustomerSkyGo.setmVoip_name(VoIpName);
+                    createVoipCustomerSkyGo.setmCustomer_reference(obj.getUserID().trim());
+                    createVoipCustomerSkyGo.setmSubscriber_reference(obj.getUserID());
+                    createVoipCustomerSkyGo.setmEmail_address("");
+                    createVoipCustomerSkyGo.setmContact_number("");
+                    createVoipCustomerSkyGo.setmEmail_address("");
+                    createVoipCustomerSkyGo.setmAddress_line_2("");
+                    createVoipCustomerSkyGo.setmAddress_line_1("");
+                    createVoipCustomerSkyGo.setmPostcode("");
+                    createVoipCustomerSkyGo.setmCountry("USA");
+                    createVoipCustomerSkyGo.setmFirst_name("");
+                    createVoipCustomerSkyGo.setmMiddle_initials("");
+                    createVoipCustomerSkyGo.setmSurname("SkyGo");
+                    createVoipCustomerSkyGo.setmTitle("Mr");
+                    //3 paramters (subscriber_id , customer_id and voip_status) change value if success
+                    createVoipCustomerSkyGo.setmCustomer_id("0");
+                    createVoipCustomerSkyGo.setmSubscriber_id("0");
+                    createVoipCustomerSkyGo.setmVoip_status("30");
+
+                    String createCustomerAndSubscriber = "<create-customer-and-subscriber version=\"1\">\n" +
+                            "<authentication>\n" +
+                            "<username>" + obj.getVoIPUserName().trim() + "</username>\n" +
+                            "<password>" + obj.getVoIPPassword().trim() + "</password>\n" +
+                            "</authentication>\n" +
+                            "<customer>\n" +
+                            "<name>" + VoIpName + "</name>\n" +
+                            "<customer-reference>" + obj.getUserID().trim() + "</customer-reference>\n" +
+                            "<distributor-id>" + obj.getVoIPDistributorId().trim() + "</distributor-id>\n" +
+                            "<status>active</status>\n" +
+                            "<credit-basis>" + obj.getVoIPCreditBasis().trim() + "</credit-basis>\n" +
+                            "<credit-limit>" + obj.getVoIPCreditLimit().trim() + "</credit-limit>\n" +
+                            "<warning-trigger>" + obj.getVoIPWarningTrigger().trim() + "</warning-trigger>\n" +
+                            "<customer-group>" + obj.getVoIPCustomerGroup().trim() + "</customer-group>\n" +
+                            "<email-address></email-address>\n" +
+                            "<contact-number></contact-number>\n" +
+                            "<address-line-1></address-line-1>\n" +
+                            "<address-line-2></address-line-2>\n" +
+                            "<address-line-3></address-line-3>\n" +
+                            "<address-line-4></address-line-4>\n" +
+                            "<postcode></postcode>\n" +
+                            "<country>USA</country>\n" +
+                            "</customer>\n" +
+                            "<subscriber>\n" +
+                            "<first-name></first-name>\n" +
+                            "<middle-initials></middle-initials>\n" +
+                            "<surname>SkyGo</surname>\n" +
+                            "<title>Mr</title>\n" +
+                            "<status>active</status>\n" +
+                            "<enable-sip-registrations>" + obj.getVoIPEnableSipRegistration().trim() + "</enable-sip-registrations>\n" +
+                            "<prefer-sip>" + obj.getVoIPPreferSip().trim() + "</prefer-sip>\n" +
+                            "<voicemail-enabled>" + obj.getVoIPVoicemailEnable().trim() + "</voicemail-enabled>\n" +
+                            "<voicemail-timeout>" + obj.getVoIPVoicemailTimeout().trim() + "</voicemail-timeout>\n" +
+                            "<notify-missed-calls>" + obj.getVoIPNotifyMissedCall().trim() + "</notify-missed-calls>\n" +
+                            "<send-charge-notifications>" + obj.getVoIPSendChargeNotifications().trim() + "</send-charge-notifications>\n" +
+                            "<send-credit-notifications>" + obj.getVoIPSendCreditNotifications().trim() + "</send-credit-notifications>\n" +
+                            "<forward-to>" + obj.getVoIPForwardTo().trim() + "</forward-to>\n" +
+                            "<withhold-cli>" + obj.getVoIPWithholdCLI().trim() + "</withhold-cli>\n" +
+                            "<email-address></email-address>\n" +
+                            "<subscriber-reference>" + obj.getUserID() + "</subscriber-reference>\n" +
+                            "<forward-callback>" + obj.getVoIPForwardCallback().trim() + "</forward-callback>\n" +
+                            "<auto-cli>" + obj.getVoIPAutoCLI().trim() + "</auto-cli>\n" +
+                            "<block-gprs>" + obj.getVoIPBlockGPRS().trim() + "</block-gprs>\n" +
+                            "</subscriber>\n" +
+                            "</create-customer-and-subscriber>";
+
                     authenticationPresenter.VoIPAPICall(createCustomerAndSubscriber, "createCustomerAndSubscriber");
                 } catch (Exception e) {
+                    showToast("OnSuccess CreateVoipAccount Error:" + e.getMessage());
                     e.printStackTrace();
                 }
                 break;
             }
             case "CreateCustomerAndSubscriberError": {
-                VoipCreateCustomerAndSubscriberError obj = (VoipCreateCustomerAndSubscriberError) response;
-                showToast("VoiP CreateCustomerAndSubscriberError: " + obj.getCreateCustomerAndSubscriberError().getContent());
+                try {
+                    VoipCreateCustomerAndSubscriberError obj = (VoipCreateCustomerAndSubscriberError) response;
+                    showToast("VoiP CreateCustomerAndSubscriberError: " + obj.getCreateCustomerAndSubscriberError().getContent());
+
+                    authenticationPresenter.CreateVoipCustomerSkyGo(createVoipCustomerSkyGo);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showToast("onSuccess CreateCustomerAndSubscriberError Error: " + e.getMessage());
+                }
                 break;
             }
             case "CreateCustomerAndSubscriberGood": {
-                VoipCreateCustomerAndSubscriberGood obj = (VoipCreateCustomerAndSubscriberGood) response;
-                UserDetails userDetails = new UserDetails(this);
-                userDetails.setVoipCustomerID(obj.getCreateCustomerAndSubscriberResponse().getCustomer().getId());
-                userDetails.setVoipSubcriberID(obj.getCreateCustomerAndSubscriberResponse().getSubscriber().getId());
-                String setSubscriberPassword = "<set-subscriber-password version=\"1\"> <authentication>\n" +
-                        "<username>skygo.api</username>\n" +
-                        "<password>54321@123</password> </authentication>\n" +
-                        "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
-                        "<username>SkyGo:" + userDetails.getUserId().trim() + "</username> \n" +
-                        "<password>" + userDetails.getUserId().trim().toLowerCase() + "</password>\n" +
-                        "</set-subscriber-password>";
                 try {
+                    VoipCreateCustomerAndSubscriberGood obj = (VoipCreateCustomerAndSubscriberGood) response;
+
+                    //add pendnig 3 parametre for create voip customer skygo (in case success)
+                    createVoipCustomerSkyGo.setmCustomer_id(obj.getCreateCustomerAndSubscriberResponse().getCustomer().getId());
+                    createVoipCustomerSkyGo.setmSubscriber_id(obj.getCreateCustomerAndSubscriberResponse().getSubscriber().getId());
+                    createVoipCustomerSkyGo.setmVoip_status("31");
+
+                    //set in share prefnce
+                    userDetails.setVoipCustomerID(obj.getCreateCustomerAndSubscriberResponse().getCustomer().getId());
+                    userDetails.setVoipSubcriberID(obj.getCreateCustomerAndSubscriberResponse().getSubscriber().getId());
+
+                    String setSubscriberPassword = "<set-subscriber-password version=\"1\"> <authentication>\n" +
+                            "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                            "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password> </authentication>\n" +
+                            "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
+                            "<username>" + userDetails.getVoipUserName().trim() + "</username> \n" +
+                            "<password>" + userDetails.getUserId().trim().toLowerCase() + "</password>\n" +
+                            "</set-subscriber-password>";
+
+                    //for set subscriber password
                     authenticationPresenter.VoIPAPICall(setSubscriberPassword, "setSubscriberPassword");
+
                 } catch (Exception e) {
                     e.printStackTrace();
-                    showToast("setSubscriberPassword Error: " + e.getMessage());
+                    showToast("on Success CreateCustomerAndSubscriberGood Error: " + e.getMessage());
                 }
-
                 break;
             }
-            case "setSubscriberPasswordGood": {
+            case "setSubscriberPasswordGood":
+            case "setSubscriberPasswordError": {
+                authenticationPresenter.CreateVoipCustomerSkyGo(createVoipCustomerSkyGo);
+                break;
+            }
+            case "CreateVoipCustomerSkyGo": {
+                showToast("everything is working fine");
                 break;
             }
         }

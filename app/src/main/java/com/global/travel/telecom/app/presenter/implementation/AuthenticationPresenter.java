@@ -8,6 +8,7 @@ import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
+import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
@@ -18,6 +19,8 @@ import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
+import com.global.travel.telecom.app.model.RecentCallHistoryModel;
+import com.global.travel.telecom.app.model.SetDataInDashboard;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberError;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberGood;
@@ -63,25 +66,22 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
-                        int dealerID = 0;
+                        int UserID = 0;
                         JSONObject responseBody = new JSONObject(body.string());
                         JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
                         JSONObject table1 = (JSONObject) responseBody.getJSONArray("Table1").get(0);
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
-                        try {
-                            dealerID = table1.getInt("UserID");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        UserID = table1.getInt("UserID");
 
                         if (respondeCode == 0) {
                             LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
-                            baseView.onSuccess("loginUser", result);
-                            baseView.hideProgressBar();
-                            if (dealerID > 0) {
+                            if (UserID > 0) {
                                 baseView.onSuccess("CreateVoipAccount", result);
                             }
+                            baseView.onSuccess("loginUser", result);
+                            baseView.hideProgressBar();
+
 
                         } else {
                             baseView.hideProgressBar();
@@ -280,6 +280,8 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         if (respondeCode == 0) {
                             JSONObject table1 = (JSONObject) responseBody.getJSONArray("Table1").get(0);
                             String mValue = table1.getString("Value");
+                            SetDataInDashboard setDataInDashboard = new Gson().fromJson(responseBody.getJSONArray("Table").get(0).toString(), SetDataInDashboard.class);
+                            baseView.onSuccess("SetDataInDashboard", setDataInDashboard);
                             GetSIMStatus result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetSIMStatus.class);
                             if (mValue.equals("3")) {
                                 String mSimStatus = table1.getString("SimStatus");
@@ -288,8 +290,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                     baseView.onSuccess("GetSubscriber2", result2);
                                 } else if (mSimStatus.contains("Suspension Request") || mSimStatus.contains("Used")) {
                                     baseView.onSuccess("GetSubscriber3", "");
-                                } else {
-                                    showToast("Error in GetSubscriber: value 3 ");
                                 }
                             } else
                                 baseView.onSuccess("GetSubscriber", result);
@@ -504,6 +504,40 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     }
 
     @Override
+    public void CreateVoipCustomerSkyGo(CreateVoipCustomerSkyGo createVoipCustomerSkyGo) {
+        Call<ResponseBody> call = APIClient.getApiService().createVoipCustomerSkyGo(createVoipCustomerSkyGo);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        JSONObject responseBody = new JSONObject(body.string());
+                        JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                        int respondeCode = table.getInt("ResponseCode");
+                        String respondeMessage = table.getString("ResponseMessage");
+                        if (respondeCode == 0) {
+                            baseView.onSuccess("CreateVoipCustomerSkyGo", respondeMessage);
+                        } else {
+                            baseView.onServerError("CreateVoipCustomerSkyGo", respondeMessage);
+                        }
+                    } catch (Exception e) {
+                        baseView.onServerError("CreateVoipCustomerSkyGo", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    }
+                } else {
+                    baseView.onServerError("CreateVoipCustomerSkyGo", response.message());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
     public void TranslateAPI(String inputlang, String outputlang, String text) {
         try {
             baseView.showProgressBar();
@@ -587,30 +621,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             try {
 
                 client.newCall(request).enqueue(new okhttp3.Callback() {
-                    @Override
-                    public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-
-                        switch (requestApiName) {
-
-                            case "getCurrentBalance": {
-                                showToast("getCurrentBalance API Error:" + e.getMessage());
-                                break;
-                            }
-                            case "createCustomerAndSubscriber": {
-                                showToast("createCustomerAndSubscriber API Error:" + e.getMessage());
-                                break;
-                            }
-                            case "setSubscriberPassword": {
-                                showToast("setSubscriberPassword API Error:" + e.getMessage());
-                                break;
-                            }
-                            case "ApplyPromotion": {
-                                showToast("ApplyPromotion API Error:" + e.getMessage());
-                                break;
-                            }
-
-                        }
-                    }
 
                     @Override
                     public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
@@ -625,32 +635,21 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                     break;
                                 }
                                 case "createCustomerAndSubscriber": {
-                                    try {
-                                        if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
-                                            VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberError.class);
-                                            baseView.onSuccess("CreateCustomerAndSubscriberError", result);
-                                        } else if (mMessage.contains("create-customer-and-subscriber-response")) {   //code for success reponse from VoiP api
-                                            VoipCreateCustomerAndSubscriberGood result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberGood.class);
-                                            baseView.onSuccess("CreateCustomerAndSubscriberGood", result);
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        showToast("VoIP Authentication Error: " + e.getMessage());
+                                    if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
+                                        VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberError.class);
+                                        baseView.onSuccess("CreateCustomerAndSubscriberError", result);
+                                    } else if (mMessage.contains("create-customer-and-subscriber-response")) {   //code for success reponse from VoiP api
+                                        VoipCreateCustomerAndSubscriberGood result = new Gson().fromJson(jsonObject.toJson().toString(), VoipCreateCustomerAndSubscriberGood.class);
+                                        baseView.onSuccess("CreateCustomerAndSubscriberGood", result);
                                     }
-
                                     break;
                                 }
                                 case "setSubscriberPassword": {
-                                    try {
-                                        if (mMessage.contains("set-subscriber-password-response")) {   //code for success reponse from VoiP api
-                                            baseView.onSuccess("setSubscriberPasswordGood", "");
-                                        }
-                                        if (mMessage.contains("set-subscriber-password-error")) {
-                                            showToast("setSubscriberPassword Error:" + mMessage);
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        showToast("VoIP Authentication Error: " + e.getMessage());
+                                    if (mMessage.contains("set-subscriber-password-response")) {   //code for success reponse from VoiP api
+                                        baseView.onSuccess("setSubscriberPasswordGood", "");
+                                    }
+                                    if (mMessage.contains("set-subscriber-password-error")) {
+                                        baseView.onSuccess("setSubscriberPasswordError", "");
                                     }
                                     break;
                                 }
@@ -663,12 +662,32 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                     }
                                     break;
                                 }
+                                case "getRecentCallHistory": {
+                                    try {
+                                        if (mMessage.contains("get-subscriber-call-history-response")) {
+                                            RecentCallHistoryModel result = new Gson().fromJson(jsonObject.toJson().toString(), RecentCallHistoryModel.class);
+                                            baseView.onSuccess("getRecentCallHistory", result);
+                                        } else if (mMessage.contains("get-subscriber-call-history-error")) {
+                                            baseView.onServerError("getRecentCallHistory", "getRecentCallHistory API Error:");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    break;
+                                }
 
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+
+                        String a=requestApiName;
                     }
 
                 });

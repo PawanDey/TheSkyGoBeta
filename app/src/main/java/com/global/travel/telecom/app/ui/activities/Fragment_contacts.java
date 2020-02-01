@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.model.ContactsModel;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -44,32 +45,36 @@ public class Fragment_contacts extends Fragment implements Serializable {
                 listViewContacts.setVisibility(View.GONE);
                 voip_progressBar.setVisibility(View.VISIBLE);
                 progress_bar_message.setVisibility(View.VISIBLE);
-                mHandler.postDelayed(new Runnable() {
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            while (SkyGoDialer.mobileArray == null) {
-                                Thread.sleep(1000);
+                        while (SkyGoDialer.mobileArray == null) {
+                            try {
+                                Thread.sleep(400);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            listViewContacts.setVisibility(View.VISIBLE);
-                            voip_progressBar.setVisibility(View.GONE);
-                            progress_bar_message.setVisibility(View.GONE);
-                            ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
-                            listViewContacts.setAdapter(adapter);
-                            listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
                         }
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    listViewContacts.setVisibility(View.VISIBLE);
+                                    voip_progressBar.setVisibility(View.GONE);
+                                    progress_bar_message.setVisibility(View.GONE);
+                                    ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
+                                    listViewContacts.setAdapter(adapter);
+                                    listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
 
-                        listViewContacts.setVisibility(View.VISIBLE);
-                        voip_progressBar.setVisibility(View.GONE);
-                        progress_bar_message.setVisibility(View.GONE);
-                        ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
-                        listViewContacts.setAdapter(adapter);
-                        listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 100);
                     }
-                }, 2500);
+                }).start();
+
 
             } else {
                 listViewContacts.setVisibility(View.VISIBLE);

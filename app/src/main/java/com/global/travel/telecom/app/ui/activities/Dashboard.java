@@ -27,6 +27,7 @@ import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
+import com.global.travel.telecom.app.model.SetDataInDashboard;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
@@ -48,6 +49,7 @@ public class Dashboard extends BaseActivity {
     String country, pincode, city, adress1, adress2, adress3, adress4, adress5, adress6;
     public ImageView setImageOnHotspot;
     AuthenticationPresenter authenticationPresenter;
+    UserDetails userDetails;
 
     @Override
     protected int getLayout() {
@@ -57,9 +59,10 @@ public class Dashboard extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userDetails = new UserDetails(this);
         setContentView(R.layout.activity_dashboard);
 //        String TokenTest = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFiYyIsIm5iZiI6MTU2MTE1MTIxOCwiZXhwIjoxNTYxMTg3MjE4LCJpYXQiOjE1NjExNTEyMTh9.xJjXj1PkAq8PtQDcGvgxKizcVIGJLYZ7nvn5SIzDwNI";
-        UserDetails userDetails = new UserDetails(this);
+        userDetails = new UserDetails(this);
         Locale locale = new Locale(userDetails.getLanguageSelect());
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -70,7 +73,7 @@ public class Dashboard extends BaseActivity {
         skygoDialerLogo = findViewById(R.id.skyGoDialer);
         setImageOnHotspot = findViewById(R.id.button25);
         SelectLoginImage();
-        //UserDetails userDetails = new UserDetails(Dashboard.this);
+        //userDetails = new UserDetails(Dashboard.this);
         // userDetails.getTokenID()
         token = userDetails.getTokenID();
         try {
@@ -153,9 +156,20 @@ public class Dashboard extends BaseActivity {
     @Override
     public void onSuccess(String method2, Object response) {
         switch (method2) {
+            case "SetDataInDashboard": {
+                SetDataInDashboard obj = (SetDataInDashboard) response;
+                userDetails.setVoipUserName(obj.getVoipName());
+                userDetails.setVoipCredentailuserName(obj.getVoipUsername());
+                userDetails.setVoipCredentailPassword(obj.getVoipPassword());
+                userDetails.setVoipCustomerID(obj.getCustomerId());
+                userDetails.setVoipSubcriberID(obj.getSubscriberId());
+                userDetails.setUserId(obj.getCustomerReference());
+                showToast("Everything is working fine");
+                break;
+            }
             case "GetSubscriber": {
                 GetSIMStatus obj = (GetSIMStatus) response;
-                UserDetails userDetails = new UserDetails(this);
+                userDetails = new UserDetails(this);
                 TextView SimStatus = findViewById(R.id.activateSim);
                 TextView SIMSerialNumber = findViewById(R.id.hideActivationtext);
 
@@ -181,7 +195,7 @@ public class Dashboard extends BaseActivity {
 
             }
             case "GetSubscriber2": {
-                UserDetails userDetails = new UserDetails(this);
+                userDetails = new UserDetails(this);
                 GetSubscriberResponse obj = (GetSubscriberResponse) response;
                 userDetails.setMSISDN(obj.getMSISDN());
                 userDetails.setActivationDate(obj.getActDate());
@@ -201,7 +215,7 @@ public class Dashboard extends BaseActivity {
                 LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
                 RecentExtensionLayout.setVisibility(View.GONE);
                 ActivationLayout.setVisibility(View.VISIBLE);
-                UserDetails userDetails = new UserDetails(this);
+                userDetails = new UserDetails(this);
                 userDetails.setRechargeStatus(1);
                 userDetails.setMSISDN(null);
                 userDetails.setActivationDate(null);
@@ -228,7 +242,6 @@ public class Dashboard extends BaseActivity {
         }, 2000);
     }
 
-
     private void log_func(Location location) {
 
         try {
@@ -248,7 +261,7 @@ public class Dashboard extends BaseActivity {
             adress4 = addresses.get(0).getSubLocality();
             adress5 = addresses.get(0).getAddressLine(0);
             adress6 = addresses.get(0).getPremises();
-            UserDetails userDetails = new UserDetails(this);
+            userDetails = new UserDetails(this);
 //            currentLocation.setText(city + ", " + adress1 + ", " + country);
             currentLocation.setText(adress5);
 
@@ -271,7 +284,7 @@ public class Dashboard extends BaseActivity {
     }
 
     public void SelectLoginImage() {
-        UserDetails userDetails = new UserDetails(this);
+        userDetails = new UserDetails(this);
         try {
             Locale locale = new Locale(userDetails.getLanguageSelect());
             Locale.setDefault(locale);
@@ -388,7 +401,7 @@ public class Dashboard extends BaseActivity {
     }
 
     public void btnActivateSIMClick(View view) {
-        UserDetails userDetails = new UserDetails(this);
+        userDetails = new UserDetails(this);
         if (userDetails.getRechargeStatus() == 1) {
             Intent intent = new Intent(Dashboard.this, ActivateSim.class);
             intent.putExtra("Token", token);
@@ -402,9 +415,9 @@ public class Dashboard extends BaseActivity {
     }
 
     public void skyGoDailer(View view) {
-//        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
-//        intent.putExtra("Token", token);
-//        startActivity(intent);
-        Toast.makeText(this, R.string.textComingSoon, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
+        intent.putExtra("Token", token);
+        startActivity(intent);
+//        Toast.makeText(this, R.string.textComingSoon, Toast.LENGTH_SHORT).show();
     }
 }

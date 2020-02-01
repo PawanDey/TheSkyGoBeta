@@ -8,10 +8,28 @@ public class UserDetails {
     Context context;
     SharedPreferences sharedPreferences;
     private int RechargeStatus;
-    private String ActivationDate, LanguageSelect, MacAddress, MSISDN,
-            PaypalTransactionFee, TxnSeriesPrefix, UserName, TokenID,
-            VoipCustomerID, VoipSubcriberID, UserId;
+    private String ActivationDate;
+    private String LanguageSelect;
+    private String MacAddress;
+    private String MSISDN;
+    private String PaypalTransactionFee;
+    private String TxnSeriesPrefix;
+    private String UserName;
+    private String TokenID;
+    private String VoipSubcriberID;
+    private String UserId;
+    private String VoipCredentailuserName;
+    private String VoipCredentailPassword;
+    private String VoipUserName;
 
+    public String getVoipUserName() {
+        VoipUserName = sharedPreferences.getString("VoipUserName", "");
+        return VoipUserName;
+    }
+
+    public void setVoipUserName(String VoipUserName) {
+        sharedPreferences.edit().putString("VoipUserName", VoipUserName).commit();
+    }
 
     public void removeTokenID() {
         sharedPreferences.edit().clear().commit();
@@ -28,6 +46,23 @@ public class UserDetails {
 
     }
 
+    public String getVoipCredentailuserName() {
+        VoipCredentailuserName = sharedPreferences.getString("VoipCredentailuserName", "");
+        return VoipCredentailuserName;
+    }
+
+    public void setVoipCredentailuserName(String VoipCredentailuserName) {
+        sharedPreferences.edit().putString("VoipCredentailuserName", VoipCredentailuserName).commit();
+    }
+
+    public String getVoipCredentailPassword() {
+        VoipCredentailPassword = sharedPreferences.getString("VoipCredentailPassword", "");
+        return VoipCredentailPassword;
+    }
+
+    public void setVoipCredentailPassword(String VoipCredentailPassword) {
+        sharedPreferences.edit().putString("VoipCredentailPassword", VoipCredentailPassword).commit();
+    }
 
     public String getUserName() {
         UserName = sharedPreferences.getString("UserName", "");
@@ -112,8 +147,8 @@ public class UserDetails {
 
 
     public String getVoipCustomerID() {
-        VoipCustomerID = sharedPreferences.getString("VoipCustomerID", "");
-        return VoipCustomerID;
+        String voipCustomerID = sharedPreferences.getString("VoipCustomerID", "");
+        return voipCustomerID;
     }
 
     public void setVoipCustomerID(String VoipCustomerID) {
@@ -154,6 +189,10 @@ public class UserDetails {
         sharedPreferences = context.getSharedPreferences("VoipSubscriberID", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("VoipCustomerID", Context.MODE_PRIVATE);
         sharedPreferences = context.getSharedPreferences("UserId", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("VoipCredentailuserName", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("VoipCredentailPassword", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("VoipUserName", Context.MODE_PRIVATE);
+
     }
 
 }
