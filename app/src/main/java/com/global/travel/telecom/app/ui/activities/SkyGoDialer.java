@@ -19,10 +19,12 @@ import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.Call;
 import com.global.travel.telecom.app.model.ContactsModel;
 import com.global.travel.telecom.app.model.CurrentBalance;
+import com.global.travel.telecom.app.model.GetRateForCountryWise;
+import com.global.travel.telecom.app.model.GetVoipPlanModel;
 import com.global.travel.telecom.app.model.GetVoipPlans;
+import com.global.travel.telecom.app.model.GetVoipRateModel;
 import com.global.travel.telecom.app.model.RecentCallHistoryModel;
 import com.global.travel.telecom.app.model.RecentSetDataModel;
-import com.global.travel.telecom.app.model.VoipPlanModel;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
@@ -41,20 +43,19 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     UserDetails userDetails;
     Context cotxt = this;
 
-    List<GetVoipPlans> result = null;
-    List<Call> CallHistoryData = null;
-
     public static String userBalance = "";
-    public static String userID = "";
 
     public static ArrayList<ContactsModel> mobileArray = null;
-    public static ArrayList<VoipPlanModel> VoipPlan = null;
+    public static ArrayList<GetVoipPlanModel> VoipPlan = null;
     public static ArrayList<RecentSetDataModel> recentCallHistoryModels = null;
+    public static ArrayList<GetVoipRateModel> mCountry_wise_rateList = null;
 
-    List<VoipPlanModel> list = null;
+    List<GetVoipPlanModel> list = null;
     List<RecentSetDataModel> recentList = null;
-    public static ArrayList<Country_wise_rate_list> mCountry_wise_rateList;
-    public Country_wise_price_adapter mCountry_wise_price_adapter;
+    List<GetVoipPlans> result = null;
+    List<Call> CallHistoryData = null;
+    List<GetRateForCountryWise> result1 = null;
+    List<GetVoipRateModel> voipRate = null;
 
 
     @Override
@@ -67,12 +68,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sky_go_dialer);
-        initList();
         userDetails = new UserDetails(this);
-        userID = userDetails.getUserId();
-        String username = userDetails.getVoipCredentailuserName();
-        String password = userDetails.getVoipCredentailPassword();
-
         voip_menu = findViewById(R.id.voip_menu);
         voip_phone = findViewById(R.id.voip_phone);
         voip_recent = findViewById(R.id.voip_recent);
@@ -94,6 +90,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         try {
             authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
             authenticationPresenter.GetVoipPlan();
+            authenticationPresenter.GetVoIPRate();
         } catch (Exception e) {
             Toast.makeText(this, "onCreate authenticationPresenter error" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -189,7 +186,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "CurrentBalance": {
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
                 Calendar calendar = Calendar.getInstance();
@@ -217,10 +213,13 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 result = (List<GetVoipPlans>) response;
                 break;
             }
+            case "GetVoipRateList": {
+                result1 = (List<GetRateForCountryWise>) response;
+                break;
+            }
             case "getRecentCallHistory": {
                 RecentCallHistoryModel re = (RecentCallHistoryModel) response;
                 CallHistoryData = re.getGetSubscriberCallHistoryResponse().getCallHistory().getCall();
-
                 break;
             }
         }
@@ -229,7 +228,8 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     @Override
     public void onServerError(String method, String errorMessage) {
         switch (method) {
-            case "GetVoipPlanList": {
+            case "GetVoipPlanList":
+            case "GetVoipRateList": {
                 showToast(errorMessage);
                 break;
             }
@@ -272,15 +272,15 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     private class AsyscGetContact extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] objects) {
-            VoipPlan = (ArrayList<VoipPlanModel>) getAllPlans();
+            VoipPlan = (ArrayList<GetVoipPlanModel>) getAllPlans();
+            mCountry_wise_rateList = (ArrayList<GetVoipRateModel>) getAllRatePriceCountryWise();
             mobileArray = (ArrayList<ContactsModel>) getAllContacts(cotxt);
             recentCallHistoryModels = (ArrayList<RecentSetDataModel>) getRecentCallHistory();
             return 0;
         }
     }
 
-
-    private List<VoipPlanModel> getAllPlans() {
+    private List<GetVoipPlanModel> getAllPlans() {
 
         list = new ArrayList<>();
         try {
@@ -288,7 +288,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 Thread.sleep(200);
             }
             for (int i = 0; i < result.size(); i++) {
-                VoipPlanModel info = new VoipPlanModel(result.get(i).getVoipPlan(), result.get(i).getDescription(), String.valueOf(result.get(i).getChargedAmount()), String.valueOf(result.get(i).getMinutes()), String.valueOf(result.get(i).getValidity()), result.get(i).getMoniker());
+                GetVoipPlanModel info = new GetVoipPlanModel(result.get(i).getVoipPlan(), result.get(i).getDescription(), String.valueOf(result.get(i).getChargedAmount()), String.valueOf(result.get(i).getMinutes()), String.valueOf(result.get(i).getValidity()), result.get(i).getMoniker());
                 list.add(info);
             }
         } catch (Exception e) {
@@ -318,40 +318,21 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         return recentList;
     }
 
-    private void initList() {
-        mCountry_wise_rateList = new ArrayList<>();
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@39p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@9p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@393p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@339p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min."));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@319p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@3`9p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@139p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@439p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@539p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@75739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@86739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@6439p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@46739p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@35749p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@35475669p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", " Unlimited channels. Take Demo. USA@378678768789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", " Unlimited channels. Take Demo. USA@377686789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", " Unlimited channels. Take Demo. USA@36786789p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", " Unlimited channels. Take Demo. USA@36869p/min. Toll Free@99p/minute. UK@29p/min. Canada@29p/min.1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("India", "2323.23"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("USA", "2.32"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Japan", "13.320"));
-        mCountry_wise_rateList.add(new Country_wise_rate_list("Delhi", "1.00"));
+    private List<GetVoipRateModel> getAllRatePriceCountryWise() {
 
+        voipRate = new ArrayList<>();
+        try {
+            while (result1 == null) {
+                Thread.sleep(500);
+            }
+            for (int i = 0; i < result1.size(); i++) {
+                GetVoipRateModel info = new GetVoipRateModel(result1.get(i).getCountryCode(), result1.get(i).getCountry(), result1.get(i).getCost(), result1.get(i).getRetail());
+                voipRate.add(info);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  voipRate;
     }
 }

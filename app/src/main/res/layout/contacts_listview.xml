@@ -1,45 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/imageNotificationButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:padding="2dp"
-        android:background="@drawable/voip_gredient_contact_circle"
-        android:src="@drawable/userimage" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:id="@+id/l">
 
-        <TextView
-            android:id="@+id/PersonName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/sf_old_republic_font"
-            android:text="Jhon Deo"
-            android:textSize="18dp" />
+        <ImageView
+            android:id="@+id/imageNotificationButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/voip_gredient_contact_circle"
+            android:padding="2dp"
+            android:src="@drawable/userimage" />
 
-        <TextView
-            android:id="@+id/PersonContact"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/sf_old_republic_font"
-            android:text="9805198061"
-            android:textSize="12dp" />
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/PersonName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="Sumit Sharma"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/PersonContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="9805198061"
+                android:textSize="12dp" />
+
+        </LinearLayout>
 
 
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="1dp"
+        android:layout_below="@+id/l"
+        android:background="@color/lightGray1"
+        android:textSize="2dp" />
+</RelativeLayout>
+
 
 

@@ -88,7 +88,7 @@ public class VoipOnCall extends AppCompatActivity {
         firstChar.setText(firstCharector);
         phoneNumber.setText("Mobile " + CallingNumber);
 //        String demoparameter = "serveraddress=sip.s.im\r\nusername=SkyGo:246\r\npassword=246\r\nloglevel=5";
-        String demoparameter = "serveraddress=sip.s.im\r\nusername=SkyGo:" + userDetails.getUserId() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
+        String demoparameter = "serveraddress=sip.s.im\r\nusername="+ userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
         try {
             // start SipStack if it's not already running
             if (mysipclient == null) {

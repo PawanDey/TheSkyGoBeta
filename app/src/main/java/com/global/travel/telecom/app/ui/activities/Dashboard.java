@@ -99,6 +99,7 @@ public class Dashboard extends BaseActivity {
                 return;
             }
 
+            assert locationManager != null;
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             assert location != null;
             onLocationCahange(location);
@@ -135,19 +136,14 @@ public class Dashboard extends BaseActivity {
 
     @Override
     public void onServerError(String method2, String errorMessage) {
-        switch (method2) {
-            case "GetSubscriber": {
-                if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-//                    showToast(" "+R.string.textSorrySomethingwentwrong);
-                    Toast.makeText(Dashboard.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Dashboard.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    break;
-                } else {
-                    showToast(errorMessage);
-                    break;
-                }
+        if ("GetSubscriber".equals(method2)) {
+            if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
+                Toast.makeText(Dashboard.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Dashboard.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                showToast(errorMessage);
             }
         }
     }
@@ -227,28 +223,11 @@ public class Dashboard extends BaseActivity {
     }
 
     private void log_func(Location location) {
-
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, logitude, 1);
-
-            country = addresses.get(0).getCountryName();
-            pincode = addresses.get(0).getPostalCode();
-            city = addresses.get(0).getLocality();
-            adress1 = addresses.get(0).getAdminArea();
-            String aadress1 = addresses.get(0).getSubAdminArea();
-            String aadress2 = addresses.get(0).getUrl();
-            String aadress3 = addresses.get(0).getSubAdminArea();
-
-            adress2 = addresses.get(0).getCountryCode();
-            adress3 = addresses.get(0).getPhone();
-            adress4 = addresses.get(0).getSubLocality();
             adress5 = addresses.get(0).getAddressLine(0);
-            adress6 = addresses.get(0).getPremises();
-            userDetails = new UserDetails(this);
             currentLocation.setText(adress5);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

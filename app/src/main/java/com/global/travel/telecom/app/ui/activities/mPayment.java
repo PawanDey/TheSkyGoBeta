@@ -60,6 +60,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
+import com.stripe.android.Stripe;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -128,6 +129,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
+
+        //for stripe  payment gateway
+        new Stripe(context, "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR");
 
         launchActivity();
         check();
@@ -289,9 +293,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
 
     void PayPalPaymentOnclick() {
-
         try {
-
             assert extras != null;
             Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
             sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;

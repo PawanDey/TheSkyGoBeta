@@ -12,16 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.model.VoipPlanModel;
+import com.global.travel.telecom.app.model.GetVoipPlanModel;
 
 import java.util.ArrayList;
 
-public class VoipPlanArrayAdapter extends ArrayAdapter<VoipPlanModel> {
+public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
 
     private Context mContext;
     int mResouce;
 
-    public VoipPlanArrayAdapter(Context context, int resource, ArrayList<VoipPlanModel> object) {
+    public VoipPlanArrayAdapter(Context context, int resource, ArrayList<GetVoipPlanModel> object) {
         super(context, resource, object);
         mContext = context;
         mResouce = resource;

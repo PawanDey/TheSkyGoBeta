@@ -109,6 +109,9 @@ dependencies {
     //voip
     implementation 'com.squareup.retrofit2:converter-simplexml:2.2.0'
     implementation 'com.github.smart-fun:XmlToJson:1.4.5'
+
+    //stripe payment gateway
+    implementation 'com.stripe:stripe-android:13.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

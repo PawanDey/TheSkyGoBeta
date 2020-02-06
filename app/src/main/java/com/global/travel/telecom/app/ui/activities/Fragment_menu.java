@@ -23,7 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.model.VoipPlanModel;
+import com.global.travel.telecom.app.model.GetVoipPlanModel;
+import com.global.travel.telecom.app.model.GetVoipRateModel;
+import com.global.travel.telecom.app.service.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,18 +36,18 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.mCountry_wise_rateList;
 
 public class Fragment_menu extends Fragment {
-    private TextView menu_name, voipNumber, currentBalance, countryWiseRateDiscription;
+    private TextView menu_name, currentBalance, countryWiseRateDiscription;
     private LinearLayout menu_linearLayoutMain;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ListView listViewVoipPlan;
-    public ArrayList<VoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
-    ProgressBar progressBar;
-    Spinner snipper_country;
+    private ArrayList<GetVoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
+    private ProgressBar progressBar;
+    private Spinner snipper_country;
     DatePickerDialog picker;
     String timeFormat = "d MMMM,yyyy";
     androidx.appcompat.app.AlertDialog progressDialog;
-    DatePicker datePicker;
-    public Country_wise_price_adapter mCountry_wise_price_adapter;
+    private DatePicker datePicker;
+    UserDetails userDetails = new UserDetails(getApplicationContext());
 
     @Nullable
     @Override
@@ -53,7 +55,6 @@ public class Fragment_menu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
         menu_name = view.findViewById(R.id.menu_name);
-        voipNumber = view.findViewById(R.id.voipNumber);
         currentBalance = view.findViewById(R.id.currentBalance);
         listViewVoipPlan = view.findViewById(R.id.menu_listView);
         menu_linearLayoutMain = view.findViewById(R.id.menu_linearLayoutMain);
@@ -74,7 +75,7 @@ public class Fragment_menu extends Fragment {
                                 public void run() {
                                     menu_linearLayoutMain.setVisibility(View.VISIBLE);
                                     currentBalance.setText("$" + SkyGoDialer.userBalance);
-                                    menu_name.setText("SkyGo:" + SkyGoDialer.userID);
+                                    menu_name.setText(userDetails.getVoipUserName());
                                 }
                             }, 100);
 
@@ -88,7 +89,7 @@ public class Fragment_menu extends Fragment {
             } else {
                 menu_linearLayoutMain.setVisibility(View.VISIBLE);
                 currentBalance.setText("$" + SkyGoDialer.userBalance);
-                menu_name.setText("SkyGo:" + SkyGoDialer.userID);
+                menu_name.setText(userDetails.getVoipUserName());
             }
         } catch (Exception e) {
             Toast.makeText(getActivity(), "fragment_menu_userbalanced_error:" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -134,11 +135,35 @@ public class Fragment_menu extends Fragment {
         }
 
         try {
-            mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
-            snipper_country.setAdapter(mCountry_wise_price_adapter);
+            if (mCountry_wise_rateList == null) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (mCountry_wise_rateList == null) {
+                            try {
+                                Thread.sleep(200);
+                                VoipPlan = SkyGoDialer.VoipPlan;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Country_wise_price_adapter mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
+                                snipper_country.setAdapter(mCountry_wise_price_adapter);
+                            }
+                        }, 500);
+                    }
+                }).start();
+            } else {
+                Country_wise_price_adapter mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
+                snipper_country.setAdapter(mCountry_wise_price_adapter);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         listViewVoipPlan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -162,7 +187,7 @@ public class Fragment_menu extends Fragment {
                             int month = datePicker.getMonth() + 1;
                             int year = datePicker.getYear();
 
-                            VoipPlanModel arrayList = (VoipPlanModel) listViewVoipPlan.getItemAtPosition(position);
+                            GetVoipPlanModel arrayList = (GetVoipPlanModel) listViewVoipPlan.getItemAtPosition(position);
                             String getPlanName = arrayList.getPlanName();
                             String getMonikerValue = arrayList.getMonikerValue();
                             String getValidity = arrayList.getValidity();
@@ -196,8 +221,8 @@ public class Fragment_menu extends Fragment {
         snipper_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Country_wise_rate_list co = (Country_wise_rate_list) parent.getItemAtPosition(position);
-                countryWiseRateDiscription.setText(co.getmPrice());
+                GetVoipRateModel co = (GetVoipRateModel) parent.getItemAtPosition(position);
+                countryWiseRateDiscription.setText(co.getmRetails() + "  Price: " + co.getmPrice());
             }
 
             @Override

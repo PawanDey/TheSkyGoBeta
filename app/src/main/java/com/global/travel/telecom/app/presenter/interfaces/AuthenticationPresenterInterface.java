@@ -36,4 +36,6 @@ public interface AuthenticationPresenterInterface {
     public void VoIPAPICall(String xmlData, String ApiName);
 
     public void GetVoipPlan();
+
+    public void GetVoIPRate();
 }

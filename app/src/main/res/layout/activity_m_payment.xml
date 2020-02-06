@@ -7,61 +7,12 @@
     android:orientation="vertical"
     tools:context=".ui.activities.mPayment">
 
-
-    <!--Apply coupons-->
-    <!--<RelativeLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="75dp">-->
-
-
-    <!--<ImageView-->
-    <!--android:id="@+id/imageView5"-->
-    <!--android:layout_width="33dp"-->
-    <!--android:layout_height="21dp"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_marginStart="25dp"-->
-    <!--android:layout_marginLeft="25dp"-->
-    <!--android:layout_marginBottom="31dp"-->
-    <!--app:srcCompat="@drawable/couponicon" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/textView14"-->
-    <!--android:layout_width="261dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_marginStart="78dp"-->
-    <!--android:layout_marginLeft="78dp"-->
-    <!--android:layout_marginTop="23dp"-->
-    <!--android:gravity="left"-->
-    <!--android:text="Apply Coupon"-->
-    <!--android:textColor="#FFFFFF"-->
-    <!--android:textSize="15dp" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/imageView9"-->
-    <!--android:layout_width="7dp"-->
-    <!--android:layout_height="11dp"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_marginEnd="24dp"-->
-    <!--android:layout_marginRight="24dp"-->
-    <!--android:layout_marginBottom="36dp"-->
-    <!--app:srcCompat="@drawable/arrow" />-->
-    <!--</RelativeLayout>-->
-
-
     <!--dashboard screen-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/shadow_black_outside"
         android:weightSum="12">
-
 
         <ImageView
             android:id="@+id/button12"

@@ -13,7 +13,16 @@
         android:layout_gravity="center"
         android:fontFamily="@font/sf_old_republic_font"
         android:gravity="center"
-        android:text="India"
-        android:textSize="20dp" />
+        android:text=""
+        android:textSize="22dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="2dp"
+        android:background="@color/lightGray1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="1dp"/>
 
 </LinearLayout>

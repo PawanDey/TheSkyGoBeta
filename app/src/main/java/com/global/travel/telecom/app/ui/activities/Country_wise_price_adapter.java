@@ -11,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.model.GetVoipRateModel;
 
 import java.util.ArrayList;
 
-public class Country_wise_price_adapter extends ArrayAdapter<Country_wise_rate_list> {
-    public Country_wise_price_adapter(Context context, ArrayList<Country_wise_rate_list> countryItems) {
+public class Country_wise_price_adapter extends ArrayAdapter<GetVoipRateModel> {
+    public Country_wise_price_adapter(Context context, ArrayList<GetVoipRateModel> countryItems) {
         super(context, 0, countryItems);
 
     }
@@ -38,9 +39,9 @@ public class Country_wise_price_adapter extends ArrayAdapter<Country_wise_rate_l
             );
         }
         TextView countryName = convertView.findViewById(R.id.country_name);
-        Country_wise_rate_list country_wise_rateList = getItem(position);
+        GetVoipRateModel country_wise_rateList = getItem(position);
 
-        countryName.setText(country_wise_rateList.getmCountryName());
+        countryName.setText("(" + country_wise_rateList.getmCountryCode() + ") " + country_wise_rateList.getmCountryName());
         return convertView;
     }
 }

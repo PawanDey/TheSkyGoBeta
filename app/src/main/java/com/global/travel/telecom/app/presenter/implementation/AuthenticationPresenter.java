@@ -11,6 +11,7 @@ import com.global.travel.telecom.app.model.AddFundsResponse;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetNotifications;
+import com.global.travel.telecom.app.model.GetRateForCountryWise;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
@@ -597,6 +598,39 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     }
                 } else {
                     baseView.onServerError("GetVoipPlanList", getResources().getString(R.string.textSorrySomethingwentwrong));
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void GetVoIPRate() {
+        Call<ResponseBody> call = APIClient.getApiService().GetVoIPRate();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        assert body != null;
+                        JSONObject responseBody = new JSONObject(body.string());
+
+                        Type listType = new TypeToken<List<GetRateForCountryWise>>() {
+                        }.getType();
+                        List<GetRateForCountryWise> result = new Gson().fromJson(responseBody.getJSONArray("Table").toString(), listType);
+                        baseView.onSuccess("GetVoipRateList", result);
+                    } catch (Exception e) {
+                        baseView.onServerError("GetVoipRateList", e.getMessage());
+                    }
+                } else {
+                    baseView.onServerError("GetVoipRateList", getResources().getString(R.string.textSorrySomethingwentwrong));
                 }
 
             }

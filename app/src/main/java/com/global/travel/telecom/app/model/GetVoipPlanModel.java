@@ -1,7 +1,7 @@
 package com.global.travel.telecom.app.model;
 
 
-public class VoipPlanModel {
+public class GetVoipPlanModel {
 
     public String planName;
     public String planDetails;
@@ -59,7 +59,7 @@ public class VoipPlanModel {
     }
 
 
-    public VoipPlanModel(String planName, String planDetails, String AmountCharge, String planMin, String validity, String monikerValue) {
+    public GetVoipPlanModel(String planName, String planDetails, String AmountCharge, String planMin, String validity, String monikerValue) {
         this.planName = planName;
         this.planDetails = planDetails;
         this.AmountCharge = AmountCharge;

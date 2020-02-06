@@ -59,5 +59,8 @@ public interface ApiService {
     @GET("GetVoIPPlans")
     Call<ResponseBody> GetVoipPlan();
 
+    @GET("GetVoIPRate")
+    Call<ResponseBody> GetVoIPRate();
+
 
 }

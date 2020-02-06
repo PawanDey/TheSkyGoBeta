@@ -307,7 +307,7 @@ public class LoginActivity extends BaseActivity {
                             "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password> </authentication>\n" +
                             "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
                             "<username>" + userDetails.getVoipUserName().trim() + "</username> \n" +
-                            "<password>" + userDetails.getUserId().trim().toLowerCase() + "</password>\n" +
+                            "<password>" + userDetails.getUserId().trim() + "</password>\n" +
                             "</set-subscriber-password>";
 
                     //for set subscriber password
@@ -325,7 +325,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             }
             case "CreateVoipCustomerSkyGo": {
-                showToast("everything is working fine");
+                showToast("Voip Account Created");
                 break;
             }
         }
