@@ -1,4 +1,4 @@
-<!--3rd july updated by prateek sharma-->
+
 <resources>
     <string name="textcontactCare">Por favor, póngase en contacto con Atención al cliente <font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
@@ -31,11 +31,6 @@
     <string name="texthintSIMNumber">Número de sim</string>
     <string name="textLanguage">Idioma</string>
     <string name="textSelectyourapplanguage">Seleccione el idioma de su aplicación</string>
-    <string name="textENGLISH">inglesa</string>
-    <string name="textCHINESE">CHINA</string>
-    <string name="textJAPANESE">JAPONESA</string>
-    <string name="textKOREAN">COREANA</string>
-    <string name="textSPANISH">ESPAÑOL</string>
     <string name="textNEXT">siguiente</string>
     <string name="textPaymentSummary">Resumen de pago</string>
     <string name="texthinthereisnumber">aquí está el número</string>

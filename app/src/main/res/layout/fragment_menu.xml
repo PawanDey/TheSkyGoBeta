@@ -36,6 +36,7 @@
                     android:textSize="22dp" />
 
                 <TextView
+                    android:id="@+id/availeBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/currentBalance"
@@ -69,6 +70,32 @@
                     android:textColor="@color/black"
                     android:textSize="20dp" />
 
+                <TextView
+                    android:id="@+id/addBalancedFunction"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_below="@+id/availeBalance"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/voip_gredient_circle"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_below="@+id/availeBalance"
+                    android:layout_marginTop="5dp"
+                    android:layout_toStartOf="@+id/addBalancedFunction"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:gravity="center"
+                    android:text="Add TOP-UP(Balance) "
+                    android:textColor="@color/colorRed"
+                    android:textSize="10dp" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -79,36 +106,37 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/checkCountryWisePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:fontFamily="@font/sf_old_republic_font"
                 android:text="Check Country Wise Price"
-                android:layout_marginBottom="5dp"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/snipper_country_wise_rate"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:spinnerMode="dialog"
-                android:drawSelectorOnTop="true"
-                android:divider="@color/white"
-                android:layoutMode="opticalBounds"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:backgroundTintMode="add"
-
-                />
+                android:divider="@color/white"
+                android:visibility="gone"
+                android:drawSelectorOnTop="true"
+                android:layoutMode="opticalBounds"
+                android:spinnerMode="dialog" />
 
             <TextView
+                android:id="@+id/countryWiseRateDiscription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Loading...."
-                android:id="@+id/countryWiseRateDiscription"
-                android:textColor="@color/colorPrimaryDark"
-                android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:textSize="14dp"/>
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14dp" />
 
         </LinearLayout>
 

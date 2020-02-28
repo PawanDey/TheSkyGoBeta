@@ -3,12 +3,7 @@ package com.global.travel.telecom.app.model;
 
 public class GetVoipPlanModel {
 
-    public String planName;
-    public String planDetails;
-    public String AmountCharge;
-    public String Validity;
-    public String planMin;
-    public String monikerValue;
+    private String planName, planDetails, AmountCharge, Validity, planMin, monikerValue;
 
     public String getPlanName() {
         return planName;

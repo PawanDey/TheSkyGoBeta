@@ -16,8 +16,9 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @GET("ValidateSubscriber")
-    Call<ResponseBody> signUp(@Query("UserName") String username, @Query("RegTypeID") String reqTypeId, @Query("GCMKey") String gcmKey);
+//    @GET("ValidateSubscriber")
+    @GET("TestValidateSubscriber")
+    Call<ResponseBody> signUp(@Query("Name") String Name, @Query("Email") String Email, @Query("Mobile") String Mobile,@Query("HomeCountry")String HomeCountry,@Query("RegTypeID") String RegTypeID, @Query("Username") String Username,@Query("GCMKey") String GCMKey);
 
     @GET("ValidateSIM")
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);
@@ -62,5 +63,7 @@ public interface ApiService {
     @GET("GetVoIPRate")
     Call<ResponseBody> GetVoIPRate();
 
+    @GET("XmlData")
+    Call<ResponseBody> VoipApisCall(@Query("requestXml") String xmlQueryString);
 
 }

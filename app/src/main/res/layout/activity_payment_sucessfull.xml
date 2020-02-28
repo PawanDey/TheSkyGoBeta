@@ -23,16 +23,15 @@
 
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="236dp"
-                android:layout_height="81dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="192dp"
-                android:gravity="center"
+                android:id="@+id/msgShowInPaymentSuccessfullScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView7"
                 android:text="@string/textYourOrderwasSuccessfullyProccessed"
-                android:textAlignment="center"
                 android:textColor="#FFFFFF"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_margin="10dp"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
@@ -40,14 +39,15 @@
                 android:id="@+id/textView3"
                 android:layout_width="230dp"
                 android:layout_height="41dp"
-                android:layout_alignBottom="@+id/textView2"
-                android:layout_marginBottom="-74dp"
                 android:background="@drawable/gredientbacktohome"
-                android:gravity="center"
-                android:layout_centerInParent="true"
                 android:text="@string/textBACKTOHOME"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
                 android:textColor="#515151"
                 android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -62,8 +62,7 @@
                 android:id="@+id/imageView7"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:layout_above="@+id/textView2"
-                android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 app:srcCompat="@drawable/thankyou" />
 

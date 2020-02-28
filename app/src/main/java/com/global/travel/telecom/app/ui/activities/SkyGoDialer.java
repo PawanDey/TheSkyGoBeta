@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,8 +31,12 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
+
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.currentBalanceMenu;
+import static com.global.travel.telecom.app.ui.activities.Fragment_recent.ListViewRecentCallHistory;
 
 public class SkyGoDialer extends BaseActivity implements Serializable {
     ImageView voip_menu, voip_phone, voip_recent, voip_contacts;
@@ -44,7 +47,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     Context cotxt = this;
 
     public static String userBalance = "";
-
     public static ArrayList<ContactsModel> mobileArray = null;
     public static ArrayList<GetVoipPlanModel> VoipPlan = null;
     public static ArrayList<RecentSetDataModel> recentCallHistoryModels = null;
@@ -59,9 +61,25 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
 
 
     @Override
-
     protected int getLayout() {
         return R.layout.activity_sky_go_dialer;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userDetails = new UserDetails(this);
+        String getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                "</authentication>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "</get-customer-balance>";
+            authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
+            authenticationPresenter.GetVoipPlan();
+            authenticationPresenter.GetVoIPRate();
+
     }
 
     @Override
@@ -96,30 +114,10 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
             e.printStackTrace();
         }
 
-        voip_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(0);
-            }
-        });
-        voip_phone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(1);
-            }
-        });
-        voip_recent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(2);
-            }
-        });
-        voip_contacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(3);
-            }
-        });
+        voip_menu.setOnClickListener(v -> viewPager.setCurrentItem(0));
+        voip_phone.setOnClickListener(v -> viewPager.setCurrentItem(1));
+        voip_recent.setOnClickListener(v -> viewPager.setCurrentItem(2));
+        voip_contacts.setOnClickListener(v -> viewPager.setCurrentItem(3));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -199,14 +197,20 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                         "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
                         "</authentication>\n" +
                         "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-//                        "<subscriberid>13823200</subscriberid>\n" +
                         "<start>" + startDate + "</start>\n" +
                         "<end>" + endDate + "</end>\n" +
                         "</get-subscriber-call-history>";
                 authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
+                try {
+                    CurrentBalance currentBalance = (CurrentBalance) response;
+                    String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
+                    userBalance = bal.substring(0, bal.length() - 2);
 
-                CurrentBalance currentBalance = (CurrentBalance) response;
-                userBalance = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
+                    currentBalanceMenu.setText("$" + userBalance);
+                } catch (Exception e) {
+                    showToast("Current Balanced Not show");
+                }
+
                 break;
             }
             case "GetVoipPlanList": {
@@ -220,6 +224,10 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
             case "getRecentCallHistory": {
                 RecentCallHistoryModel re = (RecentCallHistoryModel) response;
                 CallHistoryData = re.getGetSubscriberCallHistoryResponse().getCallHistory().getCall();
+                Collections.reverse(CallHistoryData);
+                recentCallHistoryModels = (ArrayList<RecentSetDataModel>) getRecentCallHistory();
+                RecentCallHistoryArrayAdapter adapter = new RecentCallHistoryArrayAdapter(getApplicationContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
+                runOnUiThread(() -> ListViewRecentCallHistory.setAdapter(adapter));
                 break;
             }
         }
@@ -269,7 +277,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         }
     }
 
-    private class AsyscGetContact extends AsyncTask {
+    public class AsyscGetContact extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] objects) {
             VoipPlan = (ArrayList<GetVoipPlanModel>) getAllPlans();
@@ -333,6 +341,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  voipRate;
+        return voipRate;
     }
 }

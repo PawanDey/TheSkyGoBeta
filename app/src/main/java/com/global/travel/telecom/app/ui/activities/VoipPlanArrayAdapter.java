@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.model.GetVoipPlanModel;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
@@ -46,10 +48,11 @@ public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
         TextView menu_validityWithMin = convertView.findViewById(R.id.menu_validityWithMin);
         TextView text_plan_price = convertView.findViewById(R.id.plan_price);
 
+
         text_PlanName.setText(PlanName);
         text_PlanDetails.setText(PlanDetails);
-        menu_validityWithMin.setText("Validity "+Validity+" Days ("+ PlanMin+"mins)");
-        text_plan_price.setText("$"+AmountCharge);
+        menu_validityWithMin.setText("Validity " + Validity + " Days (" + PlanMin + "mins)");
+        text_plan_price.setText("$" + String.format("%.2f", new BigDecimal((Double.parseDouble(AmountCharge)))));
         return convertView;
     }
 }

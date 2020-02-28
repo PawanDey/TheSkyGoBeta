@@ -30,8 +30,9 @@
                 android:editable="false"
                 android:fontFamily="@font/sf_old_republic_font"
                 android:gravity="center"
+                android:maxLength="18"
                 android:singleLine="true"
-                android:text="919805198061"
+                android:text=""
                 android:textSize="35dp" />
 
             <TextView

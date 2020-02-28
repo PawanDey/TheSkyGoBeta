@@ -1,3 +1,4 @@
+
 <resources>
     <string name="textcontactCare">カスタマーケアにお問い合わせください<font fgcolor="#FC3E52"><b><u>support@theskygo.com</u></b></font></string>
     <string name="app_name">The SkyGo</string>
@@ -8,7 +9,7 @@
     <string name="textDashboard">ダッシュボード</string>
     <string name="textYouareHere">現在地</string>
     <string name="textHereisLocation">現在地</string>
-    <string name="textActivateSIM">シムを有効にする</string>
+    <string name="textActivateSIM">アクティベーション</string>
     <string name="textActivateyourSIMnumber">シムを有効にする</string>
     <string name="textRecentActivationOnMobile">携帯電話での最近のアクティベーション＃</string>
     <string name="textAlltypebooking">全タイプ予約可</string>
@@ -30,11 +31,6 @@
     <string name="texthintSIMNumber">シム 番号</string>
     <string name="textLanguage">言語</string>
     <string name="textSelectyourapplanguage">言語をお選びください</string>
-    <string name="textENGLISH">英語</string>
-    <string name="textCHINESE">中国語</string>
-    <string name="textJAPANESE">日本語</string>
-    <string name="textKOREAN">韓国語</string>
-    <string name="textSPANISH">スペイン語</string>
     <string name="textNEXT">次</string>
     <string name="textPaymentSummary">支払い概要</string>
     <string name="texthinthereisnumber">こお電話番号</string>

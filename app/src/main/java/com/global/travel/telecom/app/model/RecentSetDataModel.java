@@ -3,11 +3,7 @@ package com.global.travel.telecom.app.model;
 
 public class RecentSetDataModel {
 
-    public String create_time;
-    public String duration;
-    public String leg2;
-    public String outcome;
-    public String retail_charge;
+    private String create_time, duration, leg2, outcome, retail_charge;
 
     public String getCreate_time() {
         return create_time;
@@ -48,7 +44,6 @@ public class RecentSetDataModel {
     public void setRetail_charge(String retail_charge) {
         this.retail_charge = retail_charge;
     }
-
 
 
     public RecentSetDataModel(String create_time, String duration, String leg2, String outcome, String retail_charge) {

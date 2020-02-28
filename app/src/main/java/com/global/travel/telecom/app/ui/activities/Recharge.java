@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
@@ -43,7 +42,6 @@ public class Recharge extends BaseActivity {
     String Days = "0";
     double rate = 0.0;
     double Amount = 0.0;
-    public BaseView baseView;
     TextView todayDate, errorMsg, contactCare, OK;
     String token;
     String MSISDN;
@@ -52,7 +50,7 @@ public class Recharge extends BaseActivity {
     Boolean SpecialDealer = false;
     Boolean SimValidAPIStatus = false;
     androidx.appcompat.app.AlertDialog progressDialog;
-
+    String TotalAmount = "";
 
     @Override
     protected int getLayout() {
@@ -105,7 +103,7 @@ public class Recharge extends BaseActivity {
                         NumberFormat formatter = NumberFormat.getNumberInstance();
                         formatter.setMinimumFractionDigits(2);
                         formatter.setMaximumFractionDigits(2);
-                        String TotalAmount = formatter.format(Amount);
+                        TotalAmount = formatter.format(Amount);
                         totalAmountRecharge.setText("$ " + TotalAmount);
                         getCurretDatePicker();
                     } else if (SpecialDealer.equals(true)) {
@@ -173,10 +171,13 @@ public class Recharge extends BaseActivity {
                 GetRateForPaymentPlan obj = (GetRateForPaymentPlan) response;
                 try {
                     SimValidAPIStatus = true;
-
+                    TotalAmount = obj.getRate().toString();
                     SpecialDealer = true;
-                    totalAmountRecharge.setText("$ " + obj.getRate());
-                    Amount=obj.getRate();
+                    NumberFormat formatter = NumberFormat.getNumberInstance();
+                    formatter.setMinimumFractionDigits(2);
+                    formatter.setMaximumFractionDigits(2);
+                    TotalAmount = formatter.format(Double.parseDouble(TotalAmount));
+                    totalAmountRecharge.setText("$ " + TotalAmount);
                     getCurretDatePicker();
                 } catch (Exception e) {
                     totalAmountRecharge.setText("");
@@ -195,7 +196,7 @@ public class Recharge extends BaseActivity {
                     NumberFormat formatter = NumberFormat.getNumberInstance();
                     formatter.setMinimumFractionDigits(2);
                     formatter.setMaximumFractionDigits(2);
-                    String TotalAmount = formatter.format(Amount);
+                    TotalAmount = formatter.format(Amount);
                     totalAmountRecharge.setText("$ " + TotalAmount);
                     getCurretDatePicker();
                 } catch (Exception e) {
@@ -239,7 +240,7 @@ public class Recharge extends BaseActivity {
                 Intent paymnetSummaryR = new Intent(Recharge.this, mPayment.class);
                 paymnetSummaryR.putExtra("Number", MSISDN);
                 paymnetSummaryR.putExtra("NumberOfDays", Days);
-                paymnetSummaryR.putExtra("AmountCharged", String.valueOf(Amount));
+                paymnetSummaryR.putExtra("AmountCharged", TotalAmount);
                 paymnetSummaryR.putExtra("RequestedForDtTm", validityStartDate);
                 paymnetSummaryR.putExtra("AppPaymentType", "2");
                 startActivity(paymnetSummaryR);
@@ -269,7 +270,7 @@ public class Recharge extends BaseActivity {
             validityStartDate = formatter.format(date1);
 
             String getNoOfDays = numberOfDaysRecharge.getText().toString();
-            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.length()==0 || getNoOfDays.equals("000")) {
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.length() == 0 || getNoOfDays.equals("000")) {
                 GoodUntil.setText("  ");
 
             } else {

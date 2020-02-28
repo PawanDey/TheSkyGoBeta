@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/gredientwhite"
+    android:gravity="center">
+
+
+    <ProgressBar
+        android:id="@+id/login_ff_processBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:outlineAmbientShadowColor="@color/colorRed"
+        android:outlineSpotShadowColor="@color/colorRed"
+        android:visibility="gone" />
+
+    <!--    signin-->
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/SignInPageLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="23dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/skylogo" />
+
+            <EditText
+                android:id="@+id/login_ff_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="7dp"
+                android:layout_toEndOf="@+id/verifyuseric"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:hint="User Name"
+                android:inputType="text"
+                android:maxLength="20"
+                android:paddingStart="3dp"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/login_ff_emailid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="7dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="3dp"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <EditText
+                    android:id="@+id/login_ff_phonenumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_old_republic_font"
+                    android:hint="Phone Number"
+                    android:inputType="number"
+                    android:maxLength="18"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/login_ff_log_in"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/gredientmodify"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:gravity="center"
+                android:text="@string/com_facebook_loginview_log_in_button"
+                android:textColor="#FFFFFF" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

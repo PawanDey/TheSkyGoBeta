@@ -5,21 +5,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
+import com.global.travel.telecom.app.base.BaseView;
 
 import java.util.Objects;
 
 public class Fragment_phone extends Fragment {
-    LinearLayout one, two, three, four, five, six, seven, eight, nine, zero, delete, plus;
+    private LinearLayout one, two, three, four, five, six, seven, eight, nine, zero, delete, plus;
     private TextView phoneNumber;
     private ImageView clickToCallButton;
 
@@ -41,102 +42,33 @@ public class Fragment_phone extends Fragment {
         phoneNumber = view.findViewById(R.id.editphoneNumber);
         clickToCallButton = view.findViewById(R.id.clickToCallButton);
 
-        one.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("1");
+        one.setOnClickListener(v -> phoneNumber.append("1"));
+        two.setOnClickListener(v -> phoneNumber.append("2"));
+        three.setOnClickListener(v -> phoneNumber.append("3"));
+        four.setOnClickListener(v -> phoneNumber.append("4"));
+        five.setOnClickListener(v -> phoneNumber.append("5"));
+        six.setOnClickListener(v -> phoneNumber.append("6"));
+        seven.setOnClickListener(v -> phoneNumber.append("7"));
+        eight.setOnClickListener(v -> phoneNumber.append("8"));
+        nine.setOnClickListener(v -> phoneNumber.append("9"));
+        zero.setOnClickListener(v -> phoneNumber.append("0"));
+        plus.setOnClickListener(v -> phoneNumber.append("+"));
+        delete.setOnClickListener(v -> {
+            if (phoneNumber.length() > 0) {
+                String deleteLastChar = phoneNumber.getText().toString().trim();
+                phoneNumber.setText(deleteLastChar.substring(0, deleteLastChar.length() - 1));
             }
-
-        });
-        two.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("2");
-            }
-
-        });
-        three.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("3");
-            }
-
-        });
-        four.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("4");
-            }
-
-        });
-        five.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("5");
-            }
-
-        });
-        six.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("6");
-            }
-
-        });
-        seven.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("7");
-            }
-
-        });
-        eight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("8");
-            }
-
-        });
-        nine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("9");
-            }
-
-        });
-        zero.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("0");
-            }
-
-        });
-        plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneNumber.append("+");
-            }
-
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (phoneNumber.length() > 0) {
-                    String deleteLastChar = phoneNumber.getText().toString().trim();
-                    phoneNumber.setText(deleteLastChar.substring(0, deleteLastChar.length() - 1));
-                }
-            }
-
         });
 
-        clickToCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
-                intent.putExtra("CallingNumber", phoneNumber.getText().toString().trim());
-                intent.putExtra("CallingName", "");
-                startActivity(intent);
+        clickToCallButton.setOnClickListener(v -> {
+            if (phoneNumber.length() <= 3) {
+                Toast.makeText(getContext(), "Enter valid Phone Number", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
+            intent.putExtra("CallingNumber", phoneNumber.getText().toString().trim());
+            intent.putExtra("CallingName", "");
+            startActivity(intent);
         });
         return view;
     }

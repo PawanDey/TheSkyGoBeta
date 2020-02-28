@@ -31,11 +31,6 @@
     <string name="texthintSIMNumber">SIM号码</string>
     <string name="textLanguage">语言</string>
     <string name="textSelectyourapplanguage">选择您的应用语言</string>
-    <string name="textENGLISH">英语</string>
-    <string name="textCHINESE">中文</string>
-    <string name="textJAPANESE">日本</string>
-    <string name="textKOREAN">朝鲜的</string>
-    <string name="textSPANISH">西班牙语</string>
     <string name="textNEXT">下一个</string>
     <string name="textPaymentSummary">付款摘要</string>
     <string name="texthinthereisnumber">这是数字</string>

@@ -1,3 +1,4 @@
+
 <resources>
     <string name="textcontactCare">Please contact Customer Care <font fgcolor="#FC3E52"><b><u><a>support@theskygo.com</a></u></b></font></string>
     <string name="app_name">The SkyGo</string>
@@ -30,11 +31,6 @@
     <string name="texthintSIMNumber">SIM Number</string>
     <string name="textLanguage">Language</string>
     <string name="textSelectyourapplanguage">Select your app language</string>
-    <string name="textENGLISH">ENGLISH</string>
-    <string name="textCHINESE">CHINESE</string>
-    <string name="textJAPANESE">JAPANESE</string>
-    <string name="textKOREAN">KOREAN</string>
-    <string name="textSPANISH">SPANISH</string>
     <string name="textNEXT">NEXT</string>
     <string name="textPaymentSummary">Payment Summary</string>
     <string name="texthinthereisnumber">here is number</string>
@@ -105,21 +101,5 @@
     <string name="textAlreadyhaveanaccount">Already have an account? <font fgcolor="#442EB4"><b><u>Login here</u></b></font> </string>
     <string name="textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations">Disclaimer :Only available to pick/drop at LAX Ice Currency Locations</string>
     <string name="textDonothaveanaccount">Don\'t have an account? <font fgcolor="#442EB4"><b><u>Sign up</u></b></font> </string>
-    <string name="title_activity_voip_navigation_menu">VoipNavigationMenu</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

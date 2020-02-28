@@ -3,17 +3,14 @@ package com.global.travel.telecom.app.ui.activities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.widget.Toast;
-
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
-import com.global.travel.telecom.app.base.BaseView;
 import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
@@ -28,45 +25,28 @@ public class Notification extends BaseActivity {
     RecyclerView recyclerView;
     String mName, mMsg, mTime;
     int num = 0;
-    ArrayList<String> translatePaasData = new ArrayList<>();
     List<translatPassdata> list = new ArrayList<>();
 
 
     @Override
     protected int getLayout() {
-
         return R.layout.activity_notification;
     }
 
     protected void onViewReady() {
         super.onViewReady();
-
         AuthenticationPresenter authenticationPresenter = new AuthenticationPresenter(this);
         UserDetails userDetails = new UserDetails(this);
         authenticationPresenter.ListNotifications(userDetails.getTokenID(), "1");
-
     }
 
     public void backToDashboardButton(View view) {
         finish();
-
-    }
-
-    Context context = this;
-
-    public void hotspotButton(View view) {
-        try {
-            Hotspot hotspot = new Hotspot();
-            hotspot.hotspotFxn(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void onFailure() {
         ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
-
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
@@ -77,23 +57,16 @@ public class Notification extends BaseActivity {
         }
     }
 
-    //        @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onSuccess(String method, Object response) {
         switch (method) {
 
             case "notification": {
-                GetNotifications getNotifications = new GetNotifications();
-                UserDetails userDetails = new UserDetails(this);
-
-                userDetails.getLanguageSelect();
-
-//                if (userDetails.getLanguageSelect().equals("en")) {
-                    List<GetNotifications> result = (List<GetNotifications>) response;
-                    recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-                    adapter2 = new ImageGalleryAdapterNotificationEN(result, getApplication());
-                    recyclerView.setAdapter(adapter2);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
+                List<GetNotifications> result = (List<GetNotifications>) response;
+                recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                adapter2 = new ImageGalleryAdapterNotificationEN(result, getApplication());
+                recyclerView.setAdapter(adapter2);
+                recyclerView.setLayoutManager(new LinearLayoutManager(Notification.this));
 //                } else {
 //                    List<GetNotifications> result = (List<GetNotifications>) response;
 //                    mName = result.get(0).mDealerName;

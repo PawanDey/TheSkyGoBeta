@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -20,10 +23,9 @@ import java.util.TimeZone;
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
     protected abstract int getLayout();
-
-    private ProgressBar progressBar;
-
     private AlertDialog progressDialog;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override
     public void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        mHandler.postDelayed(() -> {
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        },500);
     }
 
     @Override
@@ -61,11 +65,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             View mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loader, null);
             AlertDialog.Builder mBuilder = new AlertDialog.Builder( this ).setView(mDialogView);
             progressDialog = mBuilder.create();
-           try {
-               progressDialog.setCancelable(false);
-           }catch (Exception e){
-               progressDialog.setCanceledOnTouchOutside(false);
-           }
+            try {
+                progressDialog.setCancelable(false);
+            }catch (Exception e){
+                progressDialog.setCanceledOnTouchOutside(false);
+            }
             progressDialog.getWindow().setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT) );
             progressDialog.getWindow().setLayout( WindowManager.LayoutParams.WRAP_CONTENT , WindowManager.LayoutParams.WRAP_CONTENT  );
         }

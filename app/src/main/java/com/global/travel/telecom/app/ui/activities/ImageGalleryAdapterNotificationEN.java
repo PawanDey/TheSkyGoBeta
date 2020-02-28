@@ -9,38 +9,34 @@ import android.view.ViewGroup;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.model.GetNotifications;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 import java.util.List;
 
 class ImageGalleryAdapterNotificationEN extends RecyclerView.Adapter<viewHolderNotifications> {
 
-    List<GetNotifications> list = Collections.emptyList();
+    private List<GetNotifications> list;
     Context context;
 
-    public ImageGalleryAdapterNotificationEN(List<GetNotifications> list, Context context) {
+    ImageGalleryAdapterNotificationEN(List<GetNotifications> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
+    @NotNull
     @Override
     public viewHolderNotifications onCreateViewHolder(ViewGroup parent,
                                                       int viewType) {
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        // Inflate the layout
-        View photoView = inflater.inflate(R.layout.notifications_card_view,
-                parent, false);
-
-        viewHolderNotifications viewHolder = new viewHolderNotifications(photoView);
-        return viewHolder;
+        View photoView = inflater.inflate(R.layout.notifications_card_view,parent, false);
+        return new viewHolderNotifications(photoView);
     }
 
     @Override
-    public void onBindViewHolder(final viewHolderNotifications viewHolder,
-                                 final int position) {
-
+    public void onBindViewHolder(final viewHolderNotifications viewHolder,final int position) {
         viewHolder.Name.setText(list.get(position).mDealerName);
         viewHolder.Date.setText(list.get(position).mMessage);
         viewHolder.Message.setText(list.get(position).mAlertTime);

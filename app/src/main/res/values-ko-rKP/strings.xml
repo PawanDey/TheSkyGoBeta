@@ -5,7 +5,7 @@
     <string name="welcome_to_gtt" translatable="false">The SkyGo에 오신 것을 환영합니다. </string>
     <string name="default_notification_channel_id" translatable="false">gttAppNotificationChannel</string>
     <string name="textDashboard">계기반</string>
-    <string name="textYouareHere">너 여기 왔어.</string>
+    <string name="textYouareHere">나의 위치</string>
     <string name="textHereisLocation">위치 정보</string>
     <string name="facebook_app_id">680846345699872</string>
     <string name="fb_login_protocol_scheme">fb680846345699872</string>
@@ -31,11 +31,6 @@
     <string name="texthintSIMNumber">시뮬레이션 번호</string>
     <string name="textLanguage">언어</string>
     <string name="textSelectyourapplanguage">앱 언어 선택</string>
-    <string name="textENGLISH">영어</string>
-    <string name="textCHINESE">중국말</string>
-    <string name="textJAPANESE">일본어</string>
-    <string name="textKOREAN">한국어</string>
-    <string name="textSPANISH">스페인 사람</string>
     <string name="textNEXT">다음 것</string>
     <string name="textPaymentSummary">지불 요약</string>
     <string name="texthinthereisnumber">여기에 번호가있다.</string>

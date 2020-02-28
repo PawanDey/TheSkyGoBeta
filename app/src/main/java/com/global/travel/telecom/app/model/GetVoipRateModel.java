@@ -1,10 +1,7 @@
 package com.global.travel.telecom.app.model;
 
 public class GetVoipRateModel {
-    private String mCountryName;
-    private String mPrice;
-    private String mCountryCode;
-    private String mRetails;
+    private String mCountryName, mPrice, mCountryCode, mRetails;
 
     public String getmCountryCode() {
         return mCountryCode;

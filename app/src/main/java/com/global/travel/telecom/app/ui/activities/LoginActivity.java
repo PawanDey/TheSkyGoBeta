@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -39,7 +38,6 @@ import com.facebook.login.widget.LoginButton;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
-import com.global.travel.telecom.app.model.LoginRequestTypeId;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberError;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberGood;
@@ -50,13 +48,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.hbb20.CountryCodePicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,11 +75,15 @@ public class LoginActivity extends BaseActivity {
     AuthenticationPresenter authenticationPresenter;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     androidx.appcompat.app.AlertDialog progressDialog;
+    androidx.appcompat.app.AlertDialog progressDialog1;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     LoginResponse obj;
     UserDetails userDetails;
     CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
+    String getUserCountryCode, getUserCountryName;
+    String facebookGetName = "";
+
 
     @Override
     protected int getLayout() {
@@ -192,7 +192,6 @@ public class LoginActivity extends BaseActivity {
                     obj = (LoginResponse) response;
 
                     String VoIpName = "SkyGo:" + obj.getUserID().trim();
-
                     //set in share prefence
                     userDetails.setUserId(obj.getUserID());
                     userDetails.setVoipCredentailuserName(obj.getVoIPUserName());
@@ -376,39 +375,27 @@ public class LoginActivity extends BaseActivity {
                 Log.d("mylog", "getLastRefresh;" + loginResult.getAccessToken().getLastRefresh());
                 Log.d("mylog", "getDataAccessExpirationTime;" + loginResult.getAccessToken().getDataAccessExpirationTime());
                 Log.d("mylog", "isExpired;" + loginResult.getAccessToken().isExpired());
-
-                try {
+                if (profile != null) {
                     Log.d("mylog", "getName;" + profile.getName());
                     Log.d("mylog", "getId;" + profile.getId());
                     Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500, 500));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    facebookGetName = profile.getName();
                 }
-
                 Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT);
-                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        String getUserName;
-                        if (!task.isSuccessful()) {
-//                            showToast("Sorry! Something went wrong");
-                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
-                            return;
-                        }
-                        String token = Objects.requireNonNull(task.getResult()).getToken();
-                        if (profile != null) {
-                            getUserName = profile.getId();
-                        } else {
-                            getUserName = loginResult.getAccessToken().getUserId();
-//                            getUserName= "user";
-
-                        }
-                        try {
-                            authenticationPresenter.loginUser(getUserName, LoginRequestTypeId.FACEBOOK, token);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
+                    String getUserName;
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                        return;
                     }
+                    String token = Objects.requireNonNull(task.getResult()).getToken();
+                    if (profile != null) {
+                        getUserName = profile.getId();
+                    } else {
+                        getUserName = loginResult.getAccessToken().getUserId();
+                    }
+                    LoginFillFormFuction(getUserName, facebookGetName, "33", token, "", "", "");
+//                    authenticationPresenter.loginUser(getUserName, LoginRequestTypeId.FACEBOOK, token);
                 });
             }
 
@@ -447,13 +434,11 @@ public class LoginActivity extends BaseActivity {
 
         // ID value
         try {
-
             //layout id
             SignInPageLayout = mViewSiginScreen.findViewById(R.id.SignInPageLayout);
             LogInPageLayout = mViewSiginScreen.findViewById(R.id.LogInPageLayout);
             processBar = mViewSiginScreen.findViewById(R.id.processBar);
             verificationLayout = mViewSiginScreen.findViewById(R.id.verificationLayout);
-
             //signin
             input_email_signin = mViewSiginScreen.findViewById(R.id.input_email_signin);
             input_password_signin = mViewSiginScreen.findViewById(R.id.input_password_signin);
@@ -461,132 +446,105 @@ public class LoginActivity extends BaseActivity {
             text_below_signIn = mViewSiginScreen.findViewById(R.id.text_below_signIn);
             createaccount_signIn = mViewSiginScreen.findViewById(R.id.createaccount_signIn);
             verificationText = mViewSiginScreen.findViewById(R.id.verificationText);
-
             //login
             input_login_email = mViewSiginScreen.findViewById(R.id.input_email_loginIn);
             input_login_password = mViewSiginScreen.findViewById(R.id.input_password_loginIn);
             Button_login = mViewSiginScreen.findViewById(R.id.Button_login);
             text_below_login = mViewSiginScreen.findViewById(R.id.text_below_login);
 
-            Button_login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (input_login_email.getText().toString().isEmpty() || input_login_password.getText().toString().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "E-mail/Password is Empty", LENGTH_LONG).show();
-                        return;
-                    }
-                    processBar.setVisibility(View.VISIBLE);
-                    user = firebaseAuth.getCurrentUser();
-
-                    firebaseAuth.signInWithEmailAndPassword(input_login_email.getText().toString().trim(), input_login_password.getText().toString().trim()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            try {
-                                if (user != null) {
-                                    if (task.isSuccessful()) {
-                                        if (!user.isEmailVerified()) {
-                                            Toast.makeText(getApplicationContext(), " Your Email is not Verified ", Toast.LENGTH_SHORT).show();
-                                        } else if (user.isEmailVerified()) {
-                                            //go to dashboard activity
-                                            FirebaseInstanceId.getInstance().getInstanceId()
-                                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                                            if (!task.isSuccessful()) {
-                                                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
-                                                                return;
-                                                            }
-                                                            String token = Objects.requireNonNull(task.getResult()).getToken();
-                                                            authenticationPresenter.loginUser(Objects.requireNonNull(user.getEmail()).trim(), LoginRequestTypeId.Email, token);
-                                                        }
-                                                    });
-
-
-                                            Toast.makeText(getApplicationContext(), " Login Succesful: Verified " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), " Connection Error! Please Try Again", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    } else if (task.isComplete()) {
-                                        Toast.makeText(getApplicationContext(), " Email/password is invalid", Toast.LENGTH_SHORT).show();
-                                    } else if (task.isCanceled()) {
-                                        Toast.makeText(getApplicationContext(), " Authentication Cancle ", Toast.LENGTH_SHORT).show();
-                                    }
-                                    processBar.setVisibility(View.GONE);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Connection Error! Please Try Again", LENGTH_LONG).show();
-                                    processBar.setVisibility(View.GONE);
-                                }
-                            } catch (Exception e) {
-                                Toast.makeText(getApplicationContext(), e.getMessage(), LENGTH_LONG).show();
-                                processBar.setVisibility(View.GONE);
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
+            Button_login.setOnClickListener(v -> {
+                if (input_login_email.getText().toString().isEmpty() || input_login_password.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "E-mail/Password is Empty", LENGTH_LONG).show();
+                    return;
                 }
-            });
+                processBar.setVisibility(View.VISIBLE);
+                user = firebaseAuth.getCurrentUser();
 
-            createaccount_signIn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (input_email_signin.getText().toString().isEmpty() || input_password_signin.getText().toString().isEmpty() || confrom_input_password_signin.getText().toString().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "Fill All details ", LENGTH_LONG).show();
-                        return;
-                    }
-                    if (input_password_signin.length() < 5 || confrom_input_password_signin.length() < 5) {
-                        Toast.makeText(getApplicationContext(), "Password too short", LENGTH_LONG).show();
-                        return;
-                    }
-                    if (!input_password_signin.getText().toString().equals(confrom_input_password_signin.getText().toString())) {
-                        Toast.makeText(getApplicationContext(), "Password Not match", LENGTH_LONG).show();
-                        return;
-                    }
-
-                    processBar.setVisibility(View.VISIBLE);
-                    firebaseAuth.createUserWithEmailAndPassword(input_email_signin.getText().toString().trim(), input_password_signin.getText().toString().trim())
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task task) {
-                                                if (task.isSuccessful()) {
-                                                    verificationLayout.setVisibility(View.VISIBLE);
-                                                    verificationText.setText("A verification link has been send to " + input_email_signin.getText().toString().trim());
-                                                    Toast.makeText(getApplicationContext(), "A verification link has been send to " + input_email_signin.getText().toString().trim(), LENGTH_LONG).show();
+                firebaseAuth.signInWithEmailAndPassword(input_login_email.getText().toString().trim(), input_login_password.getText().toString().trim()).addOnCompleteListener(LoginActivity.this, task -> {
+                    try {
+                        if (user != null) {
+                            if (task.isSuccessful()) {
+                                if (!user.isEmailVerified()) {
+                                    Toast.makeText(getApplicationContext(), " Your Email is not Verified ", Toast.LENGTH_SHORT).show();
+                                } else if (user.isEmailVerified()) {
+                                    //go to dashboard activity
+                                    FirebaseInstanceId.getInstance().getInstanceId()
+                                            .addOnCompleteListener(task1 -> {
+                                                if (!task1.isSuccessful()) {
+                                                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                                                    return;
                                                 }
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), LENGTH_LONG).show();
+                                                String token = Objects.requireNonNull(task1.getResult()).getToken();
+                                                LoginFillFormFuction(user.getEmail(), "", "35", token, user.getEmail().trim(), "", "");
+//                                                authenticationPresenter.loginUser(Objects.requireNonNull(user.getEmail()).trim(), LoginRequestTypeId.Email, token);
+                                            });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), " Connection Error! Please Try Again", Toast.LENGTH_SHORT).show();
 
-                                    }
-                                    processBar.setVisibility(View.GONE);
                                 }
-                            });
-                }
+                            } else if (task.isComplete()) {
+                                Toast.makeText(getApplicationContext(), " Email/password is invalid", Toast.LENGTH_SHORT).show();
+                            } else if (task.isCanceled()) {
+                                Toast.makeText(getApplicationContext(), " Authentication Cancle ", Toast.LENGTH_SHORT).show();
+                            }
+                            processBar.setVisibility(View.GONE);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Connection Error! Please Try Again", LENGTH_LONG).show();
+                            processBar.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), LENGTH_LONG).show();
+                        processBar.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+                });
+
             });
 
-            text_below_signIn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            createaccount_signIn.setOnClickListener(v -> {
 
-                    SignInPageLayout.setVisibility(View.GONE);
-                    LogInPageLayout.setVisibility(View.VISIBLE);
-
+                if (input_email_signin.getText().toString().isEmpty() || input_password_signin.getText().toString().isEmpty() || confrom_input_password_signin.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Fill All details ", LENGTH_LONG).show();
+                    return;
                 }
+                if (input_password_signin.length() < 5 || confrom_input_password_signin.length() < 5) {
+                    Toast.makeText(getApplicationContext(), "Password too short", LENGTH_LONG).show();
+                    return;
+                }
+                if (!input_password_signin.getText().toString().equals(confrom_input_password_signin.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Password Not match", LENGTH_LONG).show();
+                    return;
+                }
+
+                processBar.setVisibility(View.VISIBLE);
+                firebaseAuth.createUserWithEmailAndPassword(input_email_signin.getText().toString().trim(), input_password_signin.getText().toString().trim())
+                        .addOnCompleteListener(LoginActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(LoginActivity.this, task12 -> {
+                                    if (task12.isSuccessful()) {
+                                        verificationLayout.setVisibility(View.VISIBLE);
+                                        verificationText.setText("A verification link has been send to " + input_email_signin.getText().toString().trim());
+                                        Toast.makeText(getApplicationContext(), "A verification link has been send to " + input_email_signin.getText().toString().trim(), LENGTH_LONG).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), LENGTH_LONG).show();
+
+                            }
+                            processBar.setVisibility(View.GONE);
+                        });
             });
-            text_below_login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    LogInPageLayout.setVisibility(View.GONE);
-                    SignInPageLayout.setVisibility(View.VISIBLE);
-                }
+            text_below_signIn.setOnClickListener(v -> {
+
+                SignInPageLayout.setVisibility(View.GONE);
+                LogInPageLayout.setVisibility(View.VISIBLE);
+
+            });
+            text_below_login.setOnClickListener(v -> {
+
+                LogInPageLayout.setVisibility(View.GONE);
+                SignInPageLayout.setVisibility(View.VISIBLE);
             });
 
 
@@ -602,28 +560,24 @@ public class LoginActivity extends BaseActivity {
         try {
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             assert account != null;
-            account.getEmail();
+            account.getId();
             Log.d("Email", "EMAIL;" + account.getEmail());
             Log.d("name", "NAME;" + account.getDisplayName());
 
             FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
-                                return;
-                            }
-                            String token = Objects.requireNonNull(task.getResult()).getToken();
-                            authenticationPresenter.loginUser(account.getEmail(), LoginRequestTypeId.GOOGLE, token);
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                            return;
                         }
+                        String token = Objects.requireNonNull(task.getResult()).getToken();
+                        LoginFillFormFuction(account.getEmail(), account.getDisplayName(), "34", token, account.getEmail(), "", "");
+//                        authenticationPresenter.loginUser(account.getEmail(), LoginRequestTypeId.GOOGLE, token);
+
                     });
         } catch (ApiException e) {
             Toast.makeText(LoginActivity.this, R.string.textLogincancel, LENGTH_LONG).show();
         }
-//            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
-//            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
-
     }
 
     private void check() {
@@ -737,5 +691,44 @@ public class LoginActivity extends BaseActivity {
 
     public void backToExit(View view) {
         finish();
+    }
+
+    public void LoginFillFormFuction(String username, String name, String reqTypeID, String gcmKey, String email, String mobileNumner, String homeCountry) {
+        View loginfillForm = LayoutInflater.from(this).inflate(R.layout.login_fill_dataform, null);
+        androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(loginfillForm);
+        progressDialog1 = mBuilder.create();
+        Objects.requireNonNull(progressDialog1.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        progressDialog1.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        progressDialog1.show();
+        ProgressBar login_ff_processBar = loginfillForm.findViewById(R.id.login_ff_processBar);
+        EditText login_ff_name = loginfillForm.findViewById(R.id.login_ff_username);
+        EditText login_ff_emailid = loginfillForm.findViewById(R.id.login_ff_emailid);
+        EditText login_ff_phonenumber = loginfillForm.findViewById(R.id.login_ff_phonenumber);
+        CountryCodePicker ccp = loginfillForm.findViewById(R.id.ccp);
+        Button login_ff_log_in = loginfillForm.findViewById(R.id.login_ff_log_in);
+        getUserCountryCode = ccp.getDefaultCountryCodeWithPlus();
+        getUserCountryName = ccp.getDefaultCountryNameCode();
+        login_ff_name.setText(name);
+        login_ff_emailid.setText(email);
+        if (!email.isEmpty()) {
+            login_ff_emailid.setEnabled(false);
+        }
+        if (!name.isEmpty()) {
+            login_ff_name.setEnabled(false);
+        }
+        ccp.setOnCountryChangeListener(() -> {
+            getUserCountryCode = ccp.getSelectedCountryCodeWithPlus();
+            getUserCountryName = ccp.getSelectedCountryNameCode();
+        });
+
+        login_ff_log_in.setOnClickListener(v -> {
+            if (login_ff_name.getText().toString().isEmpty() || login_ff_emailid.getText().toString().isEmpty() || login_ff_phonenumber.getText().toString().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Fill All Details", LENGTH_LONG).show();
+                return;
+            }
+            login_ff_processBar.setVisibility(View.VISIBLE);
+            authenticationPresenter.loginUser(login_ff_name.getText().toString(), login_ff_emailid.getText().toString(), getUserCountryCode + login_ff_phonenumber.getText(), getUserCountryName, reqTypeID, username, gcmKey);
+            progressDialog1.dismiss();
+        });
     }
 }

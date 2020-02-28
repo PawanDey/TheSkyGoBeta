@@ -154,7 +154,7 @@
                     android:layout_marginLeft="30dp"
                     android:fontFamily="@font/segoe_semi_light"
                     android:gravity="center"
-                    android:text="日本人"
+                    android:text="日本語"
                     android:textColor="#606060"
                     android:textSize="14dp" />
 

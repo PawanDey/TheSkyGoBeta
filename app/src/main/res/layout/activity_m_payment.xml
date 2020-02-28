@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gredientthankyou"
     android:orientation="vertical"
+    android:background="@drawable/gredientthankyou"
     tools:context=".ui.activities.mPayment">
 
     <!--dashboard screen-->
@@ -34,7 +34,6 @@
             android:padding="5dp"
             android:src="@drawable/wifi"
             android:visibility="gone" />
-
         <TextView
             android:id="@+id/notficationPayment"
             android:layout_width="145dp"
@@ -46,8 +45,6 @@
             android:text="@string/textPayment"
             android:textColor="#ffffff"
             android:textSize="18dp" />
-
-
         <ImageView
             android:id="@+id/notificationButton"
             android:layout_width="25dp"
@@ -77,19 +74,10 @@
                 android:layout_height="match_parent">
 
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="550dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/map2" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="1dp">
+                    android:orientation="vertical">
 
 
                     <!--Paymnet Summary-->
@@ -97,7 +85,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginTop="15dp">
-
 
                         <TextView
                             android:id="@+id/textView4"
@@ -114,21 +101,18 @@
                             android:textColorHint="#FFFFFF"
                             android:textSize="18dp" />
 
-
                         <TextView
                             android:id="@+id/misidn_serial_voip_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="23dp"
+                            android:layout_marginStart="23dp"
                             android:layout_marginBottom="42dp"
                             android:fontFamily="@font/segoe_bold"
                             android:text="SIM#"
                             android:textColor="#FFFFFF"
-                            android:textSize="10dp" />
-
+                            android:textSize="12dp" />
 
                         <TextView
                             android:id="@+id/simNumber"
@@ -156,7 +140,7 @@
                     <!--Card Amount-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="48dp">
+                        android:layout_height="40dp">
 
 
                         <TextView
@@ -197,7 +181,7 @@
                     <!--Convenience Fee-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="48dp">
+                        android:layout_height="40dp">
 
 
                         <TextView
@@ -236,7 +220,7 @@
                     <!--Amount Payable-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="70dp">
+                        android:layout_height="50dp">
 
 
                         <TextView
@@ -291,19 +275,16 @@
                     <!--ActivationDetails-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentStart="true">
+                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/activationDetails"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:layout_marginStart="25dp"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginTop="25dp"
+                            android:layout_marginTop="15dp"
                             android:fontFamily="@font/segoe_bold"
                             android:text="@string/textActivationDetails"
                             android:textColor="#FFFFFF"
@@ -314,11 +295,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:layout_marginStart="22dp"
-                            android:layout_marginLeft="22dp"
-                            android:layout_marginTop="49dp"
+                            android:layout_marginTop="30dp"
                             android:fontFamily="@font/segoe"
                             android:text="@string/textValiditydays"
                             android:textColor="#FFFFFF"
@@ -330,25 +309,21 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_marginStart="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginTop="49dp"
+                            android:layout_marginTop="30dp"
                             android:layout_toEndOf="@+id/textView16"
-                            android:layout_toRightOf="@+id/textView16"
                             android:fontFamily="@font/segoe"
                             android:text=" "
                             android:textColor="#FFFFFF"
                             android:textSize="15dp" />
 
                         <TextView
-                            android:id="@+id/textView18"
+                            android:id="@+id/fromDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:layout_marginStart="23dp"
-                            android:layout_marginLeft="23dp"
-                            android:layout_marginTop="76dp"
+                            android:layout_marginTop="50dp"
                             android:fontFamily="@font/segoe"
                             android:text="@string/textActivationfromdate"
                             android:textColor="#FFFFFF"
@@ -359,54 +334,96 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_marginStart="1dp"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginTop="76dp"
-                            android:layout_toEndOf="@+id/textView18"
-                            android:layout_toRightOf="@+id/textView18"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="50dp"
+                            android:layout_toEndOf="@+id/fromDate"
                             android:fontFamily="@font/segoe"
                             android:text=" "
                             android:textColor="#FFFFFF" />
                     </RelativeLayout>
 
-                    <!--modify and Processed button-->
+                    <!--Proceesed-->
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/proceedRelativeLayout"
+                        android:layout_marginTop="16dp">
+
 
                         <Button
-                            android:id="@+id/modifyButton"
-                            android:layout_width="230dp"
-                            android:layout_height="49dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="35dp"
+                            android:id="@+id/ProcessedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="10dp"
                             android:background="@drawable/gredientmodify"
                             android:fontFamily="@font/segoe"
-                            android:onClick="backToactivation"
-                            android:text="@string/textMODIFY"
-                            android:textColor="#FFFFFF"
-                            android:textSize="22dp" />
-
-                        <Button
-                            android:id="@+id/payPalPaymentActivityButton"
-                            android:layout_width="230dp"
-                            android:layout_height="49dp"
-                            android:layout_centerInParent="true"
-                            android:layout_marginTop="205dp"
-                            android:background="@drawable/gredientmodify"
-                            android:fontFamily="@font/segoe"
-                            android:src="@drawable/paypallogo"
                             android:text="@string/textProceed"
-                            android:textColor="#FFFFFF"
-                            android:textSize="22dp" />
+                            android:onClick="PayPalPaymentOnclick"
+                            android:textColor="@color/white"
+                            android:textSize="20dp" />
+
+
                     </RelativeLayout>
+
+                    <!--Pay Button -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/payRelativeLayout"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:background="@drawable/gredientwhite"
+                        >
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+
+                            <com.stripe.android.view.CardMultilineWidget
+                                android:id="@+id/cardInputWidget"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="15dp"
+                                android:padding="5dp" />
+
+                            <Button
+                                android:id="@+id/payPalPaymentActivityButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="50dp"
+                                android:background="@drawable/gredientmodify"
+                                android:fontFamily="@font/sf_old_republic_font"
+                                android:text="Pay"
+                                android:textColor="@color/white"
+                                android:textSize="20dp" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
 
 
                 </LinearLayout>
 
             </RelativeLayout>
+
         </LinearLayout>
+
     </ScrollView>
 
 

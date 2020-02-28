@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -25,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
+import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
 import com.global.travel.telecom.app.model.SetDataInDashboard;
@@ -39,16 +39,15 @@ import java.util.Locale;
 public class Dashboard extends BaseActivity {
     private double logitude;
     private double latitude;
-    String token;
-    TextView currentLocation;
-    TextView validity;
-    ImageView skygoDialerLogo;
+    String token, adress5;
+    String getCurrentBalance = "";
+    TextView currentLocation, validity, balanceShowInDashboard;
     boolean doubleBackToExitPressedOnce;
     Context context = this;
-    String country, pincode, city, adress1, adress2, adress3, adress4, adress5, adress6;
-    public ImageView setImageOnHotspot;
+    public ImageView setImageOnHotspot, skygoDialerLogo;
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
+
 
     @Override
     protected int getLayout() {
@@ -58,27 +57,22 @@ public class Dashboard extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userDetails = new UserDetails(this);
         setContentView(R.layout.activity_dashboard);
-//        String TokenTest = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFiYyIsIm5iZiI6MTU2MTE1MTIxOCwiZXhwIjoxNTYxMTg3MjE4LCJpYXQiOjE1NjExNTEyMTh9.xJjXj1PkAq8PtQDcGvgxKizcVIGJLYZ7nvn5SIzDwNI";
         userDetails = new UserDetails(this);
         Locale locale = new Locale(userDetails.getLanguageSelect());
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         authenticationPresenter = new AuthenticationPresenter(this);
         skygoDialerLogo = findViewById(R.id.skyGoDialer);
         setImageOnHotspot = findViewById(R.id.button25);
+        balanceShowInDashboard = findViewById(R.id.balanceShowInDashboard);
         SelectLoginImage();
-        //userDetails = new UserDetails(Dashboard.this);
-        // userDetails.getTokenID()
         token = userDetails.getTokenID();
         try {
             authenticationPresenter.GetSubscriber(userDetails.getTokenID());
         } catch (Exception e) {
-//            showToast(" "+R.string.textPleaseCheckYourInternetConnection);
             Toast.makeText(Dashboard.this, R.string.textPleaseCheckYourInternetConnection, Toast.LENGTH_LONG).show();
         }
         TextView SimStatus = findViewById(R.id.txtProcessPendingStatus);
@@ -89,7 +83,6 @@ public class Dashboard extends BaseActivity {
         TextView validityLeft = findViewById(R.id.txtValidityLeft);
         validity = findViewById(R.id.validityDateOnDeshboard);
         try {
-            //for location
             currentLocation = findViewById(R.id.hereIsLocation);
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -116,8 +109,8 @@ public class Dashboard extends BaseActivity {
                 RecentExtensionLayout.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override
@@ -159,7 +152,14 @@ public class Dashboard extends BaseActivity {
                 userDetails.setVoipCustomerID(obj.getCustomerId());
                 userDetails.setVoipSubcriberID(obj.getSubscriberId());
                 userDetails.setUserId(obj.getCustomerReference());
-                showToast("Everything is working fine");
+                getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
+                        "<authentication>\n" +
+                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                        "</authentication>\n" +
+                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                        "</get-customer-balance>";
+                authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
                 break;
             }
             case "GetSubscriber": {
@@ -203,6 +203,16 @@ public class Dashboard extends BaseActivity {
                 validityLeft.setText(obj.getActDate());
                 break;
             }
+            case "CurrentBalance": {
+                try {
+                    CurrentBalance currentBalance = (CurrentBalance) response;
+                    String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
+                    balanceShowInDashboard.setText("Balance: $" + bal.substring(0, bal.length() - 2));
+                } catch (Exception e) {
+                    showToast("Current Balanced Not show");
+                }
+                break;
+            }
         }
     }
 
@@ -233,8 +243,6 @@ public class Dashboard extends BaseActivity {
         }
 
     }
-
-    private WifiManager.LocalOnlyHotspotReservation mReservation;
 
     public void hotspotButton(View view) {
         try {

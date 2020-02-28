@@ -24,9 +24,9 @@ import java.util.Objects;
 
 public class Fragment_recent extends Fragment {
 
-    ListView ListViewRecentCallHistory;
-    ProgressBar voip_progressBarRecent;
-    TextView progress_bar_message;
+    public static ListView ListViewRecentCallHistory;
+    private ProgressBar voip_progressBarRecent;
+    private TextView progress_bar_message;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Nullable
@@ -44,33 +44,27 @@ public class Fragment_recent extends Fragment {
                 voip_progressBarRecent.setVisibility(View.VISIBLE);
                 progress_bar_message.setVisibility(View.VISIBLE);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (SkyGoDialer.recentCallHistoryModels == null) {
-                            try {
-                                Thread.sleep(300);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                new Thread(() -> {
+                    while (SkyGoDialer.recentCallHistoryModels == null) {
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    ListViewRecentCallHistory.setVisibility(View.VISIBLE);
-                                    voip_progressBarRecent.setVisibility(View.GONE);
-                                    progress_bar_message.setVisibility(View.GONE);
-                                    RecentCallHistoryArrayAdapter adapter = new RecentCallHistoryArrayAdapter(getContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
-                                    ListViewRecentCallHistory.setAdapter(adapter);
-                                    ListViewRecentCallHistory.setBackgroundColor(getResources().getColor(R.color.white));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, 100);
                     }
+                    mHandler.postDelayed(() -> {
+                        try {
+                            ListViewRecentCallHistory.setVisibility(View.VISIBLE);
+                            voip_progressBarRecent.setVisibility(View.GONE);
+                            progress_bar_message.setVisibility(View.GONE);
+                            RecentCallHistoryArrayAdapter adapter = new RecentCallHistoryArrayAdapter(getContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
+                            ListViewRecentCallHistory.setAdapter(adapter);
+                            ListViewRecentCallHistory.setBackgroundColor(getResources().getColor(R.color.white));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }, 100);
                 }).start();
 
 
@@ -87,25 +81,22 @@ public class Fragment_recent extends Fragment {
             Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        ListViewRecentCallHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    RecentSetDataModel arrayList = (RecentSetDataModel) ListViewRecentCallHistory.getItemAtPosition(i);
-                    String name = "";
-                    String mobileNumbers = arrayList.getLeg2();
-                    Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
-                    intent.putExtra("CallingNumber", mobileNumbers.trim());
-                    intent.putExtra("CallingName", name.trim());
-                    startActivity(intent);
+        ListViewRecentCallHistory.setOnItemClickListener((adapterView, view1, i, l) -> {
+            try {
+                RecentSetDataModel arrayList = (RecentSetDataModel) ListViewRecentCallHistory.getItemAtPosition(i);
+                String name = "";
+                String mobileNumbers = arrayList.getLeg2();
+                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
+                intent.putExtra("CallingNumber", mobileNumbers.trim());
+                intent.putExtra("CallingName", name.trim());
+                startActivity(intent);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
+
         });
 
         return view;
