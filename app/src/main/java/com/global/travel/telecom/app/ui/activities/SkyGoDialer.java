@@ -76,10 +76,9 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 "</authentication>\n" +
                 "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
                 "</get-customer-balance>";
-            authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
-            authenticationPresenter.GetVoipPlan();
-            authenticationPresenter.GetVoIPRate();
-
+        authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
+        authenticationPresenter.GetVoipPlan();
+        authenticationPresenter.GetVoIPRate();
     }
 
     @Override

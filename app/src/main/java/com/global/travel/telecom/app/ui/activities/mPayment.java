@@ -185,7 +185,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 break;
 
         }
-
     }
 
     @Override

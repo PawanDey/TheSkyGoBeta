@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -49,8 +50,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -58,18 +63,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static android.widget.Toast.LENGTH_LONG;
 
 
 public class LoginActivity extends BaseActivity {
     ImageView fb, google, linkedin, ownEmail;
-    ProgressBar processBar;
-    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password;
+    ProgressBar processBar, login_ff_processBar;
+    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password, inputOTP;
     TextView text_below_signIn, text_below_login, verificationText;
     LinearLayout SignInPageLayout, LogInPageLayout;
     RelativeLayout verificationLayout;
-    Button createaccount_signIn, Button_login;
+    Button createaccount_signIn, Button_login, sendOTP, login_ff_log_in;
     GoogleSignInClient mGoogleSignInClient;
     CallbackManager callbackManager;
     AuthenticationPresenter authenticationPresenter;
@@ -81,30 +87,26 @@ public class LoginActivity extends BaseActivity {
     LoginResponse obj;
     UserDetails userDetails;
     CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
-    String getUserCountryCode, getUserCountryName;
+    String getUserCountryCode, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, paraName, paraEmailID, paraPhoneNumber;
     String facebookGetName = "";
-
+    String mVerificationId = "";
 
     @Override
     protected int getLayout() {
-
-        //app permisson request
         int camera = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
-        int storage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int loc = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int phone = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE);
         int contact = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         int microphone = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-
         List<String> listPermissionsNeeded = new ArrayList<>();
 
         if (camera != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
         }
-        if (storage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+////        if (storage != PackageManager.PERMISSION_GRANTED) {
+////            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+////        }
         if (phone != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.READ_PHONE_STATE);
         }
@@ -700,12 +702,18 @@ public class LoginActivity extends BaseActivity {
         Objects.requireNonNull(progressDialog1.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         progressDialog1.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         progressDialog1.show();
-        ProgressBar login_ff_processBar = loginfillForm.findViewById(R.id.login_ff_processBar);
+
+        login_ff_processBar = loginfillForm.findViewById(R.id.login_ff_processBar);
+
         EditText login_ff_name = loginfillForm.findViewById(R.id.login_ff_username);
         EditText login_ff_emailid = loginfillForm.findViewById(R.id.login_ff_emailid);
         EditText login_ff_phonenumber = loginfillForm.findViewById(R.id.login_ff_phonenumber);
+        inputOTP = loginfillForm.findViewById(R.id.inputOTP);
         CountryCodePicker ccp = loginfillForm.findViewById(R.id.ccp);
-        Button login_ff_log_in = loginfillForm.findViewById(R.id.login_ff_log_in);
+
+        sendOTP = loginfillForm.findViewById(R.id.sendOTP);
+        login_ff_log_in = loginfillForm.findViewById(R.id.login_ff_log_in);
+
         getUserCountryCode = ccp.getDefaultCountryCodeWithPlus();
         getUserCountryName = ccp.getDefaultCountryNameCode();
         login_ff_name.setText(name);
@@ -721,14 +729,87 @@ public class LoginActivity extends BaseActivity {
             getUserCountryName = ccp.getSelectedCountryNameCode();
         });
 
+        sendOTP.setOnClickListener(v -> {
+            if (login_ff_phonenumber.getText().length() < 1) {
+                showToast("Enter Number/Valid Number");
+                return;
+            }
+            inputOTP.setVisibility(View.VISIBLE);
+            sendOTP.setVisibility(View.GONE);
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    getUserCountryCode + login_ff_phonenumber.getText().toString().trim(),
+                    60,
+                    TimeUnit.SECONDS,
+                    this,
+                    mCallbacks);
+
+        });
+
         login_ff_log_in.setOnClickListener(v -> {
             if (login_ff_name.getText().toString().isEmpty() || login_ff_emailid.getText().toString().isEmpty() || login_ff_phonenumber.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Fill All Details", LENGTH_LONG).show();
                 return;
             }
-            login_ff_processBar.setVisibility(View.VISIBLE);
-            authenticationPresenter.loginUser(login_ff_name.getText().toString(), login_ff_emailid.getText().toString(), getUserCountryCode + login_ff_phonenumber.getText(), getUserCountryName, reqTypeID, username, gcmKey);
-            progressDialog1.dismiss();
+            parareqTypeID = reqTypeID;
+            ParaUsername = username;
+            paraGcmKey = gcmKey;
+            paraName = login_ff_name.getText().toString().trim();
+            paraEmailID = login_ff_emailid.getText().toString().trim();
+            paraPhoneNumber = getUserCountryCode + login_ff_phonenumber.getText().toString().trim();
+            if (inputOTP.getText().length() == 6) {
+                login_ff_processBar.setVisibility(View.VISIBLE);
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, inputOTP.getText().toString().trim());
+                signInWithPhoneAuthCredential(credential);
+            }else{
+                showToast("Please Enter 6 Digits OTP ");
+            }
         });
+
+    }
+
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            Log.d("", "onVerificationCompleted:" + phoneAuthCredential);
+            showToast("onVerificationCompleted");
+        }
+
+        @Override
+        public void onVerificationFailed(@NonNull FirebaseException e) {
+            showToast(e.getMessage());
+            inputOTP.setVisibility(View.GONE);
+            sendOTP.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onCodeSent(@NonNull String verificationId,@NonNull PhoneAuthProvider.ForceResendingToken token) {
+            Log.d("", "onCodeSent:" + verificationId);
+            mVerificationId = verificationId;
+            showToast("Verification OTP send Succesfully");
+            login_ff_log_in.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+            super.onCodeAutoRetrievalTimeOut(s);
+            //code for timeout and show the resend passcode
+        }
+    };
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
+                        authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey);
+                        progressDialog1.dismiss();
+                    } else {
+                        Log.w("", "signInWithCredential:failure", task.getException());
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            showToast("Invalid Code");
+                            login_ff_processBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 }
