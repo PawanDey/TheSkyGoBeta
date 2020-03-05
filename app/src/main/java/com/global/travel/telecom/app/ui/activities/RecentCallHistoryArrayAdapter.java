@@ -49,7 +49,7 @@ public class RecentCallHistoryArrayAdapter extends ArrayAdapter<RecentSetDataMod
         TextView duration = convertView.findViewById(R.id.duration);
 
         leg2.setText(Leg2);
-        duration.setText("Call duration: " + Duration);
+        duration.setText(mContext.getResources().getString(R.string.textCallduration) + ":" + Duration);
 
         try {
             CreateTime = CreateTime.trim().substring(0, CreateTime.length() - 1);

@@ -43,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:onClick="hotspotButton"
             android:padding="7dp"
             android:src="@drawable/wifi"
             android:visibility="gone" />

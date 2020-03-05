@@ -27,7 +27,7 @@
             android:layout_marginLeft="28dp"
             android:layout_marginTop="18dp"
             android:fontFamily="@font/segoe_bold"
-            android:text="Language"
+            android:text="@string/textLanguage"
             android:textColor="#313131"
             android:textSize="32dp" />
 
@@ -37,7 +37,7 @@
             android:layout_marginLeft="28dp"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/segoe_semi_light"
-            android:text="Select your app language"
+            android:text="@string/textSelectyourapplanguage"
             android:textColor="#707070"
             android:textSize="14dp" />
     </LinearLayout>
@@ -188,7 +188,6 @@
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-
                     android:layout_marginLeft="30dp"
                     android:fontFamily="@font/segoe_semi_light"
                     android:gravity="center"

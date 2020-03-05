@@ -28,5 +28,5 @@
         android:fontFamily="@font/sf_old_republic_font"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Contact loading..." />
+        android:text="@string/textContactLoading" />
 </LinearLayout>

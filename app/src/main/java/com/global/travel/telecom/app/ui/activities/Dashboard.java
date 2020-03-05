@@ -73,7 +73,7 @@ public class Dashboard extends BaseActivity {
         try {
             authenticationPresenter.GetSubscriber(userDetails.getTokenID());
         } catch (Exception e) {
-            Toast.makeText(Dashboard.this, R.string.textPleaseCheckYourInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(Dashboard.this, getResources().getString(R.string.textPleaseCheckYourInternetConnection), Toast.LENGTH_LONG).show();
         }
         TextView SimStatus = findViewById(R.id.txtProcessPendingStatus);
         SimStatus.setVisibility(View.INVISIBLE);
@@ -96,10 +96,10 @@ public class Dashboard extends BaseActivity {
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             assert location != null;
             onLocationCahange(location);
-            log_func(location);
+            log_func();
 
         } catch (Exception e) {
-            Toast.makeText(Dashboard.this, R.string.textLocationPermissionNotEnabled, Toast.LENGTH_LONG).show();
+            Toast.makeText(Dashboard.this, getResources().getString(R.string.textLocationPermissionNotEnabled), Toast.LENGTH_LONG).show();
         }
         try {
             if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
@@ -121,9 +121,9 @@ public class Dashboard extends BaseActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textNOInternetConnection), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -131,7 +131,7 @@ public class Dashboard extends BaseActivity {
     public void onServerError(String method2, String errorMessage) {
         if ("GetSubscriber".equals(method2)) {
             if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-                Toast.makeText(Dashboard.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                Toast.makeText(Dashboard.this, getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Dashboard.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -170,7 +170,7 @@ public class Dashboard extends BaseActivity {
 
                 switch (obj.getmValue()) {
                     case "1": {
-                        SimStatus.setText(R.string.textStatusPending);
+                        SimStatus.setText(getResources().getString(R.string.textStatusPending));
                         SimStatus.setVisibility(View.VISIBLE);
                         SIMSerialNumber.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
                         userDetails.setRechargeStatus(0);
@@ -178,7 +178,7 @@ public class Dashboard extends BaseActivity {
                         break;
                     }
                     case "2": {
-                        SimStatus.setText(R.string.textStatusUnderProcessing);
+                        SimStatus.setText(getResources().getString(R.string.textStatusUnderProcessing));
                         SimStatus.setVisibility(View.VISIBLE);
                         SIMSerialNumber.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
                         userDetails.setRechargeStatus(0);
@@ -207,7 +207,7 @@ public class Dashboard extends BaseActivity {
                 try {
                     CurrentBalance currentBalance = (CurrentBalance) response;
                     String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
-                    balanceShowInDashboard.setText("Balance: $" + bal.substring(0, bal.length() - 2));
+                    balanceShowInDashboard.setText(getResources().getString(R.string.textBalance)+": $" + bal.substring(0, bal.length() - 2));
                 } catch (Exception e) {
                     showToast("Current Balanced Not show");
                 }
@@ -223,7 +223,7 @@ public class Dashboard extends BaseActivity {
             return;
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, R.string.textClickBACKagaintoExit, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.textClickBACKagaintoExit), Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -232,7 +232,7 @@ public class Dashboard extends BaseActivity {
         }, 2000);
     }
 
-    private void log_func(Location location) {
+    private void log_func() {
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, logitude, 1);

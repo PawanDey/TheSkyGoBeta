@@ -83,7 +83,7 @@ import static com.global.travel.telecom.app.service.APIClient.BACKEND_URL;
 public class mPayment extends BaseActivity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     Button payPalPaymentButton, payButton;
-    TextView Convenience, AmountPayabale, NumberOfDays, ActivationDate, SimNumber, CartAmount, m_response, misidn_serial_voip_text, activationDetails,fromDate;
+    TextView Convenience, AmountPayabale, NumberOfDays, ActivationDate, SimNumber, CartAmount, m_response, misidn_serial_voip_text, activationDetails, fromDate;
     RelativeLayout proceedRelativeLayout, payRelativeLayout;
     UserDetails userDetails;
     Bundle extras;
@@ -108,7 +108,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
     String IPaddress;
     Context context = this;
-//    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
+    //    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
     String stripePublishableKey = "pk_live_fWzHCP8XcqaNvCiN2bJAyC0S00kWwPRyOP";
 
     Boolean updateFundCheck = true;
@@ -155,7 +155,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         misidn_serial_voip_text = findViewById(R.id.misidn_serial_voip_text);
         proceedRelativeLayout = findViewById(R.id.proceedRelativeLayout);
         payRelativeLayout = findViewById(R.id.payRelativeLayout);
-        fromDate =findViewById(R.id.fromDate);
+        fromDate = findViewById(R.id.fromDate);
 
         AppPaymentType = extras.getString("AppPaymentType");   //1 =activation    2= extension     3= voip
 
@@ -167,18 +167,18 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         assert AppPaymentType != null;
         switch (AppPaymentType) {
             case "1":
-                misidn_serial_voip_text.setText(R.string.textSIMSerialNo);
+                misidn_serial_voip_text.setText(getResources().getString(R.string.textSIMSerialNo));
                 SimNumber.setText(extras.getString("Number"));
                 break;
             case "2":
-                misidn_serial_voip_text.setText(R.string.textMobileNumber);
+                misidn_serial_voip_text.setText(getResources().getString(R.string.textMobileNumber));
                 SimNumber.setText(extras.getString("Number"));
-                fromDate.setText("Extension From Date - ");
+                fromDate.setText(getResources().getString(R.string.textExtensionFromDate) + " - ");
                 break;
             case "3":
                 misidn_serial_voip_text.setText("Voip Plan");
                 SimNumber.setText(extras.getString("Number"));
-                activationDetails.setText("Voip Plan Detail");
+                activationDetails.setText(getResources().getString(R.string.textVoipPlanDetail));
                 break;
             default:
                 showToast("Error to select payment type i.e.(1,2,3)");
@@ -192,7 +192,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         switch (method2) {
             case "ActivationExtensionRequest": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-                    Toast.makeText(mPayment.this, R.string.textPleaseLoginagain, LENGTH_LONG).show();
+                    Toast.makeText(mPayment.this, getResources().getString(R.string.textPleaseLoginagain), LENGTH_LONG).show();
                     Intent intent = new Intent(mPayment.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -200,12 +200,12 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 break;
             }
             case "UpdateFunds": {
-                Toast.makeText(this, "Please try again", LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.textConnectionErrorPleaseTryAgain), LENGTH_LONG).show();
                 break;
             }
             case "AddFundsViaAPP": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-                    Toast.makeText(mPayment.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mPayment.this, getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mPayment.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -254,7 +254,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 AddCustomerCreditModel addCustomerCredit = (AddCustomerCreditModel) response;
                 String Balance = addCustomerCredit.getApplyCustomerCreditResponse().getBalance().getContent().trim();
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
-                intent.putExtra("msg", "Your TopUp of $" + extras.getString("AmountCharged").trim() + " is successful and your current balance is $" + Balance.substring(0, Balance.length() - 2));
+                intent.putExtra("msg", getResources().getString(R.string.textYourTopUpofDollarX )+ " $" + extras.getString("AmountCharged").trim() + " " + getResources().getString(R.string.textIsSuccessfulAndYourCurrentBalanceisDoolarX) + " $" + Balance.substring(0, Balance.length() - 2));
                 intent.putExtra("screenType", "4");
                 startActivity(intent);
                 finish();
@@ -341,9 +341,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textNOInternetConnection), LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
         }
     }
 
@@ -373,7 +373,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         }
     }
 
-    private boolean checkPlayServices() {
+    private void checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -382,9 +382,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
             } else {
                 finish();
             }
-            return false;
         }
-        return true;
     }
 
     private void check() {
@@ -497,11 +495,11 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         if (connectionResult.hasResolution()) {
             try {
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-               } catch (IntentSender.SendIntentException e) {
+            } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
         } else {
-               Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 
@@ -736,7 +734,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-          stripe.onPaymentResult(requestCode, data, new PaymentResultCallback(this));
+        stripe.onPaymentResult(requestCode, data, new PaymentResultCallback(this));
     }
 
     private final class PayCallback implements Callback {

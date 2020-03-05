@@ -35,9 +35,9 @@ public class LanguageSelect extends BaseActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textNOInternetConnection), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -48,27 +48,19 @@ public class LanguageSelect extends BaseActivity {
 
     @Override
     public void onServerError(String method, String errorMessage) {
-
     }
-
     public void SelectEnglish(View view) {
         callMethod("en");
     }
-
     public void SelectChinese(View view) {
         callMethod("zh");
-
     }
-
     public void SelectJapanese(View view) {
         callMethod("ja");
     }
-
     public void SelectKorean(View view) {
         callMethod("ko");
-
     }
-
     public void SelectSPANISH(View view) {
         callMethod("es");
     }

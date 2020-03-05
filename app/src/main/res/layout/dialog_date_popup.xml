@@ -28,7 +28,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/sf_old_republic_bold"
                android:textStyle="bold"
-                android:text="Select Start Date "
+                android:text="@string/textSelectStartDate"
                 android:textSize="17dp" />
 
             <DatePicker

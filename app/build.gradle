@@ -2,7 +2,6 @@ buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
-
     dependencies {
         classpath 'io.fabric.tools:gradle:1.31.2'
     }
@@ -14,16 +13,15 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.global.travel.telecom.app"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 22
+        versionCode 25
         multiDexEnabled true
-        versionName "1.22"
+        versionName "1.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -73,7 +71,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.0.1'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9'
-    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+//    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 //    compile('com.paypal.sdk:paypal-android-sdk:2.16.0') {
 //        exclude group: 'io.card'
 //    }
@@ -106,8 +104,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     //braintree
     implementation 'com.android.volley:volley:1.1.0'
-    implementation 'com.braintreepayments.api:drop-in:4.2.0'
-    implementation 'com.braintreepayments.api:braintree:3.7.2'
+//    implementation 'com.braintreepayments.api:drop-in:4.2.0'
+//    implementation 'com.braintreepayments.api:braintree:3.7.2'
 
     //voip
     implementation 'com.squareup.retrofit2:converter-simplexml:2.2.0'
@@ -118,6 +116,9 @@ dependencies {
 
     // country picker
     implementation 'com.hbb20:ccp:1.7.1'
+
+    //for new version updater
+    implementation 'com.google.android.play:core:1.6.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

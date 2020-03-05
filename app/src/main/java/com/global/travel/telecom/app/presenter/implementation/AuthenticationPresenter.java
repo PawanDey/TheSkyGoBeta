@@ -75,7 +75,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         int respondeCode = table.getInt("ResponseCode");
                         String respondeMessage = table.getString("ResponseMessage");
                         VoipCreated = table1.getInt("VoipCreated");
-
                         if (respondeCode == 0) {
                             LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
                             if (VoipCreated == 0) {

@@ -1,5 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +74,7 @@ public class ActivateSim extends BaseActivity {
         totalAmount = findViewById(R.id.totalAmountActivate);
         Date date = new Date();
         TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
-        java.text.DateFormat df = new SimpleDateFormat(timeFormat);
+        @SuppressLint("SimpleDateFormat") java.text.DateFormat df = new SimpleDateFormat(timeFormat);
         System.out.println("Date and timsimvalidatedsimvalidatedsimvalidatede in US/Eastern: " + df.format(date));
         todayDate.setText(df.format(date));
 
@@ -107,6 +107,7 @@ public class ActivateSim extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Days = txtnoOfDays.getText().toString();
@@ -126,16 +127,15 @@ public class ActivateSim extends BaseActivity {
                         totalAmount.setText("$ " + TotalAmount);
                         getCurretDatePicker();
                     } else if (SpecialDealer.equals(true)) {
-//                        showToast("Special dealer");
                         authenticationPresenter.GetRateForPaymentPlan(edtSerialNumber.getText().toString().trim(), Integer.parseInt(txtnoOfDays.getText().toString()), 1, "");
                     }
                 } catch (Exception e) {
                     if (edtSerialNumber.getText().toString().isEmpty()) {
-                        Toast.makeText(ActivateSim.this, R.string.textPleaseEnterSIMSerialNumber, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ActivateSim.this, getResources().getString(R.string.textPleaseEnterSIMSerialNumber), Toast.LENGTH_LONG).show();
                     } else if (Amount == 0) {
                         totalAmount.setText("$ 0.0");
                     } else
-                        Toast.makeText(ActivateSim.this, R.string.textInvalidNumberOfDay, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ActivateSim.this, getResources().getString(R.string.textInvalidNumberOfDay), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -145,6 +145,7 @@ public class ActivateSim extends BaseActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onSuccess(String method2, Object response) {
         switch (method2) {
@@ -157,9 +158,7 @@ public class ActivateSim extends BaseActivity {
                     if (!obj.getmPromotionName().equals("")) {
                         SpecialDealer = true;
                         Days = obj.getNumberOfDays();
-//                        Amount = 0.0;
                         txtnoOfDays.setText(Days);
-//                        totalAmount.setText("$ 0.0");
                         TotalAmount = "0";
                         showToast(obj.getResponseMessage());
                         getCurretDatePicker();
@@ -223,13 +222,14 @@ public class ActivateSim extends BaseActivity {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         edtSerialNumber.getText().clear();
         txtnoOfDays.getText().clear();
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(ActivateSim.this, R.string.textNOInternetConnection, Toast.LENGTH_LONG).show();
+            Toast.makeText(ActivateSim.this, getResources().getString(R.string.textNOInternetConnection), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(ActivateSim.this, R.string.textSorrySomethingwentwrong, Toast.LENGTH_LONG).show();
+            Toast.makeText(ActivateSim.this, getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -238,7 +238,7 @@ public class ActivateSim extends BaseActivity {
         switch (method2) {
             case "simvalidated": {
                 if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
-                    showToast("Please Login again");
+                    showToast(getResources().getString(R.string.textPleaseLoginagain));
                     Intent intent = new Intent(ActivateSim.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -250,7 +250,7 @@ public class ActivateSim extends BaseActivity {
                 break;
             }
             case "GetRateForPaymentPlan": {
-                showToast("Please Contact Customer Care: support@theskygo.com");  //here is show popup for invalid sim or contact to skygo team
+                showToast(getResources().getString(R.string.textcontactCare));
                 break;
             }
         }
@@ -258,18 +258,14 @@ public class ActivateSim extends BaseActivity {
 
     public void btnBuyNowClick(View view) {
         try {
-            UserDetails userDetails = new UserDetails(this);
             if (TextUtils.isEmpty(edtSerialNumber.toString())) {
-//                throw new Exception(""+R.string.textPleaseEnterSIMSerialNumber);
                 throw new Exception(getResources().getString(R.string.textPleaseEnterSIMSerialNumber));
             } else if (edtSerialNumber.getText().length() != 20) {
-//                throw new Exception(""+R.string.textInvalidSerialNumber);
                 throw new Exception(getResources().getString(R.string.textInvalidSerialNumber));
             } else if (txtnoOfDays.getText().toString().isEmpty() ||
                     txtnoOfDays.getText().toString().equals("0") ||
                     txtnoOfDays.getText().toString().equals("00") ||
                     txtnoOfDays.getText().toString().equals("000")) {
-//                throw new Exception(""+R.string.textPleaseEnterValidNumberOfDays);
                 throw new Exception(getResources().getString(R.string.textPleaseEnterValidNumberOfDays));
             } else if (SimValidAPIStatus) {
 
@@ -284,7 +280,7 @@ public class ActivateSim extends BaseActivity {
                 startActivity(PaymentSummary);
             }
         } catch (Exception e) {
-            String Error[] = e.toString().split(":");
+            String[] Error = e.toString().split(":");
             showToast(Error[1]);
         }
     }
@@ -303,29 +299,24 @@ public class ActivateSim extends BaseActivity {
         finish();
     }
 
-    public void getCurretDatePicker(View view) throws ParseException {
+    public void getCurretDatePicker(View view) {
         final Calendar cldr = Calendar.getInstance();
         int day = cldr.get(Calendar.DAY_OF_MONTH);
         int month = cldr.get(Calendar.MONTH);
         int year = cldr.get(Calendar.YEAR);
-        // date picker dialog
-
         picker = new DatePickerDialog(ActivateSim.this, R.style.DatePickerDialog,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        try {
-                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                            SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
-                            String strDate = formatter.format(date1);
-                            todayDate.setText(strDate);
-                            getCurretDatePicker();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                (view1, year1, monthOfYear, dayOfMonth) -> {
+                    String dateConverter = year1 + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    try {
+                        @SuppressLint("SimpleDateFormat") Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
+                        assert date1 != null;
+                        String strDate = formatter.format(date1);
+                        todayDate.setText(strDate);
+                        getCurretDatePicker();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
                 }, year, month, day);
 
         picker.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -341,43 +332,41 @@ public class ActivateSim extends BaseActivity {
 
         // date picker dialog
         picker = new DatePickerDialog(ActivateSim.this, R.style.DatePickerDialog,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String dateConverter = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        try {
-                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
-                            SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
-                            assert date1 != null;
-                            String strDate = formatter.format(date1);
-                            todayDate.setText(strDate);
-                            getCurretDatePicker();
+                (view1, year1, monthOfYear, dayOfMonth) -> {
+                    String dateConverter = year1 + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    try {
+                        @SuppressLint("SimpleDateFormat") Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateConverter);
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
+                        assert date1 != null;
+                        String strDate = formatter.format(date1);
+                        todayDate.setText(strDate);
+                        getCurretDatePicker();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
                 }, year, month, day);
         picker.getDatePicker().setMinDate(System.currentTimeMillis());
         picker.show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void getCurretDatePicker() {
         String getDate = todayDate.getText().toString();
         try {
-            Date date1 = new SimpleDateFormat(timeFormat).parse(getDate);
-            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            @SuppressLint("SimpleDateFormat") Date date1 = new SimpleDateFormat(timeFormat).parse(getDate);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            assert date1 != null;
             String validityStartDate = formatter.format(date1);
             String getNoOfDays = txtnoOfDays.getText().toString();
-            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.equals(null)) {
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals("000") || getNoOfDays.contains(" ")) {
                 validDateLeftAS.setText("  ");
 
             } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date1);
                 cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
-                SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
                 String validityEndDate = sdf1.format(cal.getTime());
                 validDateLeftAS.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
             }
@@ -386,21 +375,14 @@ public class ActivateSim extends BaseActivity {
         }
     }
 
-    public void noOFdaysHide(View view) {
-    }
-
     public void addOn(View view) {
-        setURL("https://orders.skygowifi.com");
-    }
-
-    private void setURL(String getURL) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://orders.skygowifi.com"));
         startActivity(browserIntent);
     }
 
     private void ContactCarePopUp(String errorName, String ContactCare) {
         try {
-            View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
+            @SuppressLint("InflateParams") View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
             androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(contactCarePopUp);
             progressDialog = mBuilder.create();
             Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -412,12 +394,7 @@ public class ActivateSim extends BaseActivity {
             OK = contactCarePopUp.findViewById(R.id.OK);
             errorMsg.setText(errorName);
 
-            OK.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog.dismiss();
-                }
-            });
+            OK.setOnClickListener(v -> progressDialog.dismiss());
 
         } catch (Exception e) {
             showToast(e.getMessage());

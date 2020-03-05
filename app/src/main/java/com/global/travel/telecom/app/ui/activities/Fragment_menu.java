@@ -235,7 +235,7 @@ public class Fragment_menu extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 GetVoipRateModel co = (GetVoipRateModel) parent.getItemAtPosition(position);
-                countryWiseRateDiscription.setText(co.getmRetails() + "  Price: " + co.getmPrice());
+                countryWiseRateDiscription.setText(co.getmRetails() +getResources().getString(R.string.textPrice)+": " + co.getmPrice());
             }
 
             @Override
@@ -277,7 +277,7 @@ public class Fragment_menu extends Fragment {
 
 
                 if (amount.equals("") || amount.equals("0") || amount.equals("00") || amount.equals("000")) {
-                    Toast.makeText(getApplicationContext(), "Please enter valid amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textPleaseEnterValidAmount), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 NumberFormat formatter = NumberFormat.getNumberInstance();

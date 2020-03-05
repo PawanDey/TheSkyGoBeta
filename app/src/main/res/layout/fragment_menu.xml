@@ -43,8 +43,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="1dp"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="Available balance"
-                    android:textColor="@color/bt_blue_pressed"
+                    android:text="@string/textAvailableBalance"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="14dp" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="Loading"
+                    android:text="@string/textLoading"
                     android:textColor="@color/colorAccent"
                     android:textSize="22dp"
                     android:textStyle="bold" />
@@ -93,7 +93,7 @@
                     android:layout_toStartOf="@+id/addBalancedFunction"
                     android:fontFamily="@font/sf_old_republic_font"
                     android:gravity="center"
-                    android:text="Add TOP-UP(Balance) "
+                    android:text="@string/textAddTOPUPBalance"
                     android:textColor="@color/colorRed"
                     android:textSize="10dp" />
             </RelativeLayout>
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:text="Check Country Wise Price"
+                android:text="@string/textCheckCountryWisePrice"
                 android:textSize="16dp"
                 android:visibility="gone" />
 

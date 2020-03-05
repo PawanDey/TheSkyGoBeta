@@ -15,7 +15,6 @@ import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.model.GetVoipPlanModel;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
@@ -51,7 +50,7 @@ public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
 
         text_PlanName.setText(PlanName);
         text_PlanDetails.setText(PlanDetails);
-        menu_validityWithMin.setText("Validity " + Validity + " Days (" + PlanMin + "mins)");
+        menu_validityWithMin.setText(mContext.getResources().getString(R.string.textValidity )+ " " + Validity +" "+ mContext.getResources().getString(R.string.textValiditydays) + PlanMin + mContext.getResources().getString(R.string.textMinute));
         text_plan_price.setText("$" + String.format("%.2f", new BigDecimal((Double.parseDouble(AmountCharge)))));
         return convertView;
     }

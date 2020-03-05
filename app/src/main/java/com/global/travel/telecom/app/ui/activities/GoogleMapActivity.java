@@ -118,19 +118,15 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage(R.string.textGPSisnotenabled)
+        builder.setMessage(getResources().getString(R.string.textGPSisnotenabled))
                 .setCancelable(false)
-                .setPositiveButton(R.string.textyes, new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(getResources().getString(R.string.textyes), (dialog, id) -> {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialog.dismiss();
                 })
-                .setNegativeButton(R.string.textno, new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        dialog.cancel();
-                        finish();
-                    }
+                .setNegativeButton(getResources().getString(R.string.textno), (dialog, id) -> {
+                    dialog.cancel();
+                    finish();
                 });
         final AlertDialog alert = builder.create();
         alert.show();

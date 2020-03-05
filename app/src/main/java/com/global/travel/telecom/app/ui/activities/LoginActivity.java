@@ -3,7 +3,6 @@ package com.global.travel.telecom.app.ui.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -13,6 +12,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +71,9 @@ import static android.widget.Toast.LENGTH_LONG;
 public class LoginActivity extends BaseActivity {
     ImageView fb, google, linkedin, ownEmail;
     ProgressBar processBar, login_ff_processBar;
-    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password, inputOTP;
+    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password, inputOTP, login_ff_phonenumber;
     TextView text_below_signIn, text_below_login, verificationText;
+    CountryCodePicker ccp;
     LinearLayout SignInPageLayout, LogInPageLayout;
     RelativeLayout verificationLayout;
     Button createaccount_signIn, Button_login, sendOTP, login_ff_log_in;
@@ -90,6 +91,7 @@ public class LoginActivity extends BaseActivity {
     String getUserCountryCode, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, paraName, paraEmailID, paraPhoneNumber;
     String facebookGetName = "";
     String mVerificationId = "";
+    String countryCodeValue = "";
 
     @Override
     protected int getLayout() {
@@ -126,14 +128,12 @@ public class LoginActivity extends BaseActivity {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
                     (new String[0]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
-
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        assert tm != null;
+        countryCodeValue = tm.getNetworkCountryIso();
         check();
-
-
         callbackManager = CallbackManager.Factory.create();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
@@ -165,9 +165,9 @@ public class LoginActivity extends BaseActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textNOInternetConnection), LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
         }
     }
 
@@ -175,7 +175,7 @@ public class LoginActivity extends BaseActivity {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "loginUser": {
-                Toast.makeText(LoginActivity.this, R.string.textLoginSuccessful, LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.textLoginSuccessful), LENGTH_LONG).show();
                 obj = (LoginResponse) response;
                 UserDetails userDetails = new UserDetails(LoginActivity.this);
                 userDetails.setTokenID(obj.getTokenID());
@@ -326,7 +326,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             }
             case "CreateVoipCustomerSkyGo": {
-                showToast("Voip Account Created");
+                showToast(getResources().getString(R.string.textVoipAccountCreated));
                 break;
             }
         }
@@ -383,11 +383,11 @@ public class LoginActivity extends BaseActivity {
                     Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500, 500));
                     facebookGetName = profile.getName();
                 }
-                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.textLogin), Toast.LENGTH_SHORT);
                 FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
                     String getUserName;
                     if (!task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
                         return;
                     }
                     String token = Objects.requireNonNull(task.getResult()).getToken();
@@ -403,7 +403,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, R.string.textLogincancel, LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.textLogincancel), LENGTH_LONG).show();
 
             }
 
@@ -412,9 +412,9 @@ public class LoginActivity extends BaseActivity {
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 assert connectivityManager != null;
                 if (Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
-                    Toast.makeText(LoginActivity.this, R.string.textNOInternetConnection, LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.textNOInternetConnection), LENGTH_LONG).show();
                 } else
-                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
             }
 
         });
@@ -456,7 +456,7 @@ public class LoginActivity extends BaseActivity {
 
             Button_login.setOnClickListener(v -> {
                 if (input_login_email.getText().toString().isEmpty() || input_login_password.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "E-mail/Password is Empty", LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textEmailPasswordIsEmpty), LENGTH_LONG).show();
                     return;
                 }
                 processBar.setVisibility(View.VISIBLE);
@@ -467,13 +467,13 @@ public class LoginActivity extends BaseActivity {
                         if (user != null) {
                             if (task.isSuccessful()) {
                                 if (!user.isEmailVerified()) {
-                                    Toast.makeText(getApplicationContext(), " Your Email is not Verified ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textYourEmailisNotVerified), Toast.LENGTH_SHORT).show();
                                 } else if (user.isEmailVerified()) {
                                     //go to dashboard activity
                                     FirebaseInstanceId.getInstance().getInstanceId()
                                             .addOnCompleteListener(task1 -> {
                                                 if (!task1.isSuccessful()) {
-                                                    Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                                                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
                                                     return;
                                                 }
                                                 String token = Objects.requireNonNull(task1.getResult()).getToken();
@@ -481,17 +481,17 @@ public class LoginActivity extends BaseActivity {
 //                                                authenticationPresenter.loginUser(Objects.requireNonNull(user.getEmail()).trim(), LoginRequestTypeId.Email, token);
                                             });
                                 } else {
-                                    Toast.makeText(getApplicationContext(), " Connection Error! Please Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textConnectionErrorPleaseTryAgain), Toast.LENGTH_SHORT).show();
 
                                 }
                             } else if (task.isComplete()) {
-                                Toast.makeText(getApplicationContext(), " Email/password is invalid", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.textEmailpasswordisInvalid), Toast.LENGTH_SHORT).show();
                             } else if (task.isCanceled()) {
-                                Toast.makeText(getApplicationContext(), " Authentication Cancle ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.textAuthenticationCancle), Toast.LENGTH_SHORT).show();
                             }
                             processBar.setVisibility(View.GONE);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Connection Error! Please Try Again", LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textConnectionErrorPleaseTryAgain), LENGTH_LONG).show();
                             processBar.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
@@ -506,15 +506,15 @@ public class LoginActivity extends BaseActivity {
             createaccount_signIn.setOnClickListener(v -> {
 
                 if (input_email_signin.getText().toString().isEmpty() || input_password_signin.getText().toString().isEmpty() || confrom_input_password_signin.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Fill All details ", LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textFillAlldetails), LENGTH_LONG).show();
                     return;
                 }
                 if (input_password_signin.length() < 5 || confrom_input_password_signin.length() < 5) {
-                    Toast.makeText(getApplicationContext(), "Password too short", LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textPasswordTooShort), LENGTH_LONG).show();
                     return;
                 }
                 if (!input_password_signin.getText().toString().equals(confrom_input_password_signin.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Password Not match", LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textPasswordNotmatch), LENGTH_LONG).show();
                     return;
                 }
 
@@ -525,13 +525,12 @@ public class LoginActivity extends BaseActivity {
                                 Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(LoginActivity.this, task12 -> {
                                     if (task12.isSuccessful()) {
                                         verificationLayout.setVisibility(View.VISIBLE);
-                                        verificationText.setText("A verification link has been send to " + input_email_signin.getText().toString().trim());
-                                        Toast.makeText(getApplicationContext(), "A verification link has been send to " + input_email_signin.getText().toString().trim(), LENGTH_LONG).show();
+                                        verificationText.setText(getResources().getString(R.string.textAVerificationLinkHasBeenSendTo) + " " + input_email_signin.getText().toString().trim());
+                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.textAVerificationLinkHasBeenSendTo) + " " + input_email_signin.getText().toString().trim(), LENGTH_LONG).show();
                                     }
                                 });
                             } else {
                                 Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), LENGTH_LONG).show();
-
                             }
                             processBar.setVisibility(View.GONE);
                         });
@@ -569,7 +568,7 @@ public class LoginActivity extends BaseActivity {
             FirebaseInstanceId.getInstance().getInstanceId()
                     .addOnCompleteListener(task -> {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
                             return;
                         }
                         String token = Objects.requireNonNull(task.getResult()).getToken();
@@ -578,7 +577,7 @@ public class LoginActivity extends BaseActivity {
 
                     });
         } catch (ApiException e) {
-            Toast.makeText(LoginActivity.this, R.string.textLogincancel, LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.textLogincancel), LENGTH_LONG).show();
         }
     }
 
@@ -603,25 +602,16 @@ public class LoginActivity extends BaseActivity {
             AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
 //            dialog.setMessage("Gps is not enabled");
             dialog.setCancelable(false);
-            dialog.setMessage(R.string.textGPSisnotenabled);
-//            dialog.setPositiveButton("Open Setting", new DialogInterface.OnClickListener()
-            dialog.setPositiveButton(R.string.textOpensettings, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    // TODO Auto-generated method stub
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    LoginActivity.this.startActivity(myIntent);
-                    //get gps
-                }
+            dialog.setMessage(getResources().getString(R.string.textGPSisnotenabled));
+            dialog.setPositiveButton(getResources().getString(R.string.textOpensettings), (paramDialogInterface, paramInt) -> {
+                // TODO Auto-generated method stub
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                LoginActivity.this.startActivity(myIntent);
+                //get gps
             });
-//            dialog.setNegativeButton("if you cancel your app will be closed", new DialogInterface.OnClickListener() {
-            dialog.setNegativeButton(R.string.textifyoucancelyourappwillbeclosed, new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    //this is for close the app
+            dialog.setNegativeButton(getResources().getString(R.string.textifyoucancelyourappwillbeclosed), (paramDialogInterface, paramInt) -> {
+                //this is for close the app
 //                    finishAffinity();
-                }
             });
             dialog.show();
         }
@@ -703,19 +693,39 @@ public class LoginActivity extends BaseActivity {
         progressDialog1.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         progressDialog1.show();
 
+        //find IDS
         login_ff_processBar = loginfillForm.findViewById(R.id.login_ff_processBar);
-
         EditText login_ff_name = loginfillForm.findViewById(R.id.login_ff_username);
         EditText login_ff_emailid = loginfillForm.findViewById(R.id.login_ff_emailid);
-        EditText login_ff_phonenumber = loginfillForm.findViewById(R.id.login_ff_phonenumber);
+        login_ff_phonenumber = loginfillForm.findViewById(R.id.login_ff_phonenumber);
         inputOTP = loginfillForm.findViewById(R.id.inputOTP);
-        CountryCodePicker ccp = loginfillForm.findViewById(R.id.ccp);
-
+        ccp = loginfillForm.findViewById(R.id.ccp);
         sendOTP = loginfillForm.findViewById(R.id.sendOTP);
         login_ff_log_in = loginfillForm.findViewById(R.id.login_ff_log_in);
+        if (!countryCodeValue.equals("")) {
+            ccp.setCountryForNameCode(countryCodeValue);
+            ccp.setDefaultCountryUsingNameCode(countryCodeValue);
+        } else {
+            ccp.setCountryForNameCode("US");
+            ccp.setDefaultCountryUsingNameCode("US");
+        }
+        // ARABIC, BENGALI, CHINESE, ENGLISH, FRENCH, GERMAN, GUJARATI, HINDI, JAPANESE, JAVANESE, PORTUGUESE, RUSSIAN, SPANISH
+        String appLanguage = userDetails.getLanguageSelect();
+        switch (appLanguage) {
+            case "es":
+                ccp.changeLanguage(CountryCodePicker.Language.SPANISH);
+                break;
+            case "ja":
+                ccp.changeLanguage(CountryCodePicker.Language.JAPANESE);
+                break;
+            case "zh":
+                ccp.changeLanguage(CountryCodePicker.Language.CHINESE);
+                break;
+        }
 
         getUserCountryCode = ccp.getDefaultCountryCodeWithPlus();
         getUserCountryName = ccp.getDefaultCountryNameCode();
+
         login_ff_name.setText(name);
         login_ff_emailid.setText(email);
         if (!email.isEmpty()) {
@@ -731,7 +741,7 @@ public class LoginActivity extends BaseActivity {
 
         sendOTP.setOnClickListener(v -> {
             if (login_ff_phonenumber.getText().length() < 1) {
-                showToast("Enter Number/Valid Number");
+                showToast(getResources().getString(R.string.textEnterNumberValidNumber));
                 return;
             }
             inputOTP.setVisibility(View.VISIBLE);
@@ -747,7 +757,7 @@ public class LoginActivity extends BaseActivity {
 
         login_ff_log_in.setOnClickListener(v -> {
             if (login_ff_name.getText().toString().isEmpty() || login_ff_emailid.getText().toString().isEmpty() || login_ff_phonenumber.getText().toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Fill All Details", LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.textFillAlldetails), LENGTH_LONG).show();
                 return;
             }
             parareqTypeID = reqTypeID;
@@ -760,8 +770,8 @@ public class LoginActivity extends BaseActivity {
                 login_ff_processBar.setVisibility(View.VISIBLE);
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, inputOTP.getText().toString().trim());
                 signInWithPhoneAuthCredential(credential);
-            }else{
-                showToast("Please Enter 6 Digits OTP ");
+            } else {
+                showToast(getResources().getString(R.string.textPleaseEnter6DigitsOTP));
             }
         });
 
@@ -771,7 +781,6 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             Log.d("", "onVerificationCompleted:" + phoneAuthCredential);
-            showToast("onVerificationCompleted");
         }
 
         @Override
@@ -782,10 +791,10 @@ public class LoginActivity extends BaseActivity {
         }
 
         @Override
-        public void onCodeSent(@NonNull String verificationId,@NonNull PhoneAuthProvider.ForceResendingToken token) {
+        public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
             Log.d("", "onCodeSent:" + verificationId);
             mVerificationId = verificationId;
-            showToast("Verification OTP send Succesfully");
+            showToast(getResources().getString(R.string.textVerificationOTPsendSuccesfully));
             login_ff_log_in.setVisibility(View.VISIBLE);
         }
 
@@ -806,7 +815,7 @@ public class LoginActivity extends BaseActivity {
                     } else {
                         Log.w("", "signInWithCredential:failure", task.getException());
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            showToast("Invalid Code");
+                            showToast(getResources().getString(R.string.textInvalidCode));
                             login_ff_processBar.setVisibility(View.GONE);
                         }
                     }

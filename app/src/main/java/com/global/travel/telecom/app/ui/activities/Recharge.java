@@ -107,18 +107,17 @@ public class Recharge extends BaseActivity {
                         totalAmountRecharge.setText("$ " + TotalAmount);
                         getCurretDatePicker();
                     } else if (SpecialDealer.equals(true)) {
-//                        showToast("Special dealer");
                         authenticationPresenter.GetRateForPaymentPlan("", Integer.parseInt(numberOfDaysRecharge.getText().toString()), 2, userDetails.getMSISDN());
 
                     } else {
                         totalAmountRecharge.setText("");
                         GoodUntil.setText("");
                         totalAmountRecharge.setText("");
-                        Toast.makeText(Recharge.this, R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+                        Toast.makeText(Recharge.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     if (numberOfDaysRecharge.getText().toString().isEmpty()) {
-                        Toast.makeText(Recharge.this, R.string.textPleaseEnterValidNumberOfDays, LENGTH_LONG).show();
+                        Toast.makeText(Recharge.this, getResources().getString(R.string.textPleaseEnterValidNumberOfDays), LENGTH_LONG).show();
                         totalAmountRecharge.setText("$ 0.0");
                     }
                 }
@@ -139,9 +138,9 @@ public class Recharge extends BaseActivity {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), R.string.textNOInternetConnection, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textNOInternetConnection), LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), R.string.textSorrySomethingwentwrong, LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
         }
     }
 
@@ -214,7 +213,7 @@ public class Recharge extends BaseActivity {
         switch (method2) {
             case "rechargeMSISDN": {
                 SimValidAPIStatus = false;
-                ContactCarePopUp(errorMessage, getApplication().getString(R.string.textcontactCare));  //here is add popup scrrren to show the popoupmsg for any error
+                ContactCarePopUp(errorMessage,getResources().getString(R.string.textcontactCare));  //here is add popup scrrren to show the popoupmsg for any error
                 break;
             }
 
@@ -322,12 +321,7 @@ public class Recharge extends BaseActivity {
             OK = contactCarePopUp.findViewById(R.id.OK);
             errorMsg.setText(errorName);
 
-            OK.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progressDialog.dismiss();
-                }
-            });
+            OK.setOnClickListener(v -> progressDialog.dismiss());
 
         } catch (Exception e) {
             showToast(e.getMessage());

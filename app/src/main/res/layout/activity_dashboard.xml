@@ -147,8 +147,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="17dp"
                         android:layout_marginEnd="-8dp"
-                        android:src="@drawable/threedot"
-                        android:text="Button" />
+                        android:src="@drawable/threedot" />
 
 
                     <ImageView
@@ -328,7 +327,7 @@
                             android:layout_marginStart="14dp"
                             android:layout_marginTop="10dp"
                             android:src="@drawable/skygodealer"
-                            android:text="Button" />
+                            />
 
                         <ImageView
                             android:id="@+id/skyGoLogo"

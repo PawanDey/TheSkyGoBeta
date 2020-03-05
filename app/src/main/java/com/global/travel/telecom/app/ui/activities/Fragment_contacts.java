@@ -105,7 +105,6 @@ public class Fragment_contacts extends Fragment implements Serializable {
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
                 }
 
             }

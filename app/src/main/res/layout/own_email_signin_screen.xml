@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/textEmail"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="@string/textPassword"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
+                    android:hint="@string/textConfirmPassword"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -122,7 +122,7 @@
                 android:background="@drawable/gredientmodify"
                 android:gravity="center"
                 android:onClick="CreateAccount"
-                android:text="Create an account"
+                android:text="@string/textCreateAnAccount"
                 android:textColor="#FFFFFF" />
             <TextView
                 android:id="@+id/text_below_signIn"
@@ -168,7 +168,7 @@
                     android:fontFamily="@font/sf_old_republic_font"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:hint="Email" />
+                    android:hint="@string/textEmail" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password Label -->
@@ -182,7 +182,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sf_old_republic_font"
                     android:inputType="textPassword"
-                    android:hint="Password"/>
+                    android:hint="@string/textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -195,7 +195,7 @@
                 android:background="@drawable/gredientmodify"
                 android:fontFamily="@font/segoe"
                 android:gravity="center"
-                android:text="Login"
+                android:text="@string/textLogin"
                 android:textColor="#FFFFFF"/>
             <TextView
                 android:id="@+id/text_below_login"

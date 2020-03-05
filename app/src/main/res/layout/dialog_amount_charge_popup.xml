@@ -15,7 +15,7 @@
         android:fontFamily="@font/sf_old_republic_font"
         android:gravity="center"
         android:padding="3dp"
-        android:text="Amount Charge (Top-up):"
+        android:text="@string/textAmountChargeTopup"
         android:textSize="17dp" />
 
     <LinearLayout

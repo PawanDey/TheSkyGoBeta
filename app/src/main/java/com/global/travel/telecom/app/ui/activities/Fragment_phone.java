@@ -62,7 +62,7 @@ public class Fragment_phone extends Fragment {
 
         clickToCallButton.setOnClickListener(v -> {
             if (phoneNumber.length() <= 3) {
-                Toast.makeText(getContext(), "Enter valid Phone Number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.textEnterValidPhoneNumber), Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);

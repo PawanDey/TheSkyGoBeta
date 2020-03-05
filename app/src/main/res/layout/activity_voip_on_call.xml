@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/sf_old_republic_font"
-            android:text="Calling..." />
+            android:text="@string/textCalling" />
 
         <TextView
             android:id="@+id/ContactPersonname"
@@ -47,7 +47,7 @@
             android:fontFamily="@font/sf_old_republic_font"
             android:gravity="center"
             android:singleLine="true"
-            android:text="Unknown Name"
+            android:text="@string/textUnknownName"
             android:textSize="35dp" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_gravity="center"
             android:fontFamily="@font/sf_old_republic_font"
             android:singleLine="true"
-            android:text="Phone number"
+            android:text="@string/textPhoneNumber"
             android:textColor="@color/darkgrey"
             android:textSize="25dp" />
 
@@ -94,8 +94,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textSize="10dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:text="Speaker" />
+                android:text="@string/textSpeaker" />
         </LinearLayout>
 
         <LinearLayout
@@ -121,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:text="Hold" />
+                android:text="@string/textHold" />
         </LinearLayout>
 
         <LinearLayout
@@ -146,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/sf_old_republic_font"
-                android:text="Mute" />
+                android:text="@string/textMute" />
         </LinearLayout>
 
     </LinearLayout>

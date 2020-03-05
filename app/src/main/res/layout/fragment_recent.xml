@@ -30,5 +30,5 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/sf_old_republic_font"
         android:gravity="center"
-        android:text="Recent Call loading..." />
+        android:text="@string/textRecentCallLoading" />
 </LinearLayout>

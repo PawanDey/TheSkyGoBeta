@@ -74,7 +74,7 @@
             android:layout_width="309dp"
             android:layout_height="66dp"
             android:layout_gravity="center"
-            android:background="@drawable/google1"
+            android:background="@drawable/google"
             android:onClick="GmailLoginButton" />
 
         <ImageView

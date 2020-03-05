@@ -77,7 +77,7 @@ public class VoipOnCall extends AppCompatActivity {
 
         if (CallingName == null || CallingName.length() == 0) {
             CallingName = "Unknown Name";
-            ContactPersonname.setText("Unknown Name");
+            ContactPersonname.setText(getResources().getString(R.string.textUnknownName));
 
         } else {
             ContactPersonname.setText(CallingName);
@@ -88,7 +88,7 @@ public class VoipOnCall extends AppCompatActivity {
             e.printStackTrace();
         }
         firstChar.setText(firstCharector);
-        phoneNumber.setText("Mobile " + CallingNumber);
+        phoneNumber.setText(getResources().getString(R.string.textMobile) + " " + CallingNumber);
 //        String demoparameter = "serveraddress=sip.s.im\r\nusername=SkyGo:246\r\npassword=246\r\nloglevel=5";
         String demoparameter = "serveraddress=sip.s.im\r\nusername=" + userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
         try {
@@ -196,8 +196,7 @@ public class VoipOnCall extends AppCompatActivity {
                         checkMute = true;
                     }
                 } else {
-                    Toast.makeText(ctx, "" +
-                            "Waiting for Pick the Call", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx, getResources().getString(R.string.textWaitingForPickTheCall), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -316,10 +315,10 @@ public class VoipOnCall extends AppCompatActivity {
         String x = "____";
         if (line.contains("Calling...")) {
             Log.v(x, "Calling...");
-            timeOnCall.setText("Calling...");
+            timeOnCall.setText(getResources().getString(R.string.textCalling));
         } else if (line.contains("Ringing")) {
             Log.v(x, "Ringing");
-            timeOnCall.setText("Ringing");
+            timeOnCall.setText(getResources().getString(R.string.textRinging));
         } else if (line.contains(",Speaking (0 sec)") && oneTimeCall) {
             Log.v(x, ",Speaking (0 sec)");
             oneTimeCall = false;
@@ -391,10 +390,4 @@ public class VoipOnCall extends AppCompatActivity {
         }
 
     }
-
-    public void Pending() {
-        Toast.makeText(this, "ComingSoon", Toast.LENGTH_SHORT).show();
-    }
-
-
 }
