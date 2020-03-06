@@ -64,7 +64,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
+                 if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
                         int VoipCreated;
