@@ -1,5 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,25 +15,25 @@ import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.model.ContactsModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ContactsArrayAdapter extends ArrayAdapter<ContactsModel> {
 
     private Context mContext;
-    int mResouce;
+    private int mResouce;
 
-    public ContactsArrayAdapter(Context context, int resource, ArrayList<ContactsModel> object) {
+    ContactsArrayAdapter(Context context, int resource, ArrayList<ContactsModel> object) {
         super(context, resource, object);
         mContext = context;
         mResouce = resource;
     }
 
+    @SuppressLint("ViewHolder")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String name = getItem(position).getName();
-        String mobleNumber = getItem(position).getMobileNumber();
-        ContactsModel contactsModel = new ContactsModel(name, mobleNumber);
-
+        String name = Objects.requireNonNull(getItem(position)).getName();
+        String mobleNumber = Objects.requireNonNull(getItem(position)).getMobileNumber();
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResouce, parent, false);
 
@@ -41,6 +42,7 @@ public class ContactsArrayAdapter extends ArrayAdapter<ContactsModel> {
 
         textView_name.setText(name);
         textView_contact.setText(mobleNumber);
+
         return convertView;
     }
 }

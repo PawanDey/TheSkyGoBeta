@@ -15,32 +15,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
-import com.global.travel.telecom.app.base.BaseView;
 
 import java.util.Objects;
 
 public class Fragment_phone extends Fragment {
-    private LinearLayout one, two, three, four, five, six, seven, eight, nine, zero, delete, plus;
     private TextView phoneNumber;
-    private ImageView clickToCallButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_phone, container, false);
-        one = view.findViewById(R.id.one);
-        two = view.findViewById(R.id.two);
-        three = view.findViewById(R.id.three);
-        four = view.findViewById(R.id.four);
-        five = view.findViewById(R.id.five);
-        six = view.findViewById(R.id.six);
-        seven = view.findViewById(R.id.seven);
-        eight = view.findViewById(R.id.eight);
-        nine = view.findViewById(R.id.nine);
-        zero = view.findViewById(R.id.zero);
-        delete = view.findViewById(R.id.delete);
-        plus = view.findViewById(R.id.plus);
+        LinearLayout one = view.findViewById(R.id.one);
+        LinearLayout two = view.findViewById(R.id.two);
+        LinearLayout three = view.findViewById(R.id.three);
+        LinearLayout four = view.findViewById(R.id.four);
+        LinearLayout five = view.findViewById(R.id.five);
+        LinearLayout six = view.findViewById(R.id.six);
+        LinearLayout seven = view.findViewById(R.id.seven);
+        LinearLayout eight = view.findViewById(R.id.eight);
+        LinearLayout nine = view.findViewById(R.id.nine);
+        LinearLayout zero = view.findViewById(R.id.zero);
+        LinearLayout delete = view.findViewById(R.id.delete);
+        LinearLayout plus = view.findViewById(R.id.plus);
         phoneNumber = view.findViewById(R.id.editphoneNumber);
-        clickToCallButton = view.findViewById(R.id.clickToCallButton);
+        ImageView clickToCallButton = view.findViewById(R.id.clickToCallButton);
 
         one.setOnClickListener(v -> phoneNumber.append("1"));
         two.setOnClickListener(v -> phoneNumber.append("2"));

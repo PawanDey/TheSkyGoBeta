@@ -35,6 +35,7 @@ import java.util.TimeZone;
 public class ActivateSim extends BaseActivity {
 
     AuthenticationPresenter authenticationPresenter;
+    @SuppressLint("StaticFieldLeak")
     static EditText edtSerialNumber;
     EditText txtnoOfDays;
     TextView totalAmount, errorMsg, contactCare, OK;

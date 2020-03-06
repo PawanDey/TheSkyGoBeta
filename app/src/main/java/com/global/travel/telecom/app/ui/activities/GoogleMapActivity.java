@@ -3,7 +3,6 @@ package com.global.travel.telecom.app.ui.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -26,13 +25,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCallback {
     GoogleMap map;
     double logitude, latitude;
-    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
         Bundle extras = getIntent().getExtras();
+        assert extras != null;
         logitude = extras.getDouble("logitude");
         latitude = extras.getDouble("latitude");
         try {
@@ -43,6 +42,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
         try {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            assert mapFragment != null;
             mapFragment.getMapAsync(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,6 +86,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void checkLocationAccess() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        assert manager != null;
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d("", "GPS not enabled..");
             buildAlertMessageNoGps();
@@ -102,14 +103,16 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                 return;
             }
 
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+            assert locationManager != null;
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            assert location != null;
             logitude = location.getLongitude();
             latitude = location.getLatitude();
         }

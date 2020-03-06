@@ -48,6 +48,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_splash_screen);
+
         try {
             versionName = findViewById(R.id.versionCode);
             versionName.setText(getResources().getString(R.string.textVersion) + ":" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);

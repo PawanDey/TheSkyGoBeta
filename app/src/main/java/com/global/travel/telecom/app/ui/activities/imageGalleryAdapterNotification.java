@@ -1,26 +1,29 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.global.travel.telecom.app.R;
 
-import java.util.Collections;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNotifications> {
 
-    List<translatPassdata> list = Collections.emptyList();
+    private List<translatPassdata> list;
     Context context;
 
-    public imageGalleryAdapterNotification(List<translatPassdata> list, Context context) {
+    imageGalleryAdapterNotification(List<translatPassdata> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
+    @NotNull
     @Override
     public viewHolderNotifications onCreateViewHolder(ViewGroup parent,
                                                       int viewType) {
@@ -32,8 +35,7 @@ class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNot
         View photoView = inflater.inflate(R.layout.notifications_card_view,
                 parent, false);
 
-        viewHolderNotifications viewHolder = new viewHolderNotifications(photoView);
-        return viewHolder;
+        return new viewHolderNotifications(photoView);
     }
 
     @Override
@@ -51,7 +53,7 @@ class imageGalleryAdapterNotification extends RecyclerView.Adapter<viewHolderNot
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 //                    list.add(new imageGalleryAdapterNotification(getNotifications.setAlertTime(translateDone[i]);

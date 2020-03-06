@@ -1,6 +1,7 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -33,7 +35,7 @@ import androidx.core.content.ContextCompat;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
+import com.facebook.GraphRequest;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.global.travel.telecom.app.R;
@@ -89,7 +91,6 @@ public class LoginActivity extends BaseActivity {
     UserDetails userDetails;
     CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
     String getUserCountryCode, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, paraName, paraEmailID, paraPhoneNumber;
-    String facebookGetName = "";
     String mVerificationId = "";
     String countryCodeValue = "";
 
@@ -365,40 +366,45 @@ public class LoginActivity extends BaseActivity {
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.performClick();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            String facebookGetFName, facebookGetLName, facebookGetEmail = "";
 
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                final Profile profile = Profile.getCurrentProfile();
-                Log.d("mylog", "Successful: " + loginResult.getAccessToken().toString());
-                Log.d("mylog", "getApplicationId;" + loginResult.getAccessToken().getApplicationId());
-                Log.d("mylog", "getToken;" + loginResult.getAccessToken().getToken());
-                Log.d("mylog", "getUserId;" + loginResult.getAccessToken().getUserId());
-                Log.d("mylog", "describeContents;" + loginResult.getAccessToken().describeContents());
-                Log.d("mylog", "getLastRefresh;" + loginResult.getAccessToken().getLastRefresh());
-                Log.d("mylog", "getDataAccessExpirationTime;" + loginResult.getAccessToken().getDataAccessExpirationTime());
-                Log.d("mylog", "isExpired;" + loginResult.getAccessToken().isExpired());
-                if (profile != null) {
-                    Log.d("mylog", "getName;" + profile.getName());
-                    Log.d("mylog", "getId;" + profile.getId());
-                    Log.d("mylog", "getProfilePictureUri;" + profile.getProfilePictureUri(500, 500));
-                    facebookGetName = profile.getName();
-                }
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.textLogin), Toast.LENGTH_SHORT);
-                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
-                    String getUserName;
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
-                        return;
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (object, response) -> {
+                    String id = loginResult.getAccessToken().getUserId();
+                    try {
+                        try {
+                            facebookGetFName = object.getString("first_name");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            facebookGetLName = object.getString("last_name");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            facebookGetEmail = object.getString("email");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
+                                return;
+                            }
+                            String token = Objects.requireNonNull(task.getResult()).getToken();
+                            LoginFillFormFuction(id, facebookGetFName + " " + facebookGetLName, "33", token, facebookGetEmail, "", "");
+                        });
+                    } catch (Exception e) {
+                        showToast(e.getMessage());
+                        e.printStackTrace();
                     }
-                    String token = Objects.requireNonNull(task.getResult()).getToken();
-                    if (profile != null) {
-                        getUserName = profile.getId();
-                    } else {
-                        getUserName = loginResult.getAccessToken().getUserId();
-                    }
-                    LoginFillFormFuction(getUserName, facebookGetName, "33", token, "", "", "");
-//                    authenticationPresenter.loginUser(getUserName, LoginRequestTypeId.FACEBOOK, token);
                 });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,first_name,last_name,email,gender,birthday"); // id,first_name,last_name,email,gender,birthday,cover,picture.type(large)
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
@@ -427,7 +433,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void ownEmailLoginButton(View view) {
-        View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen, null);
+        @SuppressLint("InflateParams") View mViewSiginScreen = LayoutInflater.from(this).inflate(R.layout.own_email_signin_screen, null);
         androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(mViewSiginScreen);
         progressDialog = mBuilder.create();
         Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -477,8 +483,7 @@ public class LoginActivity extends BaseActivity {
                                                     return;
                                                 }
                                                 String token = Objects.requireNonNull(task1.getResult()).getToken();
-                                                LoginFillFormFuction(user.getEmail(), "", "35", token, user.getEmail().trim(), "", "");
-//                                                authenticationPresenter.loginUser(Objects.requireNonNull(user.getEmail()).trim(), LoginRequestTypeId.Email, token);
+                                                LoginFillFormFuction(user.getEmail(), "", "35", token, Objects.requireNonNull(user.getEmail()).trim(), "", "");
                                             });
                                 } else {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.textConnectionErrorPleaseTryAgain), Toast.LENGTH_SHORT).show();
@@ -686,7 +691,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void LoginFillFormFuction(String username, String name, String reqTypeID, String gcmKey, String email, String mobileNumner, String homeCountry) {
-        View loginfillForm = LayoutInflater.from(this).inflate(R.layout.login_fill_dataform, null);
+        @SuppressLint("InflateParams") View loginfillForm = LayoutInflater.from(this).inflate(R.layout.login_fill_dataform, null);
         androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(loginfillForm);
         progressDialog1 = mBuilder.create();
         Objects.requireNonNull(progressDialog1.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -809,7 +814,6 @@ public class LoginActivity extends BaseActivity {
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
                         authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey);
                         progressDialog1.dismiss();
                     } else {

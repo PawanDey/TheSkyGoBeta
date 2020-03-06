@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,33 +45,27 @@ public class Fragment_contacts extends Fragment implements Serializable {
                 voip_progressBar.setVisibility(View.VISIBLE);
                 progress_bar_message.setVisibility(View.VISIBLE);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (SkyGoDialer.mobileArray == null) {
-                            try {
-                                Thread.sleep(400);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                new Thread(() -> {
+                    while (SkyGoDialer.mobileArray == null) {
+                        try {
+                            Thread.sleep(400);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    listViewContacts.setVisibility(View.VISIBLE);
-                                    voip_progressBar.setVisibility(View.GONE);
-                                    progress_bar_message.setVisibility(View.GONE);
-                                    ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
-                                    listViewContacts.setAdapter(adapter);
-                                    listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, 100);
                     }
+                    mHandler.postDelayed(() -> {
+                        try {
+                            listViewContacts.setVisibility(View.VISIBLE);
+                            voip_progressBar.setVisibility(View.GONE);
+                            progress_bar_message.setVisibility(View.GONE);
+                            ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
+                            listViewContacts.setAdapter(adapter);
+                            listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }, 100);
                 }).start();
 
 
@@ -90,24 +83,21 @@ public class Fragment_contacts extends Fragment implements Serializable {
             Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        listViewContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    ContactsModel arrayList = (ContactsModel) listViewContacts.getItemAtPosition(i);
-                    String name = arrayList.name;
-                    String mobileNumbers = arrayList.mobileNumber;
-                    Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
-                    intent.putExtra("CallingNumber", mobileNumbers.trim());
-                    intent.putExtra("CallingName", name.trim());
-                    startActivity(intent);
+        listViewContacts.setOnItemClickListener((adapterView, view1, i, l) -> {
+            try {
+                ContactsModel arrayList = (ContactsModel) listViewContacts.getItemAtPosition(i);
+                String name = arrayList.name;
+                String mobileNumbers = arrayList.mobileNumber;
+                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
+                intent.putExtra("CallingNumber", mobileNumbers.trim());
+                intent.putExtra("CallingName", name.trim());
+                startActivity(intent);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
         });
         return view;
     }

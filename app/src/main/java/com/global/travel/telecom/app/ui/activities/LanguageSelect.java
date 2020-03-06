@@ -49,18 +49,23 @@ public class LanguageSelect extends BaseActivity {
     @Override
     public void onServerError(String method, String errorMessage) {
     }
+
     public void SelectEnglish(View view) {
         callMethod("en");
     }
+
     public void SelectChinese(View view) {
         callMethod("zh");
     }
+
     public void SelectJapanese(View view) {
         callMethod("ja");
     }
+
     public void SelectKorean(View view) {
         callMethod("ko");
     }
+
     public void SelectSPANISH(View view) {
         callMethod("es");
     }

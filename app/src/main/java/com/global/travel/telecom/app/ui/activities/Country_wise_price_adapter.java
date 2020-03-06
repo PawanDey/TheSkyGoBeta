@@ -1,5 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import com.global.travel.telecom.app.model.GetVoipRateModel;
 import java.util.ArrayList;
 
 public class Country_wise_price_adapter extends ArrayAdapter<GetVoipRateModel> {
-    public Country_wise_price_adapter(Context context, ArrayList<GetVoipRateModel> countryItems) {
+    Country_wise_price_adapter(Context context, ArrayList<GetVoipRateModel> countryItems) {
         super(context, 0, countryItems);
 
     }
@@ -32,6 +33,7 @@ public class Country_wise_price_adapter extends ArrayAdapter<GetVoipRateModel> {
         return initView(position, convertView, parent);
     }
 
+    @SuppressLint("SetTextI18n")
     private View initView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(

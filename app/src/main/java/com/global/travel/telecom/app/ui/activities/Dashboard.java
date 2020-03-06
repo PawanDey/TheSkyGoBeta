@@ -1,6 +1,7 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -141,6 +142,7 @@ public class Dashboard extends BaseActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onSuccess(String method2, Object response) {
         switch (method2) {
@@ -207,7 +209,7 @@ public class Dashboard extends BaseActivity {
                 try {
                     CurrentBalance currentBalance = (CurrentBalance) response;
                     String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
-                    balanceShowInDashboard.setText(getResources().getString(R.string.textBalance)+": $" + bal.substring(0, bal.length() - 2));
+                    balanceShowInDashboard.setText(getResources().getString(R.string.textBalance) + ": $" + bal.substring(0, bal.length() - 2));
                 } catch (Exception e) {
                     showToast("Current Balanced Not show");
                 }
@@ -224,12 +226,7 @@ public class Dashboard extends BaseActivity {
         }
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, getResources().getString(R.string.textClickBACKagaintoExit), Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     private void log_func() {
@@ -245,12 +242,7 @@ public class Dashboard extends BaseActivity {
     }
 
     public void hotspotButton(View view) {
-        try {
-            Hotspot hotspot = new Hotspot();
-            hotspot.hotspotFxn(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void SelectLoginImage() {

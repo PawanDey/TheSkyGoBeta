@@ -353,12 +353,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     }
 
     public void hotspotButton(View view) {
-        try {
-            Hotspot hotspot = new Hotspot();
-            hotspot.hotspotFxn(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void backToDashboardButton(View view) {

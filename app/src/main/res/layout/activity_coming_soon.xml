@@ -39,16 +39,6 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/button25"
-            android:layout_width="23dp"
-            android:layout_height="44dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:onClick="hotspotButton"
-            android:src="@drawable/wifi"
-            android:visibility="gone" />
-
-        <ImageView
             android:id="@+id/notificationButton"
             android:layout_width="25dp"
             android:layout_height="match_parent"

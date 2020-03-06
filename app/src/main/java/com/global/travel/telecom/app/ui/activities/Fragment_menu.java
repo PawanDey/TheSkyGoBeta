@@ -1,6 +1,6 @@
 package com.global.travel.telecom.app.ui.activities;
 
-import android.app.DatePickerDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,18 +39,20 @@ import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.mCountry_w
 
 public class Fragment_menu extends Fragment {
     private TextView menu_name, countryWiseRateDiscription, addBalancedFunction, checkCountryWisePrice;
-    public static TextView currentBalanceMenu;
+    @SuppressLint("StaticFieldLeak")
+    static TextView currentBalanceMenu;
     private LinearLayout menu_linearLayoutMain;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ListView listViewVoipPlan;
     private ArrayList<GetVoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
     private ProgressBar progressBar;
     private Spinner snipper_country;
-    androidx.appcompat.app.AlertDialog progressDialog;
+    private androidx.appcompat.app.AlertDialog progressDialog;
     private DatePicker datePicker;
     UserDetails userDetails = new UserDetails(getApplicationContext());
-    String amount = "0";
+    private String amount = "0";
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
@@ -148,9 +150,9 @@ public class Fragment_menu extends Fragment {
                         }
                     }
                     mHandler.postDelayed(() -> {
-                        if(mCountry_wise_rateList.size()==0){
+                        if (mCountry_wise_rateList.size() == 0) {
                             checkCountryWisePrice.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             Country_wise_price_adapter mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
                             snipper_country.setAdapter(mCountry_wise_price_adapter);
                             snipper_country.setVisibility(View.VISIBLE);
@@ -176,8 +178,8 @@ public class Fragment_menu extends Fragment {
 
         listViewVoipPlan.setOnItemClickListener((parent, view1, position, id) -> {
             try {
-                View contactCarePopUp = LayoutInflater.from(getContext()).inflate(R.layout.dialog_date_popup, null);
-                androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(getContext()).setView(contactCarePopUp);
+                @SuppressLint("InflateParams") View contactCarePopUp = LayoutInflater.from(getContext()).inflate(R.layout.dialog_date_popup, null);
+                androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(Objects.requireNonNull(getContext())).setView(contactCarePopUp);
                 progressDialog = mBuilder.create();
                 Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 progressDialog.show();
@@ -198,10 +200,8 @@ public class Fragment_menu extends Fragment {
                     String getMonikerValue = arrayList.getMonikerValue();
                     String getValidity = arrayList.getValidity();
                     String getPlanMin = arrayList.getPlanMin();
-                    String getPlanDetails = arrayList.getPlanDetails();
+//                    String getPlanDetails = arrayList.getPlanDetails();
                     String getAmountCharge = arrayList.getAmountCharge();
-
-                    arrayList.getMonikerValue();
 
                     NumberFormat formatter = NumberFormat.getNumberInstance();
                     formatter.setMinimumFractionDigits(2);
@@ -220,22 +220,18 @@ public class Fragment_menu extends Fragment {
                     PaymentSummary.putExtra("type", "AddPlan");
                     startActivity(PaymentSummary);
                 });
-                cancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        progressDialog.dismiss();
-                    }
-                });
+                cancle.setOnClickListener(v -> progressDialog.dismiss());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
         snipper_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 GetVoipRateModel co = (GetVoipRateModel) parent.getItemAtPosition(position);
-                countryWiseRateDiscription.setText(co.getmRetails() +getResources().getString(R.string.textPrice)+": " + co.getmPrice());
+                countryWiseRateDiscription.setText(co.getmRetails() + getResources().getString(R.string.textPrice) + ": " + co.getmPrice());
             }
 
             @Override
@@ -245,7 +241,7 @@ public class Fragment_menu extends Fragment {
         });
 
         addBalancedFunction.setOnClickListener(v -> {
-            View x = LayoutInflater.from(getContext()).inflate(R.layout.dialog_amount_charge_popup, null);
+            @SuppressLint("InflateParams") View x = LayoutInflater.from(getContext()).inflate(R.layout.dialog_amount_charge_popup, null);
             androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(Objects.requireNonNull(getContext())).setView(x);
             progressDialog = mBuilder.create();
             Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
