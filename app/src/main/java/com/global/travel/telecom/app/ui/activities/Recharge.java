@@ -1,11 +1,11 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -213,7 +214,7 @@ public class Recharge extends BaseActivity {
         switch (method2) {
             case "rechargeMSISDN": {
                 SimValidAPIStatus = false;
-                ContactCarePopUp(errorMessage,getResources().getString(R.string.textcontactCare));  //here is add popup scrrren to show the popoupmsg for any error
+                ContactCarePopUp(errorMessage, getResources().getString(R.string.textcontactCare));  //here is add popup scrrren to show the popoupmsg for any error
                 break;
             }
 
@@ -260,23 +261,25 @@ public class Recharge extends BaseActivity {
         startActivity(i);
     }
 
+    @SuppressLint("SetTextI18n")
     public void getCurretDatePicker() {
         String getDate = todayDate.getText().toString();
         try {
 
-            Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
-            SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            @SuppressLint("SimpleDateFormat") Date date1 = new SimpleDateFormat("d MMMM,yyyy").parse(getDate);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+            assert date1 != null;
             validityStartDate = formatter.format(date1);
 
             String getNoOfDays = numberOfDaysRecharge.getText().toString();
-            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.equals(null) || getNoOfDays.contains(" ") || getNoOfDays.length() == 0 || getNoOfDays.equals("000")) {
+            if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.length() == 0 || getNoOfDays.equals("000")) {
                 GoodUntil.setText("  ");
 
             } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date1);
-                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
-                SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
+                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays) - 1);
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
                 String validityEndDate = sdf1.format(cal.getTime());
                 GoodUntil.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
             }
@@ -285,29 +288,23 @@ public class Recharge extends BaseActivity {
         }
     }
 
-    private WifiManager.LocalOnlyHotspotReservation mReservation;
-    Context context = this;
-
     public void hotspotButton(View view) {
 
     }
 
     public void addOn(View view) {
-        setURL("https://orders.skygowifi.com");
-    }
-
-    private void setURL(String getURL) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://orders.skygowifi.com"));
         startActivity(browserIntent);
     }
 
+
     private void ContactCarePopUp(String errorName, String ContactCare) {
         try {
-            View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
+            @SuppressLint("InflateParams") View contactCarePopUp = LayoutInflater.from(this).inflate(R.layout.dialog_validation_popup, null);
             androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(contactCarePopUp);
             progressDialog = mBuilder.create();
             progressDialog.setCancelable(false);
-            progressDialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
             progressDialog.show();
 
             //ID

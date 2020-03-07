@@ -366,7 +366,7 @@ public class ActivateSim extends BaseActivity {
             } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date1);
-                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
+                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays) - 1);   //add -1 for date change (6th march 2020)
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
                 String validityEndDate = sdf1.format(cal.getTime());
                 validDateLeftAS.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");
