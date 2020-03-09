@@ -274,11 +274,10 @@ public class Recharge extends BaseActivity {
             String getNoOfDays = numberOfDaysRecharge.getText().toString();
             if (getNoOfDays.equals("00") || getNoOfDays.equals("0") || getNoOfDays.contains(" ") || getNoOfDays.length() == 0 || getNoOfDays.equals("000")) {
                 GoodUntil.setText("  ");
-
             } else {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date1);
-                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays) - 1);
+                cal.add(Calendar.DATE, Integer.parseInt(getNoOfDays));
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf1 = new SimpleDateFormat("d MMMM");
                 String validityEndDate = sdf1.format(cal.getTime());
                 GoodUntil.setText(getResources().getString(R.string.textValidity) + " (" + validityStartDate + " " + getResources().getString(R.string.textto) + " " + validityEndDate + " )");

@@ -1,77 +1,68 @@
 package com.global.travel.telecom.app.base;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.drawable.ColorDrawable;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.global.travel.telecom.app.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.TimeZone;
+import java.util.HashMap;
+import java.util.Objects;
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
     protected abstract int getLayout();
+
     private AlertDialog progressDialog;
     private Handler mHandler = new Handler(Looper.getMainLooper());
-
+    private androidx.appcompat.app.AlertDialog progressDialog1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-//            setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-//        }
-//        if (Build.VERSION.SDK_INT >= 19) {
-//            this.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
-//        }
-//        if (Build.VERSION.SDK_INT >= 21) {
-////            setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-//            this.getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
-
-
-
+        connectToFirebaseToCheckMaintenaceStatus();
         setContentView(getLayout());
         onViewReady();
     }
 
     protected void onViewReady() {
-
     }
 
     @Override
     public void showToast(String message) {
-        mHandler.postDelayed(() -> {
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        },500);
+        mHandler.postDelayed(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show(), 500);
     }
 
     @Override
     public void showProgressBar() {
-        if( progressDialog == null ){
-            View mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loader, null);
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder( this ).setView(mDialogView);
+        if (progressDialog == null) {
+            @SuppressLint("InflateParams") View mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loader, null);
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(this).setView(mDialogView);
             progressDialog = mBuilder.create();
             try {
                 progressDialog.setCancelable(false);
-            }catch (Exception e){
+            } catch (Exception e) {
                 progressDialog.setCanceledOnTouchOutside(false);
             }
-            progressDialog.getWindow().setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT) );
-            progressDialog.getWindow().setLayout( WindowManager.LayoutParams.WRAP_CONTENT , WindowManager.LayoutParams.WRAP_CONTENT  );
+            Objects.requireNonNull(progressDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         }
         progressDialog.show();
     }
@@ -81,15 +72,43 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         progressDialog.dismiss();
     }
 
-    private void setWindowFlag(int bits,Boolean on) {
-        Window win = this.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags = winParams.flags | bits;
-        } else {
-            winParams.flags = winParams.flags & Integer.reverse(bits);
-        }
-        win.setAttributes( winParams );
+    private void connectToFirebaseToCheckMaintenaceStatus() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap a = (HashMap) dataSnapshot.getValue();
+                assert a != null;
+                if (Boolean.parseBoolean(Objects.requireNonNull(a.get("is_under_maintenance")).toString())) {
+                    showUnderMaintenanceDialog(Objects.requireNonNull(a.get("under_maintenance_message")).toString());
+                } else {
+                    dismissUnderMaintenanceDialog();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+
+        });
     }
 
+    @SuppressLint("ResourceType")
+    private void showUnderMaintenanceDialog(String underMaintenanceMessage) {
+        @SuppressLint("InflateParams") View um = LayoutInflater.from(this).inflate(R.layout.under_maintenance_popup, null);
+        androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(um);
+        progressDialog1 = mBuilder.create();
+        progressDialog1.setCancelable(false);
+        Objects.requireNonNull(progressDialog1.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        progressDialog1.show();
+        TextView maintenanceMassage = um.findViewById(R.id.maintenanceMassage);
+        maintenanceMassage.setText(underMaintenanceMessage);
+    }
+
+    private void dismissUnderMaintenanceDialog() {
+        if (progressDialog1 != null && progressDialog1.isShowing()) {
+            progressDialog1.dismiss();
+        }
+    }
 }
