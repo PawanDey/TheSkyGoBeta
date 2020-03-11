@@ -34,6 +34,7 @@ public class VoipOnCall extends AppCompatActivity {
     SipStack mysipclient = null;
     Context ctx = null;
     GetNotificationsThread notifThread = null;
+    @SuppressLint("StaticFieldLeak")
     public static VoipOnCall instance = null;
     boolean terminateNotifThread = false;
     Boolean checkHold = true;
@@ -49,6 +50,7 @@ public class VoipOnCall extends AppCompatActivity {
     Boolean oneTimeCall = true;
     String CallingNumber, CallingName, firstCharector;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +160,7 @@ public class VoipOnCall extends AppCompatActivity {
         });
 
         hold.setOnClickListener(v -> {
-            int checkpoint = mysipclient.IsOnHold(-2);
+//            int checkpoint = mysipclient.IsOnHold(-2);
             int a = -1;
             if (checkHold) {
                 mysipclient.Hold(a, true);
@@ -279,9 +281,7 @@ public class VoipOnCall extends AppCompatActivity {
         public void handleMessage(@NotNull android.os.Message msg) {
             try {
                 if (msg.getData() == null) return;
-
-                Bundle resBundle = msg.getData();
-
+//                Bundle resBundle = msg.getData();
                 String receivedNotif = msg.getData().getString("notifmessages");
 
                 if (receivedNotif != null && receivedNotif.length() > 0)
@@ -388,6 +388,6 @@ public class VoipOnCall extends AppCompatActivity {
             Toast.makeText(this, "CallOnTIme Error:" + e, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
     }
+
 }

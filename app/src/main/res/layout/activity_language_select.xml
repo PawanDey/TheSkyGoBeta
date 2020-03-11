@@ -80,7 +80,8 @@
                     android:gravity="center"
                     android:text="English"
                     android:textColor="#606060"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/border1"
@@ -150,7 +151,6 @@
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-
                     android:layout_marginLeft="30dp"
                     android:fontFamily="@font/segoe_semi_light"
                     android:gravity="center"

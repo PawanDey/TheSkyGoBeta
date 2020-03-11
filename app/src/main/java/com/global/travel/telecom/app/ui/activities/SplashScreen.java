@@ -221,7 +221,6 @@ public class SplashScreen extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }, 3000);
-
                     image = findViewById(R.id.imageView4);
                     moveAnimation();
                 }

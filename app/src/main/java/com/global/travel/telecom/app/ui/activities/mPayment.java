@@ -254,7 +254,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 AddCustomerCreditModel addCustomerCredit = (AddCustomerCreditModel) response;
                 String Balance = addCustomerCredit.getApplyCustomerCreditResponse().getBalance().getContent().trim();
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
-                intent.putExtra("msg", getResources().getString(R.string.textYourTopUpofDollarX )+ " $" + extras.getString("AmountCharged").trim() + " " + getResources().getString(R.string.textIsSuccessfulAndYourCurrentBalanceisDoolarX) + " $" + Balance.substring(0, Balance.length() - 2));
+                intent.putExtra("msg", getResources().getString(R.string.textYourTopUpofDollarX) + " $" + Objects.requireNonNull(extras.getString("AmountCharged")).trim() + " " + getResources().getString(R.string.textIsSuccessfulAndYourCurrentBalanceisDoolarX) + " $" + Balance.substring(0, Balance.length() - 2));
                 intent.putExtra("screenType", "4");
                 startActivity(intent);
                 finish();
@@ -560,7 +560,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 for (Enumeration<InetAddress> enumIpAddr = networkinterface.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress().toString();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }
@@ -638,7 +638,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                         "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
                         "</authentication>\n" +
                         "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
-                        "<amount>" + extras.getString("AmountCharged").trim() + "</amount>\n" +
+                        "<amount>" + Objects.requireNonNull(extras.getString("AmountCharged")).trim() + "</amount>\n" +
                         "<narrative>Promotion</narrative>\n" +
                         "</apply-customer-credit>";
                 authenticationPresenter.VoIPAPICall(xmlApplyPromotion, "AddCustomerCredit");
@@ -687,7 +687,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 + "\"useStripeSdk\":true,"
                 + "\"paymentMethodId\":" + "\"" + paymentMethodId + "\","
                 + "\"currency\":\"usd\","
-                + "\"amount\":\"" + extras.getString("AmountCharged").replace(".", "") + "\","
+                + "\"amount\":\"" + Objects.requireNonNull(extras.getString("AmountCharged")).replace(".", "") + "\","
                 + "\"items\":["
                 + "{\"id\":\"photo_subscription\"}"
                 + "]"
@@ -721,9 +721,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         PaymentConfiguration.init(applicationContext, stripePublishableKey);
         stripe = new Stripe(applicationContext, stripePublishableKey);
         payButton = findViewById(R.id.payPalPaymentActivityButton);
-        payButton.setOnClickListener((View view) -> {
-            pay();
-        });
+        payButton.setOnClickListener((View view) -> pay());
     }
 
     @Override
@@ -816,8 +814,13 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 updateFundCheck = false;
                 UpdateFundMethod(gson.toJson(paymentIntent), "payment success", "15");
+            } else if (status == PaymentIntent.Status.RequiresConfirmation) {
+                updateFundCheck = true;
+                showToast("payment failed :" + status.getCode());
+                UpdateFundMethod(paymentIntent.getId(), "payment failed :" + status.getCode(), "16");
             } else {
                 updateFundCheck = true;
+                showToast("payment failed :" + Objects.requireNonNull(paymentIntent.getLastPaymentError()).getMessage());
                 UpdateFundMethod(paymentIntent.getId(), "payment failed :" + Objects.requireNonNull(paymentIntent.getLastPaymentError()).getMessage(), "16");
             }
         }
