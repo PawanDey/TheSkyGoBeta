@@ -12,54 +12,58 @@
         android:roundIcon="@mipmap/gtticon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
 
         <activity
             android:name=".ui.activities.VoipOnCall"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.GoogleMapActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.LanguageSelect"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.Notification"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.ComingSoon"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.ApplyCoupons"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.PaymentSucessfull"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.mPayment"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.SkyGoDialer"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.Dashboard"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.Recharge"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.ActivateSim"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.ScannerFunction"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.SplashScreen"
             android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,7 +72,7 @@
         </activity>
         <activity
             android:name=".ui.activities.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -80,7 +84,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data android:scheme="fb680846345699872" />
             </intent-filter>
         </activity>
 

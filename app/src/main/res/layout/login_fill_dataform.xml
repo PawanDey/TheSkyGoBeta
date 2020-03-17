@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/gredientwhite"
     android:gravity="center">
 
-
-    <ProgressBar
-        android:id="@+id/login_ff_processBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:outlineAmbientShadowColor="@color/colorRed"
-        android:outlineSpotShadowColor="@color/colorRed"
-        android:visibility="gone" />
 
     <!--    signin-->
     <ScrollView
@@ -69,25 +61,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
+                android:gravity="left|center"
                 android:orientation="horizontal"
                 android:padding="5dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home Country:"
+                    android:textSize="18dp" />
+
                 <com.hbb20.CountryCodePicker
                     android:id="@+id/ccp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <EditText
-                    android:id="@+id/login_ff_phonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_old_republic_font"
-                    android:hint="@string/textPhoneNumber"
-                    android:inputType="number"
-                    android:maxLength="18"
-                    android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:layout_marginLeft="10dp"
+                    app:arrowSize="30dp"
+                    app:showFlag="true"
+                    app:showFullName="true" />
+
 
             </LinearLayout>
 
@@ -99,45 +91,29 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <Button
-                    android:id="@+id/sendOTP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/gredientthankyou"
-                    android:fontFamily="@font/sf_old_republic_font"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="5dp"
-                    android:text="@string/textSendOneTimePassword"
-                    android:textColor="#FFFFFF"
-                    android:visibility="visible" />
-
                 <EditText
-                    android:id="@+id/inputOTP"
+                    android:id="@+id/login_ff_phonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:hint="@string/textOneTimePasswordOTP"
+                    android:hint="@string/textPhoneNumberOptional"
                     android:inputType="number"
-                    android:maxLength="6"
-                    android:visibility="gone"
+                    android:maxLength="18"
                     android:textColor="@color/black"
-                    android:textSize="18dp"/>
-
+                    android:textSize="18dp" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/login_ff_log_in"
                 android:layout_width="240dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/gredientmodify"
                 android:fontFamily="@font/sf_old_republic_font"
                 android:gravity="center"
                 android:text="@string/com_facebook_loginview_log_in_button"
-                android:textColor="#FFFFFF"
-                android:visibility="gone"/>
+                android:textColor="#FFFFFF" />
 
 
         </LinearLayout>

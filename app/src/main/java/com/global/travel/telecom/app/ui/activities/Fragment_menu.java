@@ -56,7 +56,7 @@ public class Fragment_menu extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
-        TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
         menu_name = view.findViewById(R.id.menu_name);
         currentBalanceMenu = view.findViewById(R.id.currentBalance);
         listViewVoipPlan = view.findViewById(R.id.menu_listView);

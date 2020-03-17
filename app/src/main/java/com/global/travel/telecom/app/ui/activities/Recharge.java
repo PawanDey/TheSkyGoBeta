@@ -62,7 +62,7 @@ public class Recharge extends BaseActivity {
     protected void onViewReady() {
         super.onViewReady();
         GoodUntil = findViewById(R.id.validDateLeftRC);
-        TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
         authenticationPresenter = new AuthenticationPresenter(this);
         todayDate = (TextView) findViewById(R.id.datePickerRecharge);
         totalAmountRecharge = findViewById(R.id.totalAmountRecharge);

@@ -5,7 +5,6 @@
     <string name="welcome_to_gtt">Bienvenido a The SkyGo </string>
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
     <string name="facebook_app_id">680846345699872</string>
-    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textDashboard">Tablero</string>
     <string name="textYouareHere">Estás aquí</string>
     <string name="textHereisLocation">Aquí está la ubicación</string>
@@ -160,4 +159,5 @@
     <string name="textFillAlldetails">Rellene todos los detalles</string>
     <string name="textPasswordTooShort">Contraseña demasiado corta</string>
     <string name="textPasswordNotmatch">La contraseña no coincide</string>
+    <string name="textPhoneNumberOptional">Phone number (optional)</string>
 </resources>

@@ -2,7 +2,6 @@ package com.global.travel.telecom.app.presenter.implementation;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
@@ -58,13 +57,13 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     }
 
     @Override
-    public void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey) {
+    public void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey, int isEmailVerify) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().signUp(Name, Email, Mobile,HomeCountry,RegTypeID,Username,GCMKey);
+        Call<ResponseBody> call = APIClient.getApiService().signUp(Name, Email, Mobile, HomeCountry, RegTypeID, Username, GCMKey, isEmailVerify);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                 if (response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     try {
                         ResponseBody body = response.body();
                         int VoipCreated;
@@ -76,6 +75,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         String respondeMessage = table.getString("ResponseMessage");
                         VoipCreated = table1.getInt("VoipCreated");
                         if (respondeCode == 0) {
+
                             LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
                             if (VoipCreated == 0) {
                                 baseView.onSuccess("CreateVoipAccount", result);

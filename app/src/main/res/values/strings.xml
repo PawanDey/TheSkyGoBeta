@@ -6,7 +6,6 @@
     <string name="default_notification_channel_id">gttAppNotificationChannel</string>
     <string name="textDashboard">Dashboard</string>
     <string name="facebook_app_id">680846345699872</string>
-    <string name="fb_login_protocol_scheme">fb680846345699872</string>
     <string name="textYouareHere">You are here</string>
     <string name="textHereisLocation">Here is Location</string>
     <string name="textActivateSIM">Activate SIM</string>
@@ -160,4 +159,6 @@
     <string name="textFillAlldetails">Fill All details</string>
     <string name="textPasswordTooShort">Password too short</string>
     <string name="textPasswordNotmatch">Password Not match</string>
+    <string name="textPhoneNumberOptional">Phone number (optional)</string>
+
 </resources>

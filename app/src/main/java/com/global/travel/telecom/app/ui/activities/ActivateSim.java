@@ -74,7 +74,7 @@ public class ActivateSim extends BaseActivity {
         token = userDetails.getTokenID();
         totalAmount = findViewById(R.id.totalAmountActivate);
         Date date = new Date();
-        TimeZone.setDefault(TimeZone.getTimeZone("US/Eastern"));
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
         @SuppressLint("SimpleDateFormat") java.text.DateFormat df = new SimpleDateFormat(timeFormat);
         System.out.println("Date and timsimvalidatedsimvalidatedsimvalidatede in US/Eastern: " + df.format(date));
         todayDate.setText(df.format(date));

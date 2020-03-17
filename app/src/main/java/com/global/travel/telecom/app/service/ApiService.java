@@ -18,7 +18,7 @@ public interface ApiService {
 
 //    @GET("ValidateSubscriber")
     @GET("TestValidateSubscriber")
-    Call<ResponseBody> signUp(@Query("Name") String Name, @Query("Email") String Email, @Query("Mobile") String Mobile,@Query("HomeCountry")String HomeCountry,@Query("RegTypeID") String RegTypeID, @Query("Username") String Username,@Query("GCMKey") String GCMKey);
+    Call<ResponseBody> signUp(@Query("Name") String Name, @Query("Email") String Email, @Query("Mobile") String Mobile,@Query("HomeCountry")String HomeCountry,@Query("RegTypeID") String RegTypeID, @Query("Username") String Username,@Query("GCMKey") String GCMKey,@Query("isEmailVerify") int isEmailVerify);
 
     @GET("ValidateSIM")
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);

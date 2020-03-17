@@ -66,10 +66,12 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
+import java.util.TimeZone;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -92,7 +94,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     AddFundsApp addFundsApp;
     NewActivationRequest newActivationRequest;
     UpdateFundReq updateFundReq = new UpdateFundReq();
-    Random random = new Random();
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     SharedPreferences permissionStatus;
@@ -105,7 +106,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     double Deduction = 0;
 
     static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
+    //    String paypalTxnNumber = String.format("%09d", random.nextInt(1000000000));
+    String paypalTxnNumber = "";
     String IPaddress;
     Context context = this;
     //    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
@@ -127,8 +129,18 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
+        userDetails = new UserDetails(this);
         permissionStatus = PreferenceManager.getDefaultSharedPreferences(this);
         extras = getIntent().getExtras();
+        Date now = new Date();
+        try {
+            TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+            String id = (new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now));
+            paypalTxnNumber =  userDetails.getUserId() + "A" + id;
+        } catch (Exception e) {
+            e.printStackTrace();
+            showToast("Error in get Unique txn ID :" + e.getMessage());
+        }
         launchActivity();
         check();
         checkPlayServices();
@@ -138,7 +150,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(10 * 1000).setFastestInterval(1000);
 
-        userDetails = new UserDetails(this);
         addFundsApp = new AddFundsApp();
         authenticationPresenter = new AuthenticationPresenter(this);
         newActivationRequest = new NewActivationRequest();
@@ -294,7 +305,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         try {
             assert extras != null;
             Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
-            sessionTxnID = userDetails.getTxnSeriesPrefix() + paypalTxnNumber;
+            sessionTxnID = "SKYGO" + paypalTxnNumber;
 
 
             if (Deduction == 0) {
@@ -591,7 +602,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
         newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
         newActivationRequest.setToken(userDetails.getTokenID());
-        newActivationRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+        newActivationRequest.setRefNo("SKYGO" + paypalTxnNumber);
         newActivationRequest.setRequestedDevice(getDeviceName());
         newActivationRequest.setRequestedIP(IPaddress);
         newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
@@ -606,7 +617,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newExtensionRequest.setAmountCharged(extras.getString("AmountCharged"));
         newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
         newExtensionRequest.setToken(userDetails.getTokenID());
-        newExtensionRequest.setRefNo(userDetails.getTxnSeriesPrefix() + paypalTxnNumber);
+        newExtensionRequest.setRefNo("SKYGO" + paypalTxnNumber);
         newExtensionRequest.setRequestedDevice(getDeviceName());
         newExtensionRequest.setRequestedIP(IPaddress);
         newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());

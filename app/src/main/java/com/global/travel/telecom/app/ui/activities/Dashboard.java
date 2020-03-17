@@ -49,7 +49,6 @@ public class Dashboard extends BaseActivity {
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
 
-
     @Override
     protected int getLayout() {
         return R.layout.activity_dashboard;
@@ -153,7 +152,6 @@ public class Dashboard extends BaseActivity {
                 userDetails.setVoipCredentailPassword(obj.getVoipPassword());
                 userDetails.setVoipCustomerID(obj.getCustomerId());
                 userDetails.setVoipSubcriberID(obj.getSubscriberId());
-                userDetails.setUserId(obj.getCustomerReference());
                 getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
                         "<authentication>\n" +
                         "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
@@ -186,6 +184,16 @@ public class Dashboard extends BaseActivity {
                         userDetails.setRechargeStatus(0);
                         break;
                     }
+                    case "No Request Raised": {
+                        LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
+                        LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
+                        ActivationLayout.setVisibility(View.VISIBLE);
+                        RecentExtensionLayout.setVisibility(View.GONE);
+                        userDetails.setMSISDN("");
+                        userDetails.setActivationDate("");
+                        userDetails.setRechargeStatus(1);
+                        break;
+                    }
                 }
                 break;
 
@@ -202,7 +210,8 @@ public class Dashboard extends BaseActivity {
                 ActivationLayout.setVisibility(View.GONE);
                 RecentExtensionLayout.setVisibility(View.VISIBLE);
                 MSISDN.setText(obj.getMSISDN());
-                validityLeft.setText(obj.getActDate());
+                String gud[] = obj.getGoodUntil().trim().split("T");
+                validityLeft.setText("Expiry Date: " + gud[0]);
                 break;
             }
             case "CurrentBalance": {
@@ -372,9 +381,9 @@ public class Dashboard extends BaseActivity {
     }
 
     public void skyGoDailer(View view) {
-        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
-        intent.putExtra("Token", token);
-        startActivity(intent);
-//        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
+//        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
+//        intent.putExtra("Token", token);
+//        startActivity(intent);
+        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
     }
 }

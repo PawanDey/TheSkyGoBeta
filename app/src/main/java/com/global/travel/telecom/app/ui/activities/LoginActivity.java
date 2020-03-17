@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -52,12 +51,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hbb20.CountryCodePicker;
 
@@ -65,20 +60,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static android.widget.Toast.LENGTH_LONG;
 
 
 public class LoginActivity extends BaseActivity {
     ImageView fb, google, linkedin, ownEmail;
-    ProgressBar processBar, login_ff_processBar;
-    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password, inputOTP, login_ff_phonenumber;
+    ProgressBar processBar;
+    EditText input_email_signin, input_password_signin, confrom_input_password_signin, input_login_email, input_login_password, login_ff_phonenumber;
     TextView text_below_signIn, text_below_login, verificationText;
     CountryCodePicker ccp;
     LinearLayout SignInPageLayout, LogInPageLayout;
     RelativeLayout verificationLayout;
-    Button createaccount_signIn, Button_login, sendOTP, login_ff_log_in;
+    Button createaccount_signIn, Button_login, login_ff_log_in;
     GoogleSignInClient mGoogleSignInClient;
     CallbackManager callbackManager;
     AuthenticationPresenter authenticationPresenter;
@@ -91,7 +85,6 @@ public class LoginActivity extends BaseActivity {
     UserDetails userDetails;
     CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
     String getUserCountryCode, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, paraName, paraEmailID, paraPhoneNumber;
-    String mVerificationId = "";
     String countryCodeValue = "";
 
     @Override
@@ -183,7 +176,7 @@ public class LoginActivity extends BaseActivity {
                 userDetails.setUserId(obj.getUserID());
                 userDetails.setUserName(obj.getUserName());
                 userDetails.setPaypalTransactionFee(obj.getTxnSeriesPrefix());
-                userDetails.setTxnSeriesPrefix("SKY");
+                userDetails.setTxnSeriesPrefix("SKYGO");
                 Intent intent = new Intent(LoginActivity.this, Dashboard.class);
                 intent.putExtra("TokenID", userDetails.getTokenID());
                 startActivity(intent);
@@ -394,7 +387,11 @@ public class LoginActivity extends BaseActivity {
                                 return;
                             }
                             String token = Objects.requireNonNull(task.getResult()).getToken();
-                            LoginFillFormFuction(id, facebookGetFName + " " + facebookGetLName, "33", token, facebookGetEmail, "", "");
+                            int isEmailVerify = 0;
+                            if (!facebookGetEmail.isEmpty()) {
+                                isEmailVerify = 1;
+                            }
+                            LoginFillFormFuction(id, facebookGetFName + " " + facebookGetLName, "33", token, facebookGetEmail, "", "", isEmailVerify);
                         });
                     } catch (Exception e) {
                         showToast(e.getMessage());
@@ -474,7 +471,7 @@ public class LoginActivity extends BaseActivity {
                             if (task.isSuccessful()) {
                                 if (!user.isEmailVerified()) {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.textYourEmailisNotVerified), Toast.LENGTH_SHORT).show();
-                                } else if (user.isEmailVerified()) {
+                                } else {
                                     //go to dashboard activity
                                     FirebaseInstanceId.getInstance().getInstanceId()
                                             .addOnCompleteListener(task1 -> {
@@ -483,11 +480,8 @@ public class LoginActivity extends BaseActivity {
                                                     return;
                                                 }
                                                 String token = Objects.requireNonNull(task1.getResult()).getToken();
-                                                LoginFillFormFuction(user.getEmail(), "", "35", token, Objects.requireNonNull(user.getEmail()).trim(), "", "");
+                                                LoginFillFormFuction(user.getEmail(), "", "35", token, Objects.requireNonNull(user.getEmail()).trim(), "", "", 1);
                                             });
-                                } else {
-                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.textConnectionErrorPleaseTryAgain), Toast.LENGTH_SHORT).show();
-
                                 }
                             } else if (task.isComplete()) {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.textEmailpasswordisInvalid), Toast.LENGTH_SHORT).show();
@@ -577,7 +571,7 @@ public class LoginActivity extends BaseActivity {
                             return;
                         }
                         String token = Objects.requireNonNull(task.getResult()).getToken();
-                        LoginFillFormFuction(account.getEmail(), account.getDisplayName(), "34", token, account.getEmail(), "", "");
+                        LoginFillFormFuction(account.getEmail(), account.getDisplayName(), "34", token, account.getEmail(), "", "", 1);
 //                        authenticationPresenter.loginUser(account.getEmail(), LoginRequestTypeId.GOOGLE, token);
 
                     });
@@ -690,7 +684,7 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    public void LoginFillFormFuction(String username, String name, String reqTypeID, String gcmKey, String email, String mobileNumner, String homeCountry) {
+    public void LoginFillFormFuction(String username, String name, String reqTypeID, String gcmKey, String email, String mobileNumner, String homeCountry, int isEmailVerify) {
         @SuppressLint("InflateParams") View loginfillForm = LayoutInflater.from(this).inflate(R.layout.login_fill_dataform, null);
         androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(loginfillForm);
         progressDialog1 = mBuilder.create();
@@ -699,13 +693,10 @@ public class LoginActivity extends BaseActivity {
         progressDialog1.show();
 
         //find IDS
-        login_ff_processBar = loginfillForm.findViewById(R.id.login_ff_processBar);
         EditText login_ff_name = loginfillForm.findViewById(R.id.login_ff_username);
         EditText login_ff_emailid = loginfillForm.findViewById(R.id.login_ff_emailid);
         login_ff_phonenumber = loginfillForm.findViewById(R.id.login_ff_phonenumber);
-        inputOTP = loginfillForm.findViewById(R.id.inputOTP);
         ccp = loginfillForm.findViewById(R.id.ccp);
-        sendOTP = loginfillForm.findViewById(R.id.sendOTP);
         login_ff_log_in = loginfillForm.findViewById(R.id.login_ff_log_in);
         if (!countryCodeValue.equals("")) {
             ccp.setCountryForNameCode(countryCodeValue);
@@ -727,10 +718,8 @@ public class LoginActivity extends BaseActivity {
                 ccp.changeLanguage(CountryCodePicker.Language.CHINESE);
                 break;
         }
-
         getUserCountryCode = ccp.getDefaultCountryCodeWithPlus();
         getUserCountryName = ccp.getDefaultCountryNameCode();
-
         login_ff_name.setText(name);
         login_ff_emailid.setText(email);
         if (!email.isEmpty()) {
@@ -744,24 +733,8 @@ public class LoginActivity extends BaseActivity {
             getUserCountryName = ccp.getSelectedCountryNameCode();
         });
 
-        sendOTP.setOnClickListener(v -> {
-            if (login_ff_phonenumber.getText().length() < 1) {
-                showToast(getResources().getString(R.string.textEnterNumberValidNumber));
-                return;
-            }
-            inputOTP.setVisibility(View.VISIBLE);
-            sendOTP.setVisibility(View.GONE);
-            PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                    getUserCountryCode + login_ff_phonenumber.getText().toString().trim(),
-                    60,
-                    TimeUnit.SECONDS,
-                    this,
-                    mCallbacks);
-
-        });
-
         login_ff_log_in.setOnClickListener(v -> {
-            if (login_ff_name.getText().toString().isEmpty() || login_ff_emailid.getText().toString().isEmpty() || login_ff_phonenumber.getText().toString().isEmpty()) {
+            if (login_ff_name.getText().toString().isEmpty() || login_ff_emailid.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.textFillAlldetails), LENGTH_LONG).show();
                 return;
             }
@@ -770,59 +743,9 @@ public class LoginActivity extends BaseActivity {
             paraGcmKey = gcmKey;
             paraName = login_ff_name.getText().toString().trim();
             paraEmailID = login_ff_emailid.getText().toString().trim();
-            paraPhoneNumber = getUserCountryCode + login_ff_phonenumber.getText().toString().trim();
-            if (inputOTP.getText().length() == 6) {
-                login_ff_processBar.setVisibility(View.VISIBLE);
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, inputOTP.getText().toString().trim());
-                signInWithPhoneAuthCredential(credential);
-            } else {
-                showToast(getResources().getString(R.string.textPleaseEnter6DigitsOTP));
-            }
+            paraPhoneNumber = login_ff_phonenumber.getText().toString().trim();
+            authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, isEmailVerify);
         });
 
-    }
-
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-            Log.d("", "onVerificationCompleted:" + phoneAuthCredential);
-        }
-
-        @Override
-        public void onVerificationFailed(@NonNull FirebaseException e) {
-            showToast(e.getMessage());
-            inputOTP.setVisibility(View.GONE);
-            sendOTP.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-            Log.d("", "onCodeSent:" + verificationId);
-            mVerificationId = verificationId;
-            showToast(getResources().getString(R.string.textVerificationOTPsendSuccesfully));
-            login_ff_log_in.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
-            super.onCodeAutoRetrievalTimeOut(s);
-            //code for timeout and show the resend passcode
-        }
-    };
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey);
-                        progressDialog1.dismiss();
-                    } else {
-                        Log.w("", "signInWithCredential:failure", task.getException());
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            showToast(getResources().getString(R.string.textInvalidCode));
-                            login_ff_processBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
     }
 }

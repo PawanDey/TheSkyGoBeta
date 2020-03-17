@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,9 +38,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -59,14 +63,17 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        image = findViewById(R.id.imageView4);
         setContentView(R.layout.activity_splash_screen);
-        checkForAppUpdate();
         try {
             versionName = findViewById(R.id.versionCode);
             versionName.setText(getResources().getString(R.string.textVersion) + ":" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+        try {
+            checkForAppUpdate();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -88,7 +95,6 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, final int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
         if (requestCode == REQ_CODE_VERSION_UPDATE) {
             if (resultCode != RESULT_OK) {
                 log("Update flow failed! Result code: " + resultCode);
@@ -129,6 +135,8 @@ public class SplashScreen extends AppCompatActivity {
                 connectToFirebaseToCheckMaintenaceStatus();
             }
         });
+        appUpdateInfoTask.addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+        connectToFirebaseToCheckMaintenaceStatus();
     }
 
     private void startAppUpdateImmediate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {

@@ -8,7 +8,7 @@ import com.global.travel.telecom.app.model.UpdateFundReq;
 
 
 public interface AuthenticationPresenterInterface {
-    void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey);
+    void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey,int isEmailVerify);
 
     void activateSim(NewActivationRequest newActivationRequest);
 

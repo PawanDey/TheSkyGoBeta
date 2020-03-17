@@ -131,7 +131,6 @@
                 android:layout_height="135dp"
                 android:layout_marginTop="17dp"
                 android:background="@drawable/dashboardgredient2"
-                android:clickable="false"
                 android:onClick="btnActivateSIMClick"
                 android:orientation="horizontal">
 
@@ -272,7 +271,7 @@
                         android:fontFamily="@font/segoe_font_family"
                         android:text=" "
                         android:textColor="#A6FFFFFF"
-                        android:textSize="12dp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/imageView6"
