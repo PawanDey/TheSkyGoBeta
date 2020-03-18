@@ -2,6 +2,7 @@ package com.global.travel.telecom.app.service;
 
 
 import com.global.travel.telecom.app.model.AddFundsApp;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
@@ -16,9 +17,9 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-//    @GET("ValidateSubscriber")
+    //    @GET("ValidateSubscriber")
     @GET("TestValidateSubscriber")
-    Call<ResponseBody> signUp(@Query("Name") String Name, @Query("Email") String Email, @Query("Mobile") String Mobile,@Query("HomeCountry")String HomeCountry,@Query("RegTypeID") String RegTypeID, @Query("Username") String Username,@Query("GCMKey") String GCMKey,@Query("isEmailVerify") int isEmailVerify);
+    Call<ResponseBody> signUp(@Query("Name") String Name, @Query("Email") String Email, @Query("Mobile") String Mobile, @Query("HomeCountry") String HomeCountry, @Query("RegTypeID") String RegTypeID, @Query("Username") String Username, @Query("GCMKey") String GCMKey, @Query("isEmailVerify") int isEmailVerify);
 
     @GET("ValidateSIM")
     Call<ResponseBody> validateSim(@Query("SerialNumber") String SerialNumber, @Query("Token") String Token);
@@ -65,5 +66,8 @@ public interface ApiService {
 
     @GET("XmlData")
     Call<ResponseBody> VoipApisCall(@Query("requestXml") String xmlQueryString);
+
+    @POST("AddVoIPAPICallLog")
+    Call<ResponseBody> AddVoIPAPICallLog(@Body AddVoIPAPICallLogModel1 addVoIPAPICallLogModel1);
 
 }

@@ -381,9 +381,9 @@ public class Dashboard extends BaseActivity {
     }
 
     public void skyGoDailer(View view) {
-//        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
-//        intent.putExtra("Token", token);
-//        startActivity(intent);
-        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
+        intent.putExtra("Token", token);
+        startActivity(intent);
+//        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
     }
 }

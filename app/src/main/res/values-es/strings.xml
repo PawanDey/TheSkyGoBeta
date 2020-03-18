@@ -159,5 +159,7 @@
     <string name="textFillAlldetails">Rellene todos los detalles</string>
     <string name="textPasswordTooShort">Contraseña demasiado corta</string>
     <string name="textPasswordNotmatch">La contraseña no coincide</string>
-    <string name="textPhoneNumberOptional">Phone number (optional)</string>
+    <string name="textPhoneNumberOptional">Numero de teléfono (opcional )</string>
+    <string name="textHomeCountry">País de origen</string>
+
 </resources>

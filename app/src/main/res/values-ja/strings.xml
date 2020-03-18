@@ -159,5 +159,7 @@
     <string name="textFillAlldetails">すべての詳細を記入</string>
     <string name="textPasswordTooShort">パスワードが短すぎます</string>
     <string name="textPasswordNotmatch">パスワードが一致しません</string>
-    <string name="textPhoneNumberOptional">Phone number (optional)</string>
+    <string name="textPhoneNumberOptional">電話番号（オプション）</string>
+    <string name="textHomeCountry">本国</string>
+
 </resources>

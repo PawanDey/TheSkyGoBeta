@@ -38,12 +38,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -135,8 +132,11 @@ public class SplashScreen extends AppCompatActivity {
                 connectToFirebaseToCheckMaintenaceStatus();
             }
         });
-        appUpdateInfoTask.addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
-        connectToFirebaseToCheckMaintenaceStatus();
+        appUpdateInfoTask.addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            connectToFirebaseToCheckMaintenaceStatus();
+        });
+
     }
 
     private void startAppUpdateImmediate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {
@@ -162,7 +162,7 @@ public class SplashScreen extends AppCompatActivity {
      */
     private void popupSnackbarForCompleteUpdateAndUnregister() {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "An update has just been downloaded.", Snackbar.LENGTH_LONG);
-        snackbar.setAction("Res", v -> appUpdateManager.completeUpdate());
+        snackbar.setAction("Restart", v -> appUpdateManager.completeUpdate());
         snackbar.show();
     }
 

@@ -36,6 +36,8 @@ import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.AddCustomerCreditModel;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.UpdateFundReq;
@@ -136,7 +138,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         try {
             TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
             String id = (new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now));
-            paypalTxnNumber =  userDetails.getUserId() + "A" + id;
+            paypalTxnNumber = userDetails.getUserId() + "A" + id;
         } catch (Exception e) {
             e.printStackTrace();
             showToast("Error in get Unique txn ID :" + e.getMessage());
@@ -226,7 +228,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 break;
             }
             case "AddCustomerCredit":
-            case "ApplyPromotion": {
+            case "ApplyPromotion":
+            case "AddVoIPAPICallLog": {
                 showToast(errorMessage);
                 break;
             }
@@ -253,6 +256,17 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 break;
             }
 
+            case "AddVoIPAPICallLog": {
+                AddVoIPAPICallLogModel addVoIPAPICallLog = (AddVoIPAPICallLogModel) response;
+                AddVoIPAPICallLogModel1 apiCallData = new AddVoIPAPICallLogModel1();
+                apiCallData.setAPIName(addVoIPAPICallLog.getAPIName());
+                apiCallData.setAPIRequest(addVoIPAPICallLog.getAPIrequest());
+                apiCallData.setAPIResponse(addVoIPAPICallLog.getAPIresponse());
+                apiCallData.setPlatform("Android");
+                apiCallData.setUserID(userDetails.getUserId());
+                authenticationPresenter.AddVoIPAPICallLog(apiCallData);
+                break;
+            }
             case "ApplyPromotion": {
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
                 intent.putExtra("screenType", "3");

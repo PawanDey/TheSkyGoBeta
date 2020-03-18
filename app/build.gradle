@@ -19,9 +19,9 @@ android {
         applicationId "com.global.travel.telecom.app"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 29
+        versionCode 30
         multiDexEnabled true
-        versionName "1.29"
+        versionName "1.30"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

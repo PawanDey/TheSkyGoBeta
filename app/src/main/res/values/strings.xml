@@ -160,5 +160,6 @@
     <string name="textPasswordTooShort">Password too short</string>
     <string name="textPasswordNotmatch">Password Not match</string>
     <string name="textPhoneNumberOptional">Phone number (optional)</string>
+    <string name="textHomeCountry">Home Country</string>
 
 </resources>

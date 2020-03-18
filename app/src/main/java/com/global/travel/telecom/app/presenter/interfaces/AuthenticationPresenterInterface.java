@@ -1,6 +1,7 @@
 package com.global.travel.telecom.app.presenter.interfaces;
 
 import com.global.travel.telecom.app.model.AddFundsApp;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
@@ -37,4 +38,6 @@ public interface AuthenticationPresenterInterface {
     void GetVoipPlan();
 
     void GetVoIPRate();
+
+    void AddVoIPAPICallLog(AddVoIPAPICallLogModel1 addVoIPAPICallLogModel1);
 }

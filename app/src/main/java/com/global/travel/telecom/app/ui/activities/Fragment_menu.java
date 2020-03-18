@@ -191,6 +191,7 @@ public class Fragment_menu extends Fragment {
                 Date date = new Date();
                 datePicker.setMinDate(date.getTime());
                 OK.setOnClickListener(v -> {
+                    progressDialog.dismiss();
                     int day = datePicker.getDayOfMonth();
                     int month = datePicker.getMonth() + 1;
                     int year = datePicker.getYear();

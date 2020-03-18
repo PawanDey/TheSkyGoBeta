@@ -68,7 +68,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home Country:"
+                    android:text="@string/textHomeCountry"
                     android:textSize="18dp" />
 
                 <com.hbb20.CountryCodePicker

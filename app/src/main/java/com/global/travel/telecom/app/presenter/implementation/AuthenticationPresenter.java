@@ -10,6 +10,8 @@ import com.global.travel.telecom.app.model.ActivateSimResponse;
 import com.global.travel.telecom.app.model.AddCustomerCreditModel;
 import com.global.travel.telecom.app.model.AddFundsApp;
 import com.global.travel.telecom.app.model.AddFundsResponse;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel;
+import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.CurrentBalance;
 import com.global.travel.telecom.app.model.GetNotifications;
@@ -659,7 +661,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                    ResponseBody responseBody = response.body();
                     String mMessage = null;
                     try {
                         mMessage = Objects.requireNonNull(response.body()).string();
@@ -674,6 +675,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onSuccess("CurrentBalance", result);
                             break;
                         }
+
                         case "createCustomerAndSubscriber": {
                             if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
                                 VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), VoipCreateCustomerAndSubscriberError.class);
@@ -684,6 +686,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             }
                             break;
                         }
+
                         case "setSubscriberPassword": {
                             if (mMessage.contains("set-subscriber-password-response")) {   //code for success reponse from VoiP api
                                 baseView.onSuccess("setSubscriberPasswordGood", "");
@@ -693,9 +696,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             }
                             break;
                         }
+
                         case "ApplyPromotion": {
+                            AddVoIPAPICallLogModel result = new AddVoIPAPICallLogModel();
+                            result.setAPIrequest(xmlData);
+                            result.setAPIresponse(mMessage);
+                            result.setAPIName(ApiName);
+                            baseView.onSuccess("AddVoIPAPICallLog", result);
                             if (mMessage.contains("apply-promotion-response")) {   //code for success reponse from VoiP api
-                                baseView.onSuccess("ApplyPromotion", mMessage);
+                                baseView.onSuccess("ApplyPromotion", result);
                             }
                             if (mMessage.contains("apply-promotion-error")) {
                                 baseView.onServerError("ApplyPromotion", "ApplyPromotion API Error");
@@ -716,10 +725,16 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                             break;
                         }
+
                         case "AddCustomerCredit": {
+                            AddVoIPAPICallLogModel result = new AddVoIPAPICallLogModel();
+                            result.setAPIrequest(xmlData);
+                            result.setAPIresponse(mMessage);
+                            result.setAPIName(ApiName);
+                            baseView.onSuccess("AddVoIPAPICallLog", result);
                             if (mMessage.contains("apply-customer-credit-response")) {
-                                AddCustomerCreditModel result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), AddCustomerCreditModel.class);
-                                baseView.onSuccess("AddCustomerCredit", result);
+                                AddCustomerCreditModel result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), AddCustomerCreditModel.class);
+                                baseView.onSuccess("AddCustomerCredit", result1);
                             }
                             if (mMessage.contains("apply-customer-credit-error")) {
                                 baseView.onServerError("AddCustomerCredit", "AddCustomerCredit API Error");
@@ -731,12 +746,35 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                     baseView.showToast("VoipAPICall onFailure :" + t.getMessage());
                 }
             });
         } catch (Exception e) {
             baseView.showToast("VoipAPICall Auth Presenter :" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void AddVoIPAPICallLog(AddVoIPAPICallLogModel1 addVoIPAPICallLogModel1) {
+        try {
+            Call<ResponseBody> call = APIClient.getApiService().AddVoIPAPICallLog(addVoIPAPICallLogModel1);
+            try {
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        baseView.onFailure();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

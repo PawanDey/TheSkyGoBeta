@@ -19,14 +19,20 @@ public class PaymentSucessfull extends AppCompatActivity {
         bundle = getIntent().getExtras();
         String screenType = bundle.getString("screenType");
         TextView msg = findViewById(R.id.msgShowInPaymentSuccessfullScreen);
-        if (screenType.equals("1")) {
+        assert screenType != null;
+        switch (screenType) {
+            case "1":
 
-        } else if (screenType.equals("2")) {
+                break;
+            case "2":
 
-        } else if (screenType.equals("3")) {
+                break;
+            case "3":
 
-        } else if (screenType.equals("4")) {
-            msg.setText(bundle.getString("msg"));
+                break;
+            case "4":
+                msg.setText(bundle.getString("msg"));
+                break;
         }
     }
 

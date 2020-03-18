@@ -159,5 +159,7 @@
     <string name="textFillAlldetails">모든 세부 사항 채우기</string>
     <string name="textPasswordTooShort">비밀번호가 너무 짧습니다</string>
     <string name="textPasswordNotmatch">비밀번호가 일치하지 않습니다</string>
-    <string name="textPhoneNumberOptional">Phone number (optional)</string>
+    <string name="textPhoneNumberOptional">전화 번호 (선택 사항 )</string>
+    <string name="textHomeCountry">본국</string>
+
 </resources>

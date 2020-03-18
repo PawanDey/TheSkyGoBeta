@@ -42,6 +42,7 @@
                 android:background="@drawable/gredientbacktohome"
                 android:text="@string/textBACKTOHOME"
                 android:gravity="center"
+                android:onClick="backToHome"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="70dp"
@@ -51,11 +52,10 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/backToHome"
+                android:id="@+id/wewwe"
                 android:layout_width="match_parent"
                 android:layout_height="515dp"
                 android:background="@drawable/mapthanku"
-                android:onClick="backToHome"
                 android:scaleType="center" />
 
             <ImageView
