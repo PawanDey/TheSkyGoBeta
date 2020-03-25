@@ -656,6 +656,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void VoIPAPICall(String xmlData, String ApiName) {
         try {
+            baseView.showProgressBar();
             requestApiName = ApiName;
             Call<ResponseBody> call = APIClient.getApiService().VoipApisCall(xmlData);
             call.enqueue(new Callback<ResponseBody>() {
@@ -702,11 +703,14 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             result.setAPIrequest(xmlData);
                             result.setAPIresponse(mMessage);
                             result.setAPIName(ApiName);
-                            baseView.onSuccess("AddVoIPAPICallLog", result);
-                            if (mMessage.contains("apply-promotion-response")) {   //code for success reponse from VoiP api
+                            result.setPlanType("10041");
+                            if (mMessage.contains("apply-promotion-response")) {
+                                result.setParchaseStatus("10038");
+                                baseView.onSuccess("AddVoIPAPICallLog", result);
                                 baseView.onSuccess("ApplyPromotion", result);
-                            }
-                            if (mMessage.contains("apply-promotion-error")) {
+                            } else {
+                                result.setParchaseStatus("10039");
+                                baseView.onSuccess("AddVoIPAPICallLog", result);
                                 baseView.onServerError("ApplyPromotion", "ApplyPromotion API Error");
                             }
                             break;
@@ -731,27 +735,33 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             result.setAPIrequest(xmlData);
                             result.setAPIresponse(mMessage);
                             result.setAPIName(ApiName);
-                            baseView.onSuccess("AddVoIPAPICallLog", result);
+                            result.setPlanType("10040");
                             if (mMessage.contains("apply-customer-credit-response")) {
+                                result.setParchaseStatus("10038");
+                                baseView.onSuccess("AddVoIPAPICallLog", result);
                                 AddCustomerCreditModel result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), AddCustomerCreditModel.class);
                                 baseView.onSuccess("AddCustomerCredit", result1);
-                            }
-                            if (mMessage.contains("apply-customer-credit-error")) {
+                            } else {
+                                result.setParchaseStatus("10039");
+                                baseView.onSuccess("AddVoIPAPICallLog", result);
                                 baseView.onServerError("AddCustomerCredit", "AddCustomerCredit API Error");
                             }
                             break;
                         }
                     }
+                    baseView.hideProgressBar();
 
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                    baseView.hideProgressBar();
                     baseView.showToast("VoipAPICall onFailure :" + t.getMessage());
                 }
             });
         } catch (Exception e) {
             baseView.showToast("VoipAPICall Auth Presenter :" + e.getMessage());
+            baseView.hideProgressBar();
             e.printStackTrace();
         }
     }

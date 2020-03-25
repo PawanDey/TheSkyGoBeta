@@ -161,5 +161,9 @@
     <string name="textPasswordNotmatch">Password Not match</string>
     <string name="textPhoneNumberOptional">Phone number (optional)</string>
     <string name="textHomeCountry">Home Country</string>
+    <string name="textPleaseCheckYourEmailForOrderConfirmation">Please check your email for order confirmation</string>
+    <string name="textOrderNumber">Order Number:</string>
+    <string name="textReviewYourOrder">Review your order</string>
+
 
 </resources>

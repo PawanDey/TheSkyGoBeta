@@ -112,7 +112,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     String paypalTxnNumber = "";
     String IPaddress;
     Context context = this;
-    //    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
+//    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
     String stripePublishableKey = "pk_live_fWzHCP8XcqaNvCiN2bJAyC0S00kWwPRyOP";
 
     Boolean updateFundCheck = true;
@@ -137,7 +137,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         Date now = new Date();
         try {
             TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
-            String id = (new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now));
+            @SuppressLint("SimpleDateFormat") String id = (new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now));
             paypalTxnNumber = userDetails.getUserId() + "A" + id;
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,6 +243,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 userDetails.setRechargeStatus(0);
                 Intent i = new Intent(mPayment.this, PaymentSucessfull.class);
                 i.putExtra("screenType", "1");
+                i.putExtra("msg", getResources().getString(R.string.textPleaseCheckYourEmailForOrderConfirmation));
+                i.putExtra("orderNumber", sessionTxnID);
+                i.putExtra("payment", Deduction);
                 startActivity(i);
                 finish();
                 break;
@@ -251,6 +254,9 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
             case "ExtensionRequest": {
                 Intent paymentsuccess = new Intent(mPayment.this, PaymentSucessfull.class);
                 paymentsuccess.putExtra("screenType", "2");
+                paymentsuccess.putExtra("msg", getResources().getString(R.string.textPleaseCheckYourEmailForOrderConfirmation));
+                paymentsuccess.putExtra("orderNumber", sessionTxnID);
+                paymentsuccess.putExtra("payment", Deduction);
                 startActivity(paymentsuccess);
                 finish();
                 break;
@@ -258,18 +264,28 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
             case "AddVoIPAPICallLog": {
                 AddVoIPAPICallLogModel addVoIPAPICallLog = (AddVoIPAPICallLogModel) response;
+
                 AddVoIPAPICallLogModel1 apiCallData = new AddVoIPAPICallLogModel1();
+
                 apiCallData.setAPIName(addVoIPAPICallLog.getAPIName());
                 apiCallData.setAPIRequest(addVoIPAPICallLog.getAPIrequest());
                 apiCallData.setAPIResponse(addVoIPAPICallLog.getAPIresponse());
                 apiCallData.setPlatform("Android");
                 apiCallData.setUserID(userDetails.getUserId());
+                apiCallData.setPlanID(extras.getString("VoipID"));
+                apiCallData.setParchaseStatus(addVoIPAPICallLog.getParchaseStatus());
+                apiCallData.setPlanType(addVoIPAPICallLog.getPlanType());
+                apiCallData.setTxnRefNo(sessionTxnID);
+
                 authenticationPresenter.AddVoIPAPICallLog(apiCallData);
                 break;
             }
             case "ApplyPromotion": {
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
                 intent.putExtra("screenType", "3");
+                intent.putExtra("msg", getResources().getString(R.string.textPleaseCheckYourEmailForOrderConfirmation));
+                intent.putExtra("orderNumber", sessionTxnID);
+                intent.putExtra("payment", Deduction);
                 startActivity(intent);
                 finish();
                 break;
@@ -281,6 +297,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
                 intent.putExtra("msg", getResources().getString(R.string.textYourTopUpofDollarX) + " $" + Objects.requireNonNull(extras.getString("AmountCharged")).trim() + " " + getResources().getString(R.string.textIsSuccessfulAndYourCurrentBalanceisDoolarX) + " $" + Balance.substring(0, Balance.length() - 2));
                 intent.putExtra("screenType", "4");
+                intent.putExtra("orderNumber", sessionTxnID);
+                intent.putExtra("payment", Deduction);
                 startActivity(intent);
                 finish();
                 break;
@@ -298,7 +316,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                         extensionRequest();
                         break;
                     case "3":
-                        VoipPlanRecharge();
+                        VoipPaymentRequest();
                         break;
                 }
                 break;
@@ -317,6 +335,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
     public void PayPalPaymentOnclick(View view) {
         try {
+            TextView ProcessedButton = findViewById(R.id.ProcessedButton);
             assert extras != null;
             Deduction = Double.parseDouble(Objects.requireNonNull(extras.getString("AmountCharged")));
             sessionTxnID = "SKYGO" + paypalTxnNumber;
@@ -331,9 +350,10 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                         extensionRequest();
                         break;
                     case "3":
-                        VoipPlanRecharge();
+                        VoipPaymentRequest();
                         break;
                 }
+                ProcessedButton.setClickable(false);
             } else {
                 addFundsApp.setAmountCharged(String.valueOf(Deduction));
                 addFundsApp.setDealerID("0");
@@ -616,7 +636,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
         newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
         newActivationRequest.setToken(userDetails.getTokenID());
-        newActivationRequest.setRefNo("SKYGO" + paypalTxnNumber);
+        newActivationRequest.setRefNo(sessionTxnID);
         newActivationRequest.setRequestedDevice(getDeviceName());
         newActivationRequest.setRequestedIP(IPaddress);
         newActivationRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
@@ -631,7 +651,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newExtensionRequest.setAmountCharged(extras.getString("AmountCharged"));
         newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
         newExtensionRequest.setToken(userDetails.getTokenID());
-        newExtensionRequest.setRefNo("SKYGO" + paypalTxnNumber);
+        newExtensionRequest.setRefNo(sessionTxnID);
         newExtensionRequest.setRequestedDevice(getDeviceName());
         newExtensionRequest.setRequestedIP(IPaddress);
         newExtensionRequest.setRequestedOS("Android|" + userDetails.getLanguageSelect());
@@ -639,7 +659,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
 
     }
 
-    private void VoipPlanRecharge() {
+    private void VoipPaymentRequest() {
 
         switch (Objects.requireNonNull(extras.getString("type"))) {
             case "AddPlan": {
@@ -672,13 +692,11 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         }
     }
 
-
     //stripe method
     private void StripeOnPageLoad() {
         CardMultilineWidget cardInputWidget = findViewById(R.id.cardInputWidget);
         cardInputWidget.setShouldShowPostalCode(false);
         cardInputWidget.clear();
-
         onRetrievedKey(stripePublishableKey);
     }
 
@@ -686,7 +704,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         showProgressBar();
         CardMultilineWidget cardInputWidget = findViewById(R.id.cardInputWidget);
         PaymentMethodCreateParams params = cardInputWidget.getPaymentMethodCreateParams();
-
         if (params == null) {
             hideProgressBar();
             return;

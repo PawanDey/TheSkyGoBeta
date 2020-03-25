@@ -146,7 +146,7 @@ public class VoipOnCall extends AppCompatActivity {
                 if (checkLoadspeaker) {
                     loadspeakerImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.loadspeaker_blue));
                     loadspeakerTextColorChange.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    loadspeakerTextColorChange.setTypeface(Typeface.DEFAULT_BOLD);
+                    loadspeakerTextColorChange.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     loadspeakerTextColorChange.setTextSize(12);
                     checkLoadspeaker = false;
                 } else {
@@ -186,7 +186,7 @@ public class VoipOnCall extends AppCompatActivity {
                         mysipclient.Mute(-2, true, 0);
                         muteImageColorChange.setImageDrawable(getResources().getDrawable(R.drawable.mute_blue));
                         muteTextColorChange.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        muteTextColorChange.setTypeface(Typeface.DEFAULT_BOLD);
+                        muteTextColorChange.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                         muteTextColorChange.setTextSize(12);
                         checkMute = false;
                     } else {

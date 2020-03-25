@@ -38,6 +38,7 @@ public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
         String PlanMin = getItem(position).getPlanMin();
         String Validity = getItem(position).getValidity();
         String MonikerValue = getItem(position).getMonikerValue();
+        String VoipID = getItem(position).getVoipID();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResouce, parent, false);
@@ -50,7 +51,7 @@ public class VoipPlanArrayAdapter extends ArrayAdapter<GetVoipPlanModel> {
 
         text_PlanName.setText(PlanName);
         text_PlanDetails.setText(PlanDetails);
-        menu_validityWithMin.setText(mContext.getResources().getString(R.string.textValidity )+ " " + Validity +" "+ mContext.getResources().getString(R.string.textValiditydays) + PlanMin + mContext.getResources().getString(R.string.textMinute));
+        menu_validityWithMin.setText(mContext.getResources().getString(R.string.textValidity) + " " + Validity + " " + mContext.getResources().getString(R.string.textValiditydays) + PlanMin + mContext.getResources().getString(R.string.textMinute));
         text_plan_price.setText("$" + String.format("%.2f", new BigDecimal((Double.parseDouble(AmountCharge)))));
         return convertView;
     }

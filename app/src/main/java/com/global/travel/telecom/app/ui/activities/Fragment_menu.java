@@ -201,6 +201,7 @@ public class Fragment_menu extends Fragment {
                     String getMonikerValue = arrayList.getMonikerValue();
                     String getValidity = arrayList.getValidity();
                     String getPlanMin = arrayList.getPlanMin();
+                    String VoipID = arrayList.getVoipID();
 //                    String getPlanDetails = arrayList.getPlanDetails();
                     String getAmountCharge = arrayList.getAmountCharge();
 
@@ -217,6 +218,8 @@ public class Fragment_menu extends Fragment {
                     PaymentSummary.putExtra("AppPaymentType", "3");
                     PaymentSummary.putExtra("MonikerValue", getMonikerValue);
                     PaymentSummary.putExtra("PlanMin", getPlanMin);
+                    PaymentSummary.putExtra("VoipID", VoipID);
+
                     //compare bal and plan
                     PaymentSummary.putExtra("type", "AddPlan");
                     startActivity(PaymentSummary);

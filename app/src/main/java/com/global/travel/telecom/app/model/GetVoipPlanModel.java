@@ -3,7 +3,15 @@ package com.global.travel.telecom.app.model;
 
 public class GetVoipPlanModel {
 
-    private String planName, planDetails, AmountCharge, Validity, planMin, monikerValue;
+    private String planName, planDetails, AmountCharge, Validity, planMin, monikerValue, VoipID;
+
+    public String getVoipID() {
+        return VoipID;
+    }
+
+    public void setVoipID(String voipID) {
+        VoipID = voipID;
+    }
 
     public String getPlanName() {
         return planName;
@@ -54,13 +62,14 @@ public class GetVoipPlanModel {
     }
 
 
-    public GetVoipPlanModel(String planName, String planDetails, String AmountCharge, String planMin, String validity, String monikerValue) {
+    public GetVoipPlanModel(String planName, String planDetails, String AmountCharge, String planMin, String validity, String monikerValue, String VoipID) {
         this.planName = planName;
         this.planDetails = planDetails;
         this.AmountCharge = AmountCharge;
         this.planMin = planMin;
         this.Validity = validity;
         this.monikerValue = monikerValue;
+        this.VoipID = VoipID;
 
     }
 }

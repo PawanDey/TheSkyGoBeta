@@ -161,5 +161,8 @@
     <string name="textPasswordNotmatch">La contraseña no coincide</string>
     <string name="textPhoneNumberOptional">Numero de teléfono (opcional )</string>
     <string name="textHomeCountry">País de origen</string>
+    <string name="textPleaseCheckYourEmailForOrderConfirmation">Por favor revise su correo electrónico para la confirmación del pedido</string>
+    <string name="textOrderNumber">Número de orden:</string>
+    <string name="textReviewYourOrder">Revise su orden</string>
 
 </resources>

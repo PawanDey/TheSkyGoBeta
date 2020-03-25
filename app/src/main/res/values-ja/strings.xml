@@ -161,5 +161,8 @@
     <string name="textPasswordNotmatch">パスワードが一致しません</string>
     <string name="textPhoneNumberOptional">電話番号（オプション）</string>
     <string name="textHomeCountry">本国</string>
+    <string name="textPleaseCheckYourEmailForOrderConfirmation">注文確認についてはメールをご確認ください</string>
+    <string name="textOrderNumber">注文番号：</string>
+    <string name="textReviewYourOrder">注文を確認する</string>
 
 </resources>

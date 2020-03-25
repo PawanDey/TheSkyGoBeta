@@ -295,7 +295,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 Thread.sleep(200);
             }
             for (int i = 0; i < result.size(); i++) {
-                GetVoipPlanModel info = new GetVoipPlanModel(result.get(i).getVoipPlan(), result.get(i).getDescription(), String.valueOf(result.get(i).getChargedAmount()), String.valueOf(result.get(i).getMinutes()), String.valueOf(result.get(i).getValidity()), result.get(i).getMoniker());
+                GetVoipPlanModel info = new GetVoipPlanModel(result.get(i).getVoipPlan(), result.get(i).getDescription(), String.valueOf(result.get(i).getChargedAmount()), String.valueOf(result.get(i).getMinutes()), String.valueOf(result.get(i).getValidity()), result.get(i).getMoniker(), result.get(i).getVoipId());
                 list.add(info);
             }
         } catch (Exception e) {

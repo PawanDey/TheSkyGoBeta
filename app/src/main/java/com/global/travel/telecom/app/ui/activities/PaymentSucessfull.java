@@ -1,6 +1,8 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -12,28 +14,18 @@ import com.global.travel.telecom.app.R;
 public class PaymentSucessfull extends AppCompatActivity {
     Bundle bundle;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_sucessfull);
         bundle = getIntent().getExtras();
-        String screenType = bundle.getString("screenType");
-        TextView msg = findViewById(R.id.msgShowInPaymentSuccessfullScreen);
-        assert screenType != null;
-        switch (screenType) {
-            case "1":
-
-                break;
-            case "2":
-
-                break;
-            case "3":
-
-                break;
-            case "4":
-                msg.setText(bundle.getString("msg"));
-                break;
-        }
+        TextView msgShowInPaymentSuccessfullScreen = findViewById(R.id.msgShowInPaymentSuccessfullScreen);
+        TextView msgorderNumber = findViewById(R.id.msgorderNumber);
+        TextView msgpayment = findViewById(R.id.msgpayment);
+        msgShowInPaymentSuccessfullScreen.setText(bundle.getString("msg"));
+        msgorderNumber.setText(getResources().getString(R.string.textOrderNumber) + " " + bundle.getString("orderNumber"));
+        msgpayment.setText(getResources().getString(R.string.textPayment) + ": $" + bundle.getDouble("payment"));
     }
 
     public void backToHome(View view) {
@@ -41,5 +33,10 @@ public class PaymentSucessfull extends AppCompatActivity {
         DashboardIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(DashboardIntent);
         finish();
+    }
+
+    public void reviewYoutOrder(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://theskygo.com/"));
+        startActivity(browserIntent);
     }
 }

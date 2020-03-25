@@ -18,6 +18,16 @@ public class GetVoipPlans {
     private Long mValidity;
     @SerializedName("VoipPlan")
     private String mVoipPlan;
+    @SerializedName("VoipId")
+    private String VoipId;
+
+    public String getVoipId() {
+        return VoipId;
+    }
+
+    public void setVoipId(String voipId) {
+        VoipId = voipId;
+    }
 
     public Double getChargedAmount() {
         return mChargedAmount;

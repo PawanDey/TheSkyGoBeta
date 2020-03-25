@@ -161,4 +161,8 @@
     <string name="textPasswordNotmatch">密码不匹配</string>
     <string name="textPhoneNumberOptional">电话号码（可选）)</string>
     <string name="textHomeCountry">本国</string>
+    <string name="textPleaseCheckYourEmailForOrderConfirmation">请检查您的电子邮件以确认订单</string>
+    <string name="textOrderNumber">订单号：</string>
+    <string name="textReviewYourOrder">查看你的订单</string>
+
 </resources>

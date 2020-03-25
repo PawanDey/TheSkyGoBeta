@@ -16,7 +16,7 @@ public class APIClient {
 //    public static String BACKEND_URL = "https://www.sirrat.com/Stripe_test/";  //test url for stripe
 
 
-    private static Retrofit getClient() {
+    private static void getClient() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -27,7 +27,6 @@ public class APIClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-        return retrofit;
     }
 
     public static ApiService service;
