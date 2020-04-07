@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none"
+        >
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/profile"
+            android:title="@string/textProfile" />
+        <item
+            android:id="@+id/nav_Language_Change"
+            android:icon="@drawable/language_change"
+            android:title="@string/textLanguage" />
+        <item
+            android:id="@+id/nav_transaction"
+            android:icon="@drawable/transaction"
+            android:title="@string/textTransaction" />
+        <item
+            android:id="@+id/nav_InviteFriend"
+            android:icon="@drawable/invite_friend"
+            android:title="@string/textInviteFriend" />
+        <item
+            android:id="@+id/nav_Rate_Us"
+            android:icon="@drawable/rate_us"
+            android:title="@string/textRateUs" />
+        <item
+            android:id="@+id/nav_Feedback"
+            android:icon="@drawable/feedback"
+            android:title="@string/textFeedback" />
+        <item
+            android:id="@+id/nav_Customer_Service"
+            android:icon="@drawable/customer_services"
+            android:title="@string/textCustomerService" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="@string/textLogout" />
+    </group>
+</menu>

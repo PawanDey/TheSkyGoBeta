@@ -673,10 +673,7 @@ public class LoginActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 break;
-            default:
-                showToast("no language select");
 
-                break;
         }
     }
 

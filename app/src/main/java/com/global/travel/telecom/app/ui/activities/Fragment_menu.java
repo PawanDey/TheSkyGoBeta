@@ -153,7 +153,7 @@ public class Fragment_menu extends Fragment {
                         if (mCountry_wise_rateList.size() == 0) {
                             checkCountryWisePrice.setVisibility(View.GONE);
                         } else {
-                            Country_wise_price_adapter mCountry_wise_price_adapter = new Country_wise_price_adapter(getContext(), mCountry_wise_rateList);
+                            Country_wise_price_adapter mCountry_wise_price_adapter = new Country_wise_price_adapter(getApplicationContext(), mCountry_wise_rateList);
                             snipper_country.setAdapter(mCountry_wise_price_adapter);
                             snipper_country.setVisibility(View.VISIBLE);
                             checkCountryWisePrice.setVisibility(View.VISIBLE);

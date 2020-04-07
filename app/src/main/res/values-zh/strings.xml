@@ -164,5 +164,13 @@
     <string name="textPleaseCheckYourEmailForOrderConfirmation">请检查您的电子邮件以确认订单</string>
     <string name="textOrderNumber">订单号：</string>
     <string name="textReviewYourOrder">查看你的订单</string>
+    <string name="textProfile">轮廓</string>
+    <string name="textStatement">声明</string>
+    <string name="textInviteFriend">邀请朋友</string>
+    <string name="textRateUs">评价我们</string>
+    <string name="textFeedback">反馈</string>
+    <string name="textCustomerService">客户服务</string>
+    <string name="textLogout">登出</string>
+    <string name="textTransaction">交易</string>
 
 </resources>

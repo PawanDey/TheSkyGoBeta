@@ -2,6 +2,7 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,13 +16,20 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
@@ -31,13 +39,15 @@ import com.global.travel.telecom.app.model.GetSubscriberResponse;
 import com.global.travel.telecom.app.model.SetDataInDashboard;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
-public class Dashboard extends BaseActivity {
+public class Dashboard extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private double logitude;
     private double latitude;
     String token, adress5;
@@ -48,6 +58,9 @@ public class Dashboard extends BaseActivity {
     public ImageView setImageOnHotspot, skygoDialerLogo;
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
+    NavigationView navigationView;
+    DrawerLayout drawer;
+    private androidx.appcompat.app.AlertDialog progressDialog;
 
     @Override
     protected int getLayout() {
@@ -57,7 +70,6 @@ public class Dashboard extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
         userDetails = new UserDetails(this);
         Locale locale = new Locale(userDetails.getLanguageSelect());
         Locale.setDefault(locale);
@@ -82,6 +94,11 @@ public class Dashboard extends BaseActivity {
         TextView MSISDN = findViewById(R.id.txtMSISDN);
         TextView validityLeft = findViewById(R.id.txtValidityLeft);
         validity = findViewById(R.id.validityDateOnDeshboard);
+        navigationView = findViewById(R.id.nav_view);
+        drawer = findViewById(R.id.drawer);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
         try {
             currentLocation = findViewById(R.id.hereIsLocation);
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -111,13 +128,15 @@ public class Dashboard extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
     public void onFailure() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = Objects.requireNonNull(cm).getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected) {
@@ -129,7 +148,7 @@ public class Dashboard extends BaseActivity {
 
     @Override
     public void onServerError(String method2, String errorMessage) {
-        if ("GetSubscriber".equals(method2)) {
+        if ("GetSubscriber" .equals(method2)) {
             if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
                 Toast.makeText(Dashboard.this, getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Dashboard.this, LoginActivity.class);
@@ -210,7 +229,7 @@ public class Dashboard extends BaseActivity {
                 ActivationLayout.setVisibility(View.GONE);
                 RecentExtensionLayout.setVisibility(View.VISIBLE);
                 MSISDN.setText(obj.getMSISDN());
-                String gud[] = obj.getGoodUntil().trim().split("T");
+                String[] gud = obj.getGoodUntil().trim().split("T");
                 validityLeft.setText("Expiry Date: " + gud[0]);
                 break;
             }
@@ -229,13 +248,17 @@ public class Dashboard extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, getResources().getString(R.string.textClickBACKagaintoExit), Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, getResources().getString(R.string.textClickBACKagaintoExit), Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     private void log_func() {
@@ -299,9 +322,6 @@ public class Dashboard extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                break;
-            default:
-                showToast(" no logo select ");
                 break;
         }
     }
@@ -386,4 +406,123 @@ public class Dashboard extends BaseActivity {
         startActivity(intent);
 //        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.nav_profile: {
+                Intent intent = new Intent(this, UserProfile.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.nav_Language_Change: {
+                @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_language_change, null);
+                androidx.appcompat.app.AlertDialog.Builder mBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).setView(view);
+                progressDialog = mBuilder.create();
+                Objects.requireNonNull(progressDialog.getWindow()).setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                progressDialog.show();
+
+                //ID
+                TextView cancle = view.findViewById(R.id.langauge_change_Cancle);
+                TextView OK = view.findViewById(R.id.langauge_change_OK);
+
+                RadioButton SelectEnglish = view.findViewById(R.id.SelectEnglish);
+                RadioButton SelectChinese = view.findViewById(R.id.SelectChinese);
+                RadioButton SelectJapanese = view.findViewById(R.id.SelectJapanese);
+                RadioButton SelectKorean = view.findViewById(R.id.SelectKorean);
+                RadioButton SelectSPANISH = view.findViewById(R.id.SelectSPANISH);
+
+                OK.setOnClickListener(v1 -> {
+
+                    if (SelectEnglish.isChecked()) {
+                        setLanguage("en");
+                    } else if (SelectChinese.isChecked()) {
+                        setLanguage("zh");
+                    } else if (SelectJapanese.isChecked()) {
+                        setLanguage("ja");
+                    } else if (SelectKorean.isChecked()) {
+                        setLanguage("ko");
+                    } else if (SelectSPANISH.isChecked()) {
+                        setLanguage("es");
+                    }else{
+                        showToast(getResources().getString(R.string.textSelectYourAppLanguage));
+                    }
+                });
+                cancle.setOnClickListener(v12 -> progressDialog.dismiss());
+
+                break;
+            }
+            case R.id.nav_transaction: {
+                Intent intent = new Intent(this, TransactionDetails.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.nav_InviteFriend: {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Get it for free at https://play.google.com/store/apps/details?id=com.global.travel.telecom.app");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                break;
+            }
+            case R.id.nav_Rate_Us: {
+                Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                try {
+                    startActivity(myAppLinkToMarket);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case R.id.nav_Feedback: {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "sumit.s@virtuzo.in", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+                        "The SkyGo Feedback by User");
+                emailIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Hi SkyGo Team,");
+                startActivity(Intent.createChooser(emailIntent, "The SkyGo Feedback"));
+                break;
+            }
+            case R.id.nav_Customer_Service: {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:919805198061"));
+                startActivity(intent);
+                break;
+            }
+            case R.id.nav_logout: {
+                Intent intent = new Intent(this, LoginActivity.class);
+                userDetails.setMSISDN("");
+                userDetails.removeTokenID();
+                startActivity(intent);
+                finish();
+                break;
+            }
+        }
+        //close navigation drawer
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+    public void threeLines(View view) {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    private void setLanguage(String Locate) {
+        Locale locale = new Locale(Locate);
+        UserDetails userDetails = new UserDetails(this);
+        userDetails.setLanguageSelect(locale.toString());
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
+        progressDialog.dismiss();
+        Intent intent=new Intent(this,Dashboard.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

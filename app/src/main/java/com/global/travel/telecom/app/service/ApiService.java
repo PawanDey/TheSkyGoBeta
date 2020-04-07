@@ -6,6 +6,7 @@ import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
+import com.global.travel.telecom.app.model.PostUpdateUserProfileData;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 
 import okhttp3.ResponseBody;
@@ -70,4 +71,12 @@ public interface ApiService {
     @POST("AddVoIPAPICallLog")
     Call<ResponseBody> AddVoIPAPICallLog(@Body AddVoIPAPICallLogModel1 addVoIPAPICallLogModel1);
 
+    @GET("GetUserProfileData")
+    Call<ResponseBody> GetUserProfileData(@Query("TokenId") String token);
+
+    @POST("UpdateUserProfileData")
+    Call<ResponseBody> UpdateUserProfileData(@Body PostUpdateUserProfileData postUpdateUserProfileData);
+
+    @GET("GetAllTransaction")
+    Call<ResponseBody> GetAllTransaction(@Query("TokenId") String token);
 }

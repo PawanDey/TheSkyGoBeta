@@ -1,4 +1,3 @@
-
 <resources>
     <string name="textcontactCare">Please contact Customer Care <font fgcolor="#FC3E52"><b><u><a>support@theskygo.com</a></u></b></font></string>
     <string name="app_name">The SkyGo</string>
@@ -164,6 +163,14 @@
     <string name="textPleaseCheckYourEmailForOrderConfirmation">Please check your email for order confirmation</string>
     <string name="textOrderNumber">Order Number:</string>
     <string name="textReviewYourOrder">Review your order</string>
+    <string name="textProfile">Profile</string>
+    <string name="textStatement">Statement</string>
+    <string name="textInviteFriend">Invite Friend</string>
+    <string name="textRateUs">Rate Us</string>
+    <string name="textFeedback">Feedback</string>
+    <string name="textCustomerService">Customer Service</string>
+    <string name="textLogout">Logout</string>
+    <string name="textTransaction">Transaction</string>
 
 
 </resources>

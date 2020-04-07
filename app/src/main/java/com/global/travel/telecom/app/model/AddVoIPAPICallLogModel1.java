@@ -33,7 +33,6 @@ public class AddVoIPAPICallLogModel1 {
         TxnRefNo = txnRefNo;
     }
 
-
     public String getParchaseStatus() {
         return ParchaseStatus;
     }

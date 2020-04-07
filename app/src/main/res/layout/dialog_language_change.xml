@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/gredientwhite"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/sf_old_republic_font"
+        android:gravity="center"
+        android:padding="3dp"
+        android:text="@string/textSelectYourAppLanguage"
+        android:textSize="17dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/dialog_bg"
+        android:orientation="vertical">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/SelectEnglish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="English" />
+
+            <RadioButton
+                android:id="@+id/SelectChinese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="中文" />
+
+            <RadioButton
+                android:id="@+id/SelectJapanese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="日本語" />
+
+            <RadioButton
+                android:id="@+id/SelectKorean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="한국어" />
+
+            <RadioButton
+                android:id="@+id/SelectSPANISH"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sf_old_republic_font"
+                android:text="Espanol" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/langauge_change_Cancle"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:gravity="center"
+            android:shadowColor="@color/colorPrimary"
+            android:text="@string/textCancel"
+            android:textColor="#FC3E52"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/langauge_change_OK"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:gravity="center"
+            android:text="@string/textOK"
+            android:textColor="#FC3E52"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

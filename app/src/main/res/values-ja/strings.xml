@@ -164,5 +164,13 @@
     <string name="textPleaseCheckYourEmailForOrderConfirmation">注文確認についてはメールをご確認ください</string>
     <string name="textOrderNumber">注文番号：</string>
     <string name="textReviewYourOrder">注文を確認する</string>
+    <string name="textProfile">プロフィール</string>
+    <string name="textStatement">ステートメント</string>
+    <string name="textInviteFriend">友人を招待</string>
+    <string name="textRateUs">私たちを評価してください</string>
+    <string name="textFeedback">フィードバック</string>
+    <string name="textCustomerService">顧客サービス</string>
+    <string name="textLogout">ログアウト</string>
+    <string name="textTransaction">トランザクション</string>
 
 </resources>

@@ -81,7 +81,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
                 HashMap a = (HashMap) dataSnapshot.getValue();
                 assert a != null;
                 if (Boolean.parseBoolean(Objects.requireNonNull(a.get("is_under_maintenance")).toString())) {
-                    showUnderMaintenanceDialog(Objects.requireNonNull(a.get("under_maintenance_message")).toString());
+                    showToast(Objects.requireNonNull(a.get("under_maintenance_message")).toString());
+//                    showUnderMaintenanceDialog(Objects.requireNonNull(a.get("under_maintenance_message")).toString());
                 } else {
                     dismissUnderMaintenanceDialog();
                 }
@@ -111,4 +112,5 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
             progressDialog1.dismiss();
         }
     }
+
 }

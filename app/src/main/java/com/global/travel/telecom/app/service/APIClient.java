@@ -12,8 +12,8 @@ public class APIClient {
     private static String BASE_URL = "https://api.globaltraveltelecom.com/api/applicationuser/";
     //    private static String BASE_URL = "http://35.236.120.255/apitest.globaltraveltelecom.com/api/applicationuser/";
     private static String TranslateAPI_url = "http://sirrat.com/translator/";
-    public static String BACKEND_URL = "https://www.sirrat.com/Stripe/";  //live  url for stripe
-//    public static String BACKEND_URL = "https://www.sirrat.com/Stripe_test/";  //test url for stripe
+//    public static String BACKEND_URL = "https://www.sirrat.com/Stripe/";  //live  url for stripe
+    public static String BACKEND_URL = "https://www.sirrat.com/Stripe_test/";  //test url for stripe
 
 
     private static void getClient() {

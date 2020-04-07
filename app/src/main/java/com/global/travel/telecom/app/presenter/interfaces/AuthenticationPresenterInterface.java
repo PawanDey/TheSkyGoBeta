@@ -5,11 +5,12 @@ import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
+import com.global.travel.telecom.app.model.PostUpdateUserProfileData;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 
 
 public interface AuthenticationPresenterInterface {
-    void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey,int isEmailVerify);
+    void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey, int isEmailVerify);
 
     void activateSim(NewActivationRequest newActivationRequest);
 
@@ -40,4 +41,10 @@ public interface AuthenticationPresenterInterface {
     void GetVoIPRate();
 
     void AddVoIPAPICallLog(AddVoIPAPICallLogModel1 addVoIPAPICallLogModel1);
+
+    void GetUserProfileData(String token);
+
+    void UpdateUserProfileData(PostUpdateUserProfileData postUpdateUserProfileData);
+
+    void GetAllTransaction(String token);
 }

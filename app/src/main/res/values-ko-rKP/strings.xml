@@ -164,5 +164,14 @@
     <string name="textPleaseCheckYourEmailForOrderConfirmation">주문 확인을 위해 이메일을 확인하십시오</string>
     <string name="textOrderNumber">주문 번호:</string>
     <string name="textReviewYourOrder">주문 재확인</string>
+    <string name="textProfile">프로필</string>
+    <string name="textStatement">성명서</string>
+    <string name="textInviteFriend">친구를 초대하다</string>
+    <string name="textRateUs">우리를 평가</string>
+    <string name="textFeedback">피드백</string>
+    <string name="textCustomerService">고객 서비스</string>
+    <string name="textLogout">로그 아웃</string>
+    <string name="textTransaction">트랜잭션</string>
+
 
 </resources>

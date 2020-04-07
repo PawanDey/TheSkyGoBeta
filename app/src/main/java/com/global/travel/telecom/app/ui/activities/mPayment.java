@@ -112,8 +112,8 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     String paypalTxnNumber = "";
     String IPaddress;
     Context context = this;
-//    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
-    String stripePublishableKey = "pk_live_fWzHCP8XcqaNvCiN2bJAyC0S00kWwPRyOP";
+    String stripePublishableKey = "pk_test_txOKeTftLeseIaribQBfChbQ00y9ehlYJR";
+//    String stripePublishableKey = "pk_live_fWzHCP8XcqaNvCiN2bJAyC0S00kWwPRyOP";
 
     Boolean updateFundCheck = true;
     String AppPaymentType = "";

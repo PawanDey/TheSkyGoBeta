@@ -118,7 +118,7 @@
             <Spinner
                 android:id="@+id/snipper_country_wise_rate"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="40sp"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:backgroundTintMode="add"
                 android:divider="@color/white"

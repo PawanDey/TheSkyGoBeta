@@ -19,10 +19,12 @@ import com.global.travel.telecom.app.model.GetRateForCountryWise;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
 import com.global.travel.telecom.app.model.GetSIMStatus;
 import com.global.travel.telecom.app.model.GetSubscriberResponse;
+import com.global.travel.telecom.app.model.GetUserProfileDate;
 import com.global.travel.telecom.app.model.GetVoipPlans;
 import com.global.travel.telecom.app.model.LoginResponse;
 import com.global.travel.telecom.app.model.NewActivationRequest;
 import com.global.travel.telecom.app.model.NewExtensionRequest;
+import com.global.travel.telecom.app.model.PostUpdateUserProfileData;
 import com.global.travel.telecom.app.model.RecentCallHistoryModel;
 import com.global.travel.telecom.app.model.SetDataInDashboard;
 import com.global.travel.telecom.app.model.UpdateFundReq;
@@ -35,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -774,6 +777,25 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                ResponseBody body = response.body();
+                                assert body != null;
+                                JSONObject responseBody = null;
+                                responseBody = new JSONObject(body.string());
+                                JSONObject table = null;
+                                table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                                int respondeCode = table.getInt("ResponseCode");
+                                String respondeMessage = table.getString("ResponseMessage");
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            String error = response.errorBody().toString();
+                            showToast(response.errorBody().toString());
+                        }
+
                     }
 
                     @Override
@@ -789,4 +811,144 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
         }
     }
 
+    @Override
+    public void GetUserProfileData(String token) {
+        try {
+            baseView.showProgressBar();
+            Call<ResponseBody> call = APIClient.getApiService().GetUserProfileData(token);
+            try {
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                ResponseBody body = response.body();
+                                assert body != null;
+                                JSONObject responseBody = new JSONObject(body.string());
+                                JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                                int respondeCode = table.getInt("ResponseCode");
+                                String respondeMessage = table.getString("ResponseMessage");
+                                if (respondeCode == 0) {
+                                    GetUserProfileDate result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetUserProfileDate.class);
+                                    baseView.onSuccess("GetUserProfileData", result);
+                                } else if (respondeCode == 1) {
+                                    baseView.onServerError("GetUserProfileData", respondeMessage);
+                                }
+
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                                hideProgressBar();
+                            }
+
+                        } else {
+                            String error = response.errorBody().toString();
+                            showToast(response.errorBody().toString());
+                            hideProgressBar();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        baseView.hideProgressBar();
+                        baseView.onFailure();
+                    }
+                });
+            } catch (Exception e) {
+                baseView.hideProgressBar();
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            baseView.hideProgressBar();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void UpdateUserProfileData(PostUpdateUserProfileData postUpdateUserProfileData) {
+        baseView.showProgressBar();
+        Call<ResponseBody> call = APIClient.getApiService().UpdateUserProfileData(postUpdateUserProfileData);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        assert body != null;
+                        JSONObject responseBody = new JSONObject(body.string());
+                        JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                        int respondeCode = table.getInt("ResponseCode");
+                        String respondeMessage = table.getString("ResponseMessage");
+                        if (respondeCode == 0) {
+                            baseView.onSuccess("UpdateUserProfileData", "Success");
+                        } else {
+                            baseView.onServerError("UpdateUserProfileData", respondeMessage);
+                        }
+                    } catch (Exception e) {
+                        baseView.onServerError("UpdateUserProfileData Error :", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    }
+                } else {
+                    baseView.onServerError("UpdateUserProfileData", getResources().getString(R.string.textSorrySomethingwentwrong));
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                baseView.hideProgressBar();
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void GetAllTransaction(String token) {
+        try {
+            baseView.showProgressBar();
+            Call<ResponseBody> call = APIClient.getApiService().GetAllTransaction(token);
+            try {
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                ResponseBody body = response.body();
+                                assert body != null;
+                                JSONObject responseBody = new JSONObject(body.string());
+                                JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                                int respondeCode = table.getInt("ResponseCode");
+                                String respondeMessage = table.getString("ResponseMessage");
+                                if (respondeCode == 0) {
+                                    GetUserProfileDate result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetUserProfileDate.class);
+                                    baseView.onSuccess("GetAllTransaction", result);
+                                } else if (respondeCode == 1) {
+                                    baseView.onServerError("GetAllTransaction", respondeMessage);
+                                }
+
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                                hideProgressBar();
+                            }
+
+                        } else {
+                            String error = response.errorBody().toString();
+                            showToast(response.errorBody().toString());
+                            hideProgressBar();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        baseView.hideProgressBar();
+                        baseView.onFailure();
+                    }
+                });
+            } catch (Exception e) {
+                baseView.hideProgressBar();
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            baseView.hideProgressBar();
+            e.printStackTrace();
+        }
+    }
 }
