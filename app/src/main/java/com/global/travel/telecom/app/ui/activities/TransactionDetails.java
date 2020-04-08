@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
+import com.global.travel.telecom.app.model.TransactionDetailsActivationExtentionVoIPModel;
 import com.global.travel.telecom.app.presenter.implementation.AuthenticationPresenter;
 import com.global.travel.telecom.app.service.UserDetails;
 
@@ -23,9 +24,11 @@ public class TransactionDetails extends BaseActivity {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    HashMap<String, List<TransactionDetailsActivationExtentionVoIPModel>> listDataChild;
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
+    List<TransactionDetailsActivationExtentionVoIPModel> ae;
+    List<TransactionDetailsActivationExtentionVoIPModel> voip;
 
     @Override
     protected int getLayout() {
@@ -43,21 +46,39 @@ public class TransactionDetails extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        prepareListData();
-        listAdapter = new TransactionDetails_ExpandableListAdapter(this, listDataHeader, listDataChild);
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
     }
 
     @Override
     public void onSuccess(String method, Object response) {
         switch (method) {
-            case "GetUserProfileData": {
+            case "GetAllTransactionActivationExtension": {
+                List<TransactionDetailsActivationExtentionVoIPModel> transactionDetailsActivationExtentionVoIPModel = (List<TransactionDetailsActivationExtentionVoIPModel>) response;
+                listDataHeader = new ArrayList<>();
+                listDataChild = new HashMap<>();
+
+                // Adding child data
+                listDataHeader.add("Activation / Extenstion");
+                listDataHeader.add("VoIP");
+
+                // Adding child data
+                ae = transactionDetailsActivationExtentionVoIPModel;
+                listDataChild.put(listDataHeader.get(0), ae);
+
 
                 break;
             }
+            case "GetAllTransactionVoIP": {
+
+                List<TransactionDetailsActivationExtentionVoIPModel> transactionDetailsActivationExtentionVoIPModel = (List<TransactionDetailsActivationExtentionVoIPModel>) response;
+                voip = transactionDetailsActivationExtentionVoIPModel;
+                listDataChild.put(listDataHeader.get(1), voip);
+                listAdapter = new TransactionDetails_ExpandableListAdapter(this, listDataHeader, listDataChild);
+                // setting list adapter
+                expListView.setAdapter(listAdapter);
+                hideProgressBar();
+                break;
+            }
         }
-        hideProgressBar();
     }
 
     @Override
@@ -75,7 +96,7 @@ public class TransactionDetails extends BaseActivity {
 
     @Override
     public void onFailure() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = Objects.requireNonNull(cm).getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
@@ -85,36 +106,6 @@ public class TransactionDetails extends BaseActivity {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
         }
         hideProgressBar();
-    }
-
-    private void prepareListData() {
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
-
-        // Adding child data
-        listDataHeader.add("Top 250");
-        listDataHeader.add("Now Showing");
-
-        // Adding child data
-        List<String> top250 = new ArrayList<>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
-
-        List<String> nowShowing = new ArrayList<>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
-
-        listDataChild.put(listDataHeader.get(0), top250);
-        listDataChild.put(listDataHeader.get(1), nowShowing);
     }
 
 }

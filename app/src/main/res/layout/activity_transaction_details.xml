@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:outlineAmbientShadowColor="@color/white"
+    android:outlineSpotShadowColor="@color/white"
+    android:background="@color/white"
     tools:context=".ui.activities.TransactionDetails">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorAccent"
+        android:fontFamily="@font/segoe_semi_bold"
+        android:gravity="center"
+        android:text="Transaction Details"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+
+        />
 
     <ExpandableListView
         android:id="@+id/ExpandableListView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:cacheColorHint="@color/colorAccent"
+        android:choiceMode="singleChoice"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="10dp"
+        android:foregroundTint="@color/black"
+        android:foregroundTintMode="add"
+        android:soundEffectsEnabled="true" />
 
 </LinearLayout>

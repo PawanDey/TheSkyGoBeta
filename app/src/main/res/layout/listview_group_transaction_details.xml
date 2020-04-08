@@ -2,16 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#000000"
+    android:background="@color/white"
+    android:outlineSpotShadowColor="@color/white"
+    android:outlineAmbientShadowColor="@color/white"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="8dp">
-
 
     <TextView
         android:id="@+id/lblListHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#f9f93d"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="Activtion/Extenstion"
+        android:textColor="@color/colorAccent"
         android:textSize="17dp" />
 
 </LinearLayout>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:outlineAmbientShadowColor="@color/white"
+    android:outlineSpotShadowColor="@color/white">
 
     <LinearLayout
         android:id="@+id/RecentLL"
@@ -9,86 +12,77 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:background="@drawable/recent_call_history_light_shadow"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="5dp">
 
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:fontFamily="@font/sf_old_republic_bold"
+            android:gravity="left"
+            android:padding="3sp"
+            android:text="Amount : $12"
+            android:textSize="16dp" />
 
 
-            <TextView
-                android:id="@+id/amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/sf_old_republic_bold"
-                android:gravity="left"
-                android:padding="3sp"
-                android:text="Amount : $12"
-                android:textSize="16dp" />
+        <TextView
+            android:id="@+id/remarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:padding="3sp"
+            android:text="12.00 Charged for Extension ; SerialNumber: 8901260245785509917F"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp" />
 
+        <TextView
+            android:id="@+id/transactionid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:padding="3sp"
+            android:text="transaction ID: SKYGO124I20200404125114"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp" />
 
-            <TextView
-                android:id="@+id/remarks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:padding="3sp"
-                android:text="12.00 Charged for Extension ; SerialNumber: 8901260245785509917F"
-                android:textColor="@color/darkgrey"
-                android:textSize="12dp" />
+        <TextView
+            android:id="@+id/PaymentType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:padding="3sp"
+            android:text="Payment Type: Extension"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp" />
 
-            <TextView
-                android:id="@+id/transactionid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:padding="3sp"
-                android:text="transaction ID: SKYGO124I20200404125114"
-                android:textColor="@color/darkgrey"
-                android:textSize="12dp" />
+        <TextView
+            android:id="@+id/DateOfPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:padding="3sp"
+            android:text="Date of Payment: 2020-04-04"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp" />
 
-            <TextView
-                android:id="@+id/PaymentType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:padding="3sp"
-                android:text="Payment Type: Extension"
-                android:textColor="@color/darkgrey"
-                android:textSize="12dp" />
+        <TextView
+            android:id="@+id/payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/sf_old_republic_font"
+            android:padding="3sp"
+            android:text="Payment: Success"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp" />
 
-            <TextView
-                android:id="@+id/DateOfPayment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:padding="3sp"
-                android:text="Date of Payment: 2020-04-04"
-                android:textColor="@color/darkgrey"
-                android:textSize="12dp" />
-
-            <TextView
-                android:id="@+id/payment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:padding="3sp"
-                android:text="Payment: Success"
-                android:textColor="@color/darkgrey"
-                android:textSize="12dp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 
@@ -103,16 +97,8 @@
         android:textColor="@color/colorRed"
         android:textSize="1dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/colorRed"
-        android:textSize="1dp" />
-
     <ImageView
+        android:id="@+id/paymentStatusImage"
         android:layout_width="45sp"
         android:layout_height="45sp"
         android:layout_alignParentRight="true"

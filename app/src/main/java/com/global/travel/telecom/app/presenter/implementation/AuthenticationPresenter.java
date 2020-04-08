@@ -27,6 +27,7 @@ import com.global.travel.telecom.app.model.NewExtensionRequest;
 import com.global.travel.telecom.app.model.PostUpdateUserProfileData;
 import com.global.travel.telecom.app.model.RecentCallHistoryModel;
 import com.global.travel.telecom.app.model.SetDataInDashboard;
+import com.global.travel.telecom.app.model.TransactionDetailsActivationExtentionVoIPModel;
 import com.global.travel.telecom.app.model.UpdateFundReq;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberError;
 import com.global.travel.telecom.app.model.VoipCreateCustomerAndSubscriberGood;
@@ -918,9 +919,14 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 int respondeCode = table.getInt("ResponseCode");
                                 String respondeMessage = table.getString("ResponseMessage");
                                 if (respondeCode == 0) {
-                                    GetUserProfileDate result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetUserProfileDate.class);
-                                    baseView.onSuccess("GetAllTransaction", result);
-                                } else if (respondeCode == 1) {
+                                    Type listType = new TypeToken<List<TransactionDetailsActivationExtentionVoIPModel>>() {
+                                    }.getType();
+
+                                    List<TransactionDetailsActivationExtentionVoIPModel> result = new Gson().fromJson(responseBody.getJSONArray("Table1").toString(), listType);
+                                    List<TransactionDetailsActivationExtentionVoIPModel> result1 = new Gson().fromJson(responseBody.getJSONArray("Table2").toString(), listType);
+                                    baseView.onSuccess("GetAllTransactionActivationExtension", result);
+                                    baseView.onSuccess("GetAllTransactionVoIP", result1);
+                                } else {
                                     baseView.onServerError("GetAllTransaction", respondeMessage);
                                 }
 

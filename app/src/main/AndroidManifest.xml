@@ -74,12 +74,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.activities.TransactionDetails"></activity>
-        <activity android:name=".ui.activities.UserProfile" />
+        <activity
+            android:name=".ui.activities.SplashScreen"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".ui.activities.UserProfile"
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.VoipOnCall"
-            android:screenOrientation="locked"
-            tools:ignore="LockedOrientationActivity" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.GoogleMapActivity"
             android:screenOrientation="locked"
@@ -122,7 +125,7 @@
             android:name=".ui.activities.ScannerFunction"
             android:screenOrientation="locked" />
         <activity
-            android:name=".ui.activities.SplashScreen"
+            android:name=".ui.activities.TransactionDetails"
             android:noHistory="true"
             android:screenOrientation="locked">
             <intent-filter>
