@@ -14,6 +14,7 @@ import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel;
 import com.global.travel.telecom.app.model.AddVoIPAPICallLogModel1;
 import com.global.travel.telecom.app.model.CreateVoipCustomerSkyGo;
 import com.global.travel.telecom.app.model.CurrentBalance;
+import com.global.travel.telecom.app.model.GetActivePromotions;
 import com.global.travel.telecom.app.model.GetNotifications;
 import com.global.travel.telecom.app.model.GetRateForCountryWise;
 import com.global.travel.telecom.app.model.GetRateForPaymentPlan;
@@ -680,7 +681,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onSuccess("CurrentBalance", result);
                             break;
                         }
-
                         case "createCustomerAndSubscriber": {
                             if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
                                 VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), VoipCreateCustomerAndSubscriberError.class);
@@ -719,6 +719,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             }
                             break;
                         }
+
                         case "getRecentCallHistory": {
                             try {
                                 if (mMessage.contains("get-subscriber-call-history-response")) {
@@ -730,7 +731,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                             break;
                         }
 
@@ -749,6 +749,22 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 result.setParchaseStatus("10039");
                                 baseView.onSuccess("AddVoIPAPICallLog", result);
                                 baseView.onServerError("AddCustomerCredit", "AddCustomerCredit API Error");
+                            }
+                            break;
+                        }
+
+                        case "getActivePromotion": {
+                            if (mMessage.contains("get-active-promotions-response")) {
+                                Type listType = new TypeToken<List<GetActivePromotions>>() {
+                                }.getType();
+                              try {
+                                  List<GetActivePromotions> result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), listType);
+                                  baseView.onSuccess("getActivePromotion", result1);
+                              }catch (Exception e){
+                                  e.printStackTrace();
+                              }
+                            } else {
+                                baseView.onServerError("getActivePromotion", "AddCustomerCredit API Error");
                             }
                             break;
                         }

@@ -1,178 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/white">
 
     <LinearLayout
-        android:id="@+id/menu_linearLayoutMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/menu_linearLayout"
+            android:id="@+id/menu_linearLayoutMain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="3dp">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/menu_linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/currentBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="$ --"
+                        android:textColor="@color/colorRed"
+                        android:textSize="22dp" />
+
+                    <TextView
+                        android:id="@+id/availeBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/currentBalance"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="1dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="@string/textAvailableBalance"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/menu_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text="@string/textLoading"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="22dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/voipNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/menu_name"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="3dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/addBalancedFunction"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_below="@+id/availeBalance"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="3dp"
+                        android:background="@drawable/voip_gredient_circle"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@color/white"
+                        android:textSize="25dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toStartOf="@+id/addBalancedFunction"
+                        android:layout_toLeftOf="@+id/addBalancedFunction"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="center"
+                        android:text="@string/textAddTOPUPBalance"
+                        android:textColor="@color/colorRed"
+                        android:textSize="10dp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/planDeatailsLeft"
+                android:background="@drawable/gredient_white_reactangle"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ProgressBar
+                            android:id="@+id/circularProgressbar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="150sp"
+                            android:layout_height="150sp"
+                            android:layout_centerHorizontal="true"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="100"
+                            android:progressDrawable="@drawable/ring_plan_min_balance"
+                            android:secondaryProgress="100" />
+
+                        <TextView
+                            android:id="@+id/percentageMin"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginEnd="26dp"
+                            android:gravity="center"
+                            android:text="here is min left"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/menu_validity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/circularProgressbar"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/textMinute"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ProgressBar
+                            android:id="@+id/circularProgressbar1"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_centerHorizontal="true"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="100"
+                            android:progressDrawable="@drawable/ring_plan_min_balance"
+                            android:secondaryProgress="100" />
+
+                        <TextView
+                            android:id="@+id/percentageMin1"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="days left"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/menu_validityDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/circularProgressbar1"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginEnd="26dp"
+                            android:text="Validity  under cons"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_marginBottom="5dp"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/currentBalance"
+                    android:id="@+id/checkCountryWisePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="$ --"
-                    android:textColor="@color/colorRed"
-                    android:textSize="22dp" />
+                    android:text="@string/textCheckCountryWisePrice"
+                    android:textSize="16dp"
+                    android:visibility="gone" />
+
+                <Spinner
+                    android:id="@+id/snipper_country_wise_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:backgroundTintMode="add"
+                    android:divider="@color/white"
+                    android:drawSelectorOnTop="true"
+                    android:layoutMode="opticalBounds"
+                    android:spinnerMode="dialog"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/availeBalance"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/countryWiseRateDiscription"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/currentBalance"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="5dp"
                     android:fontFamily="@font/sf_old_republic_font"
-                    android:text="@string/textAvailableBalance"
+                    android:gravity="center"
+                    android:text=""
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14dp" />
 
-                <TextView
-                    android:id="@+id/menu_name"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/menu_listView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:fontFamily="@font/sf_old_republic_font"
-                    android:text="@string/textLoading"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="22dp"
-                    android:textStyle="bold" />
+                    android:background="@color/white"
+                    android:divider="@color/white"
+                    android:dividerHeight="9dp"
+                    android:scrollbars="none"
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/voipNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/menu_name"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="3dp"
-                    android:fontFamily="@font/sf_old_republic_font"
-                    android:text=" "
-                    android:textColor="@color/black"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/addBalancedFunction"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_below="@+id/availeBalance"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="3dp"
-                    android:background="@drawable/voip_gredient_circle"
-                    android:gravity="center"
-                    android:text="+"
-                    android:textColor="@color/white"
-                    android:textSize="25dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="45dp"
-                    android:layout_below="@+id/availeBalance"
-                    android:layout_marginTop="5dp"
-                    android:layout_toStartOf="@+id/addBalancedFunction"
-                    android:fontFamily="@font/sf_old_republic_font"
-                    android:gravity="center"
-                    android:text="@string/textAddTOPUPBalance"
-                    android:textColor="@color/colorRed"
-                    android:textSize="10dp" />
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/checkCountryWisePrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:text="@string/textCheckCountryWisePrice"
-                android:textSize="16dp"
-                android:visibility="gone" />
-
-            <Spinner
-                android:id="@+id/snipper_country_wise_rate"
-                android:layout_width="match_parent"
-                android:layout_height="40sp"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:backgroundTintMode="add"
-                android:divider="@color/white"
-                android:visibility="gone"
-                android:drawSelectorOnTop="true"
-                android:layoutMode="opticalBounds"
-                android:spinnerMode="dialog" />
-
-            <TextView
-                android:id="@+id/countryWiseRateDiscription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/sf_old_republic_font"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="14dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:layout_centerInParent="true">
 
-            <ListView
-                android:id="@+id/menu_listView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="@color/white"
-                android:dividerHeight="9dp"
-                android:scrollbars="none"
-                android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/menu_progressBar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true">
-
-        <ProgressBar
-            android:id="@+id/menu_progressBar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerInParent="true" />
-
-    </RelativeLayout>
-
-
-</RelativeLayout>
+</ScrollView>

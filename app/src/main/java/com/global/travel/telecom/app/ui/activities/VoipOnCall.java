@@ -307,6 +307,7 @@ public class VoipOnCall extends AppCompatActivity {
         if (line == null || line.length() < 1) return;
         // we can receive multiple notifications at once, so we split them by CRLF or with ",NEOL \r\n" and we end up with a
 //        String array of notifications
+        mysipclient.GetLogs();
         mStatus = mStatus + "         " + line;
         String[] notarray = line.split(",NEOL \n");
         String notifywordcontent;

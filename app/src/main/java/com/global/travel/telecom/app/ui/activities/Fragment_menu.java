@@ -2,6 +2,7 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +36,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.InitialQuantity;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.RemainingQuantity;
 import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.mCountry_wise_rateList;
 
 public class Fragment_menu extends Fragment {
@@ -42,6 +45,7 @@ public class Fragment_menu extends Fragment {
     @SuppressLint("StaticFieldLeak")
     static TextView currentBalanceMenu;
     private LinearLayout menu_linearLayoutMain;
+    public static LinearLayout planDeatailsLeft;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ListView listViewVoipPlan;
     private ArrayList<GetVoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
@@ -51,6 +55,7 @@ public class Fragment_menu extends Fragment {
     private DatePicker datePicker;
     UserDetails userDetails = new UserDetails(getApplicationContext());
     private String amount = "0";
+    private Handler handler = new Handler();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -66,6 +71,11 @@ public class Fragment_menu extends Fragment {
         countryWiseRateDiscription = view.findViewById(R.id.countryWiseRateDiscription);
         snipper_country = view.findViewById(R.id.snipper_country_wise_rate);
         addBalancedFunction = view.findViewById(R.id.addBalancedFunction);
+        planDeatailsLeft = view.findViewById(R.id.planDeatailsLeft);
+
+        TextView percentageMin = view.findViewById(R.id.percentageMin);
+        ProgressBar mProgress = view.findViewById(R.id.circularProgressbar);
+        Drawable drawable = getResources().getDrawable(R.drawable.ring_plan_min_balance);
 
         try {
             if (SkyGoDialer.userBalance.equals("")) {
@@ -302,7 +312,27 @@ public class Fragment_menu extends Fragment {
 
         });
 
+        if (Integer.parseInt(InitialQuantity) != 0) {
+            planDeatailsLeft.setVisibility(View.VISIBLE);
+            mProgress.setProgress(0);   // Main Progress
+            mProgress.setSecondaryProgress(Integer.parseInt(InitialQuantity)); // Secondary Progress
+            mProgress.setMax(Integer.parseInt(InitialQuantity)); // Maximum Progress
+            mProgress.setProgressDrawable(drawable);
+            new Thread(() -> {
+                while (Integer.parseInt(InitialQuantity) >= Integer.parseInt(RemainingQuantity)) {
+                    handler.post(() -> {
+                        mProgress.setProgress(Integer.parseInt(RemainingQuantity));
+                        percentageMin.setText(RemainingQuantity + " min Left");
 
+                    });
+                    try {
+                        Thread.sleep(70);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
         return view;
     }
 }

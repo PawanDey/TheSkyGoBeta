@@ -1,12 +1,16 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.Call;
 import com.global.travel.telecom.app.model.ContactsModel;
 import com.global.travel.telecom.app.model.CurrentBalance;
+import com.global.travel.telecom.app.model.GetActivePromotions;
 import com.global.travel.telecom.app.model.GetRateForCountryWise;
 import com.global.travel.telecom.app.model.GetVoipPlanModel;
 import com.global.travel.telecom.app.model.GetVoipPlans;
@@ -36,6 +41,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.currentBalanceMenu;
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.planDeatailsLeft;
 import static com.global.travel.telecom.app.ui.activities.Fragment_recent.ListViewRecentCallHistory;
 
 public class SkyGoDialer extends BaseActivity implements Serializable {
@@ -45,13 +51,15 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
     Context cotxt = this;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static String userBalance = "";
     public static ArrayList<ContactsModel> mobileArray = null;
     public static ArrayList<GetVoipPlanModel> VoipPlan = null;
     public static ArrayList<RecentSetDataModel> recentCallHistoryModels = null;
     public static ArrayList<GetVoipRateModel> mCountry_wise_rateList = null;
-
+    public static String InitialQuantity = "0";
+    public static String RemainingQuantity = "0";
     List<GetVoipPlanModel> list = null;
     List<RecentSetDataModel> recentList = null;
     List<GetVoipPlans> result = null;
@@ -65,21 +73,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         return R.layout.activity_sky_go_dialer;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        userDetails = new UserDetails(this);
-        String getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
-                "<authentication>\n" +
-                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
-                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
-                "</authentication>\n" +
-                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                "</get-customer-balance>";
-        authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
-        authenticationPresenter.GetVoipPlan();
-        authenticationPresenter.GetVoIPRate();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,12 +95,13 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
                 "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
                 "</authentication>\n" +
-                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID().trim() + "</subscriberid>\n" +
                 "</get-customer-balance>";
         try {
             authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
             authenticationPresenter.GetVoipPlan();
             authenticationPresenter.GetVoIPRate();
+
         } catch (Exception e) {
             Toast.makeText(this, "onCreate authenticationPresenter error" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -183,31 +177,21 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "CurrentBalance": {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DATE, +1);
-                String endDate = dateFormat.format(calendar.getTime());
-                calendar.add(Calendar.DATE, -30);
-                String startDate = dateFormat.format(calendar.getTime());
-                String getRecentCallHistory = "<get-subscriber-call-history version=\"1\">\n" +
+                String getActivePromotion = "<get-active-promotions version=\"1\">\n" +
                         "<authentication>\n" +
                         "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
                         "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
                         "</authentication>\n" +
                         "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                        "<start>" + startDate + "</start>\n" +
-                        "<end>" + endDate + "</end>\n" +
-                        "</get-subscriber-call-history>";
-                authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
+                        "</get-active-promotions>";
+                authenticationPresenter.VoIPAPICall(getActivePromotion, "getActivePromotion");
                 try {
                     CurrentBalance currentBalance = (CurrentBalance) response;
                     String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
                     userBalance = bal.substring(0, bal.length() - 2);
-
                     currentBalanceMenu.setText("$" + userBalance);
                 } catch (Exception e) {
-                    showToast("Current Balanced Not show");
+                    showToast("Current Balanced Not show :" + e);
                 }
 
                 break;
@@ -227,6 +211,32 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 recentCallHistoryModels = (ArrayList<RecentSetDataModel>) getRecentCallHistory();
                 RecentCallHistoryArrayAdapter adapter = new RecentCallHistoryArrayAdapter(getApplicationContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
                 runOnUiThread(() -> ListViewRecentCallHistory.setAdapter(adapter));
+                break;
+            }
+            case "getActivePromotion": {
+                planDeatailsLeft.setVisibility(View.VISIBLE);
+                GetActivePromotions getActivePromotion = (GetActivePromotions) response;
+                InitialQuantity = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getInitialQuantity();
+                RemainingQuantity = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getRemainingQuantity();
+                InitialQuantity = InitialQuantity.substring(0, InitialQuantity.length() - 3);
+                RemainingQuantity = RemainingQuantity.substring(0, RemainingQuantity.length() - 3);
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, +1);
+                String endDate = dateFormat.format(calendar.getTime());
+                calendar.add(Calendar.DATE, -30);
+                String startDate = dateFormat.format(calendar.getTime());
+                String getRecentCallHistory = "<get-subscriber-call-history version=\"1\">\n" +
+                        "<authentication>\n" +
+                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                        "</authentication>\n" +
+                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                        "<start>" + startDate + "</start>\n" +
+                        "<end>" + endDate + "</end>\n" +
+                        "</get-subscriber-call-history>";
+                authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
                 break;
             }
         }

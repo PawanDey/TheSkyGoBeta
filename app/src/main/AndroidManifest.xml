@@ -75,7 +75,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".ui.activities.SplashScreen"
+            android:name=".ui.activities.TransactionDetails"
             android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.UserProfile"
@@ -125,7 +125,7 @@
             android:name=".ui.activities.ScannerFunction"
             android:screenOrientation="locked" />
         <activity
-            android:name=".ui.activities.TransactionDetails"
+            android:name=".ui.activities.SplashScreen"
             android:noHistory="true"
             android:screenOrientation="locked">
             <intent-filter>
