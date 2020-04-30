@@ -38,14 +38,19 @@ import java.util.TimeZone;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.InitialQuantity;
 import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.RemainingQuantity;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.leftValidityday;
 import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.mCountry_wise_rateList;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.totalValidityday;
 
 public class Fragment_menu extends Fragment {
     private TextView menu_name, countryWiseRateDiscription, addBalancedFunction, checkCountryWisePrice;
     @SuppressLint("StaticFieldLeak")
     static TextView currentBalanceMenu;
     private LinearLayout menu_linearLayoutMain;
-    public static LinearLayout planDeatailsLeft;
+    @SuppressLint("StaticFieldLeak")
+    static LinearLayout planDeatailsLeft;
+    static TextView percentageMin, menu_ValiditydaysLeft;
+    static ProgressBar mProgress, menu_ValiditydaysLeftProgressBar;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ListView listViewVoipPlan;
     private ArrayList<GetVoipPlanModel> VoipPlan = SkyGoDialer.VoipPlan;
@@ -53,9 +58,11 @@ public class Fragment_menu extends Fragment {
     private Spinner snipper_country;
     private androidx.appcompat.app.AlertDialog progressDialog;
     private DatePicker datePicker;
-    UserDetails userDetails = new UserDetails(getApplicationContext());
+    private UserDetails userDetails = new UserDetails(getApplicationContext());
     private String amount = "0";
     private Handler handler = new Handler();
+    private Handler handler1 = new Handler();
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -72,10 +79,10 @@ public class Fragment_menu extends Fragment {
         snipper_country = view.findViewById(R.id.snipper_country_wise_rate);
         addBalancedFunction = view.findViewById(R.id.addBalancedFunction);
         planDeatailsLeft = view.findViewById(R.id.planDeatailsLeft);
-
-        TextView percentageMin = view.findViewById(R.id.percentageMin);
-        ProgressBar mProgress = view.findViewById(R.id.circularProgressbar);
-        Drawable drawable = getResources().getDrawable(R.drawable.ring_plan_min_balance);
+        percentageMin = view.findViewById(R.id.percentageMin);
+        menu_ValiditydaysLeft = view.findViewById(R.id.menu_ValiditydaysLeft);
+        mProgress = view.findViewById(R.id.circularProgressbar);
+        menu_ValiditydaysLeftProgressBar = view.findViewById(R.id.menu_ValiditydaysLeftProgressBar);
 
         try {
             if (SkyGoDialer.userBalance.equals("")) {
@@ -311,28 +318,25 @@ public class Fragment_menu extends Fragment {
             cancle.setOnClickListener(v12 -> progressDialog.dismiss());
 
         });
+        Drawable drawable = getResources().getDrawable(R.drawable.ring_plan_min_balance);
 
         if (Integer.parseInt(InitialQuantity) != 0) {
             planDeatailsLeft.setVisibility(View.VISIBLE);
-            mProgress.setProgress(0);   // Main Progress
             mProgress.setSecondaryProgress(Integer.parseInt(InitialQuantity)); // Secondary Progress
             mProgress.setMax(Integer.parseInt(InitialQuantity)); // Maximum Progress
             mProgress.setProgressDrawable(drawable);
-            new Thread(() -> {
-                while (Integer.parseInt(InitialQuantity) >= Integer.parseInt(RemainingQuantity)) {
-                    handler.post(() -> {
-                        mProgress.setProgress(Integer.parseInt(RemainingQuantity));
-                        percentageMin.setText(RemainingQuantity + " min Left");
-
-                    });
-                    try {
-                        Thread.sleep(70);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
+            percentageMin.setText(RemainingQuantity + " min Left");
+            mProgress.setProgress(Integer.parseInt(RemainingQuantity));
         }
+
+        if (Integer.parseInt(totalValidityday) != 0) {
+            menu_ValiditydaysLeftProgressBar.setMax(Integer.parseInt(totalValidityday));// Maximum Progress
+            menu_ValiditydaysLeftProgressBar.setSecondaryProgress(Integer.parseInt(totalValidityday)); // Secondary Progress
+            menu_ValiditydaysLeftProgressBar.setProgressDrawable(drawable);
+            menu_ValiditydaysLeft.setText(leftValidityday + " Day Left");
+            menu_ValiditydaysLeftProgressBar.setProgress(Integer.parseInt(leftValidityday));
+        }
+
         return view;
     }
 }

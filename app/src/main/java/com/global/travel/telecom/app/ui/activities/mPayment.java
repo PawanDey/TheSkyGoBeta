@@ -266,7 +266,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 AddVoIPAPICallLogModel addVoIPAPICallLog = (AddVoIPAPICallLogModel) response;
 
                 AddVoIPAPICallLogModel1 apiCallData = new AddVoIPAPICallLogModel1();
-
                 apiCallData.setAPIName(addVoIPAPICallLog.getAPIName());
                 apiCallData.setAPIRequest(addVoIPAPICallLog.getAPIrequest());
                 apiCallData.setAPIResponse(addVoIPAPICallLog.getAPIresponse());
@@ -276,7 +275,6 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 apiCallData.setParchaseStatus(addVoIPAPICallLog.getParchaseStatus());
                 apiCallData.setPlanType(addVoIPAPICallLog.getPlanType());
                 apiCallData.setTxnRefNo(sessionTxnID);
-
                 authenticationPresenter.AddVoIPAPICallLog(apiCallData);
                 break;
             }

@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,14 +35,20 @@ import com.global.travel.telecom.app.presenter.implementation.AuthenticationPres
 import com.global.travel.telecom.app.service.UserDetails;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.currentBalanceMenu;
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.mProgress;
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.menu_ValiditydaysLeft;
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.menu_ValiditydaysLeftProgressBar;
+import static com.global.travel.telecom.app.ui.activities.Fragment_menu.percentageMin;
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.planDeatailsLeft;
 import static com.global.travel.telecom.app.ui.activities.Fragment_recent.ListViewRecentCallHistory;
 
@@ -51,8 +59,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
     Context cotxt = this;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-
     public static String userBalance = "";
     public static ArrayList<ContactsModel> mobileArray = null;
     public static ArrayList<GetVoipPlanModel> VoipPlan = null;
@@ -60,19 +66,22 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     public static ArrayList<GetVoipRateModel> mCountry_wise_rateList = null;
     public static String InitialQuantity = "0";
     public static String RemainingQuantity = "0";
+    public static String totalValidityday = "0";
+    public static String leftValidityday = "0";
     List<GetVoipPlanModel> list = null;
     List<RecentSetDataModel> recentList = null;
     List<GetVoipPlans> result = null;
     List<Call> CallHistoryData = null;
     List<GetRateForCountryWise> result1 = null;
     List<GetVoipRateModel> voipRate = null;
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Handler handler1 = new Handler(Looper.getMainLooper());
 
 
     @Override
     protected int getLayout() {
         return R.layout.activity_sky_go_dialer;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +178,31 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        userDetails = new UserDetails(this);
+        String getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                "</authentication>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "</get-customer-balance>";
+//        authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
+//        authenticationPresenter.GetVoipPlan();
+//        authenticationPresenter.GetVoIPRate();
+
+        String getActivePromotion = "<get-active-promotions version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                "</authentication>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "</get-active-promotions>";
+//        authenticationPresenter.VoIPAPICall(getActivePromotion, "getActivePromotion");
+    }
+
+    @Override
     public void onFailure() {
 
     }
@@ -177,14 +211,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     public void onSuccess(String method, Object response) {
         switch (method) {
             case "CurrentBalance": {
-                String getActivePromotion = "<get-active-promotions version=\"1\">\n" +
-                        "<authentication>\n" +
-                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
-                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
-                        "</authentication>\n" +
-                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                        "</get-active-promotions>";
-                authenticationPresenter.VoIPAPICall(getActivePromotion, "getActivePromotion");
                 try {
                     CurrentBalance currentBalance = (CurrentBalance) response;
                     String bal = currentBalance.getGetCustomerBalanceResponse().getClearedBalance().getContent();
@@ -193,7 +219,14 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 } catch (Exception e) {
                     showToast("Current Balanced Not show :" + e);
                 }
-
+                String getActivePromotion = "<get-active-promotions version=\"1\">\n" +
+                        "<authentication>\n" +
+                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                        "</authentication>\n" +
+                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                        "</get-active-promotions>";
+                authenticationPresenter.VoIPAPICall(getActivePromotion, "getActivePromotion");
                 break;
             }
             case "GetVoipPlanList": {
@@ -214,29 +247,70 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 break;
             }
             case "getActivePromotion": {
-                planDeatailsLeft.setVisibility(View.VISIBLE);
                 GetActivePromotions getActivePromotion = (GetActivePromotions) response;
-                InitialQuantity = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getInitialQuantity();
-                RemainingQuantity = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getRemainingQuantity();
-                InitialQuantity = InitialQuantity.substring(0, InitialQuantity.length() - 3);
-                RemainingQuantity = RemainingQuantity.substring(0, RemainingQuantity.length() - 3);
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DATE, +1);
-                String endDate = dateFormat.format(calendar.getTime());
-                calendar.add(Calendar.DATE, -30);
-                String startDate = dateFormat.format(calendar.getTime());
-                String getRecentCallHistory = "<get-subscriber-call-history version=\"1\">\n" +
-                        "<authentication>\n" +
-                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
-                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
-                        "</authentication>\n" +
-                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                        "<start>" + startDate + "</start>\n" +
-                        "<end>" + endDate + "</end>\n" +
-                        "</get-subscriber-call-history>";
-                authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
+//                String i = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().get(0).getInitialQuantity();
+//                String r = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().get(0).getRemainingQuantity();
+                String i = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getInitialQuantity();
+                String r = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getRemainingQuantity();
+                InitialQuantity = i.substring(0, i.length() - 3);
+                RemainingQuantity = r.substring(0, r.length() - 3);
+                Date d = new Date();
+                String planEndDate = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getEndTime();
+                String planStartDate = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().getStartTime();
+                planEndDate = planEndDate.substring(0, planEndDate.length() - 9).trim();
+                planStartDate = planStartDate.substring(0, planStartDate.length() - 9).trim();
+                totalValidityday = getDiffInTwoDates(planStartDate, planEndDate);
+                String currentDate = (String) DateFormat.format("yyyy-MM-dd", d.getTime());
+                leftValidityday = getDiffInTwoDates(currentDate, planEndDate);
+                planDeatailsLeft.setVisibility(View.VISIBLE);
+
+                if (Integer.parseInt(InitialQuantity) != 0) {
+                    planDeatailsLeft.setVisibility(View.VISIBLE);
+                    mProgress.setSecondaryProgress(Integer.parseInt(InitialQuantity)); // Secondary Progress
+                    mProgress.setMax(Integer.parseInt(InitialQuantity)); // Maximum Progress
+                    percentageMin.setText(RemainingQuantity + " min Left");
+
+                    menu_ValiditydaysLeft.setText(leftValidityday + " Day Left");
+                    menu_ValiditydaysLeftProgressBar.setMax(Integer.parseInt(totalValidityday));// Maximum Progress
+                    menu_ValiditydaysLeftProgressBar.setSecondaryProgress(Integer.parseInt(totalValidityday)); // Secondary Progress
+                    final int[] y = {1};
+                    final int[] x = {1};
+
+                    new Thread(() -> {
+                        while (x[0] <= Integer.parseInt(RemainingQuantity)) {
+                            handler.post(() -> {
+                                mProgress.setProgress(x[0]);
+                                x[0]++;
+                            });
+                            try {
+                                Thread.sleep(30);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+                    new Thread(() -> {
+                        while (y[0] <= Integer.parseInt(leftValidityday)) {
+                            handler1.post(() -> {
+                                menu_ValiditydaysLeftProgressBar.setProgress(y[0]);
+                                y[0]++;
+                            });
+                            try {
+                                Thread.sleep(60);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
+                getRecentCallHistoryFunction();
+                break;
+            }
+
+            case "PromotionNotApplied": {
+                planDeatailsLeft.setVisibility(View.GONE);
+                getRecentCallHistoryFunction();
                 break;
             }
         }
@@ -254,23 +328,66 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
 
     }
 
+    public void getRecentCallHistoryFunction() {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("US/Eastern"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, +1);
+        String endDate = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.DATE, -30);
+        String startDate = dateFormat.format(calendar.getTime());
+        String getRecentCallHistory = "<get-subscriber-call-history version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                "</authentication>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "<start>" + startDate + "</start>\n" +
+                "<end>" + endDate + "</end>\n" +
+                "</get-subscriber-call-history>";
+        authenticationPresenter.VoIPAPICall(getRecentCallHistory, "getRecentCallHistory");
+    }
+
+    public String getDiffInTwoDates(String startDate, String endDate) {
+        Date date1 = null;
+        Date date2 = null;
+        SimpleDateFormat dates = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date1 = dates.parse(startDate);
+            date2 = dates.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //Comparing dates
+        assert date1 != null;
+        long difference = Math.abs(date1.getTime() - date2.getTime());
+        long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+        //Convert long to String
+        return Long.toString(differenceDates);
+    }
+
     private List<ContactsModel> getAllContacts(Context ctx) {
 
         List<ContactsModel> list = new ArrayList<>();
         try {
             ContentResolver contentResolver = ctx.getContentResolver();
             Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            assert cursor != null;
             if (cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                     if (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
                         Cursor cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
-                        while (cursorInfo.moveToNext()) {
-                            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            String mobileNumber = cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            ContactsModel info = new ContactsModel(name, mobileNumber);
-                            list.add(info);
+                        assert cursorInfo != null;
+                        if (cursorInfo != null) {
+                            while (cursorInfo.moveToNext()) {
+                                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                String mobileNumber = cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                ContactsModel info = new ContactsModel(name, mobileNumber);
+                                list.add(info);
+                            }
                         }
 
                         cursorInfo.close();
@@ -286,6 +403,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class AsyscGetContact extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] objects) {
@@ -352,4 +470,5 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         }
         return voipRate;
     }
+
 }

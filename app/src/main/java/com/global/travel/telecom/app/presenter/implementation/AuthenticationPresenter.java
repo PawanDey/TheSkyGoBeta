@@ -755,16 +755,18 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                         case "getActivePromotion": {
                             if (mMessage.contains("get-active-promotions-response")) {
-                                Type listType = new TypeToken<List<GetActivePromotions>>() {
-                                }.getType();
-                              try {
-                                  List<GetActivePromotions> result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), listType);
-                                  baseView.onSuccess("getActivePromotion", result1);
-                              }catch (Exception e){
-                                  e.printStackTrace();
-                              }
+                                try {
+                                    GetActivePromotions result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), GetActivePromotions.class);
+                                    baseView.onSuccess("getActivePromotion", result1);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             } else {
-                                baseView.onServerError("getActivePromotion", "AddCustomerCredit API Error");
+                                if (mMessage.contains("PromotionNotApplied")) {
+                                    baseView.onSuccess("PromotionNotApplied", "");
+                                } else {
+                                    baseView.onServerError("getActivePromotion", "AddCustomerCredit API Error");
+                                }
                             }
                             break;
                         }
