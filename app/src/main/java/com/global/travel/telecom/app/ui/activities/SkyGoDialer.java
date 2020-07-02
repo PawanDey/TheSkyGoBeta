@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -108,8 +107,8 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 "</get-customer-balance>";
         try {
             authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
-            authenticationPresenter.GetVoipPlan();
             authenticationPresenter.GetVoIPRate();
+            authenticationPresenter.GetVoipPlan();
 
         } catch (Exception e) {
             Toast.makeText(this, "onCreate authenticationPresenter error" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -229,14 +228,17 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 authenticationPresenter.VoIPAPICall(getActivePromotion, "getActivePromotion");
                 break;
             }
+
             case "GetVoipPlanList": {
                 result = (List<GetVoipPlans>) response;
                 break;
             }
+
             case "GetVoipRateList": {
                 result1 = (List<GetRateForCountryWise>) response;
                 break;
             }
+
             case "getRecentCallHistory": {
                 RecentCallHistoryModel re = (RecentCallHistoryModel) response;
                 CallHistoryData = re.getGetSubscriberCallHistoryResponse().getCallHistory().getCall();
@@ -246,6 +248,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 runOnUiThread(() -> ListViewRecentCallHistory.setAdapter(adapter));
                 break;
             }
+
             case "getActivePromotion": {
                 GetActivePromotions getActivePromotion = (GetActivePromotions) response;
 //                String i = getActivePromotion.getGetActivePromotionsResponse().getPromotions().getPromotion().getActiveOffers().getOffer().get(0).getInitialQuantity();

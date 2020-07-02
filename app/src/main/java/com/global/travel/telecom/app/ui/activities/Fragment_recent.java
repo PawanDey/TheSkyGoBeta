@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,7 +32,9 @@ public class Fragment_recent extends Fragment {
     static ListView ListViewRecentCallHistory;
     private ProgressBar voip_progressBarRecent;
     private TextView progress_bar_message;
+    private EditText RecentContactSearch;
     private Handler mHandler = new Handler(Looper.getMainLooper());
+    private RecentCallHistoryArrayAdapter adapter;
 
     @Nullable
     @Override
@@ -38,6 +44,7 @@ public class Fragment_recent extends Fragment {
         ListViewRecentCallHistory = view.findViewById(R.id.ListViewRecentCallHistory);
         voip_progressBarRecent = view.findViewById(R.id.voip_progressBarRecent);
         progress_bar_message = view.findViewById(R.id.progress_bar_message);
+        RecentContactSearch = view.findViewById(R.id.RecentContactSearch);
 
         try {
             if (SkyGoDialer.recentCallHistoryModels == null) {
@@ -55,10 +62,11 @@ public class Fragment_recent extends Fragment {
                     }
                     mHandler.postDelayed(() -> {
                         try {
+                            RecentContactSearch.setVisibility(View.VISIBLE);
                             ListViewRecentCallHistory.setVisibility(View.VISIBLE);
                             voip_progressBarRecent.setVisibility(View.GONE);
                             progress_bar_message.setVisibility(View.GONE);
-                            RecentCallHistoryArrayAdapter adapter = new RecentCallHistoryArrayAdapter(getContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
+                            adapter = new RecentCallHistoryArrayAdapter(getContext(), R.layout.recent_call_history_listview, SkyGoDialer.recentCallHistoryModels);
                             ListViewRecentCallHistory.setAdapter(adapter);
                             ListViewRecentCallHistory.setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -70,6 +78,7 @@ public class Fragment_recent extends Fragment {
 
 
             } else {
+                RecentContactSearch.setVisibility(View.VISIBLE);
                 ListViewRecentCallHistory.setVisibility(View.VISIBLE);
                 voip_progressBarRecent.setVisibility(View.GONE);
                 progress_bar_message.setVisibility(View.GONE);
@@ -100,6 +109,25 @@ public class Fragment_recent extends Fragment {
 
         });
 
+        RecentContactSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s.toString(), count1 -> {
+                    Log.d("FILTER --> ", "filter complete! count: " + count1);
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
     }
+
 }

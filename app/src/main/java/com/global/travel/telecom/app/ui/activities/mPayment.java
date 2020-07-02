@@ -266,6 +266,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 AddVoIPAPICallLogModel addVoIPAPICallLog = (AddVoIPAPICallLogModel) response;
 
                 AddVoIPAPICallLogModel1 apiCallData = new AddVoIPAPICallLogModel1();
+
                 apiCallData.setAPIName(addVoIPAPICallLog.getAPIName());
                 apiCallData.setAPIRequest(addVoIPAPICallLog.getAPIrequest());
                 apiCallData.setAPIResponse(addVoIPAPICallLog.getAPIresponse());
@@ -275,9 +276,11 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 apiCallData.setParchaseStatus(addVoIPAPICallLog.getParchaseStatus());
                 apiCallData.setPlanType(addVoIPAPICallLog.getPlanType());
                 apiCallData.setTxnRefNo(sessionTxnID);
+
                 authenticationPresenter.AddVoIPAPICallLog(apiCallData);
                 break;
             }
+
             case "ApplyPromotion": {
                 Intent intent = new Intent(mPayment.this, PaymentSucessfull.class);
                 intent.putExtra("screenType", "3");
@@ -674,6 +677,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 authenticationPresenter.VoIPAPICall(xmlApplyPromotion, "ApplyPromotion");
                 break;
             }
+
             case "AddBalance": {
                 String xmlApplyPromotion = "<apply-customer-credit version=\"1\">\n" +
                         "<authentication>\n" +

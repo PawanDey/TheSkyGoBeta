@@ -58,7 +58,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
     public ImageView setImageOnHotspot, skygoDialerLogo;
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
-    NavigationView navigationView;
+//    NavigationView navigationView;
     DrawerLayout drawer;
     private androidx.appcompat.app.AlertDialog progressDialog;
 
@@ -87,6 +87,18 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         } catch (Exception e) {
             Toast.makeText(Dashboard.this, getResources().getString(R.string.textPleaseCheckYourInternetConnection), Toast.LENGTH_LONG).show();
         }
+        try{
+        getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
+                "<authentication>\n" +
+                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                "</authentication>\n" +
+                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                "</get-customer-balance>";
+        authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");}
+        catch (Exception e){
+            e.printStackTrace();
+        }
         TextView SimStatus = findViewById(R.id.txtProcessPendingStatus);
         SimStatus.setVisibility(View.INVISIBLE);
         LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
@@ -94,10 +106,10 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         TextView MSISDN = findViewById(R.id.txtMSISDN);
         TextView validityLeft = findViewById(R.id.txtValidityLeft);
         validity = findViewById(R.id.validityDateOnDeshboard);
-        navigationView = findViewById(R.id.nav_view);
+//        navigationView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
+//        navigationView.setNavigationItemSelectedListener(this);
+//        navigationView.setItemIconTintList(null);
 
         try {
             currentLocation = findViewById(R.id.hereIsLocation);
@@ -118,6 +130,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         } catch (Exception e) {
             Toast.makeText(Dashboard.this, getResources().getString(R.string.textLocationPermissionNotEnabled), Toast.LENGTH_LONG).show();
         }
+
         try {
             if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
                 MSISDN.setText(userDetails.getMSISDN());
@@ -171,14 +184,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
                 userDetails.setVoipCredentailPassword(obj.getVoipPassword());
                 userDetails.setVoipCustomerID(obj.getCustomerId());
                 userDetails.setVoipSubcriberID(obj.getSubscriberId());
-                getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
-                        "<authentication>\n" +
-                        "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
-                        "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
-                        "</authentication>\n" +
-                        "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                        "</get-customer-balance>";
-                authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
+
                 break;
             }
             case "GetSubscriber": {
@@ -505,7 +511,6 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     public void threeLines(View view) {
         drawer.openDrawer(GravityCompat.START);

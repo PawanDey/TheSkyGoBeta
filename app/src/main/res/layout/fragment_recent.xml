@@ -5,14 +5,22 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/RecentContactSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search..."
+        android:lines="1"
+        android:textSize="18dp"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/ListViewRecentCallHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:divider="@color/white"
-        android:visibility="gone" />
+        android:divider="@color/white" />
 
     <ProgressBar
         android:id="@+id/voip_progressBarRecent"

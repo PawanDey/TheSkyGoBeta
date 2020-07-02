@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -253,12 +253,10 @@
                 <ListView
                     android:id="@+id/menu_listView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="350dp"
                     android:background="@color/white"
                     android:divider="@color/white"
-                    android:dividerHeight="9dp"
-                    android:scrollbars="none"
-                    android:visibility="gone" />
+                    android:dividerHeight="9dp" />
 
             </LinearLayout>
 

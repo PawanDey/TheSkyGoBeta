@@ -5,12 +5,22 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/ContactSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search..."
+        android:lines="1"
+        android:visibility="gone"
+        android:textSize="18dp"/>
+
     <ListView
         android:id="@+id/ListViewContacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/white"
-        android:visibility="gone" />
+        android:textFilterEnabled="true"
+        />
 
     <ProgressBar
         android:id="@+id/voip_progressBar"
@@ -24,9 +34,9 @@
         android:id="@+id/progress_bar_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/sf_old_republic_font"
-        android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/textContactLoading" />
 </LinearLayout>

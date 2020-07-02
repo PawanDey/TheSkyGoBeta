@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +34,8 @@ public class Fragment_contacts extends Fragment implements Serializable {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ProgressBar voip_progressBar;
     private TextView progress_bar_message;
+    private EditText ContactSearch;
+    ContactsArrayAdapter adapter;
 
     @Nullable
     @Override
@@ -38,6 +44,8 @@ public class Fragment_contacts extends Fragment implements Serializable {
         listViewContacts = view.findViewById(R.id.ListViewContacts);
         voip_progressBar = view.findViewById(R.id.voip_progressBar);
         progress_bar_message = view.findViewById(R.id.progress_bar_message);
+        ContactSearch = view.findViewById(R.id.ContactSearch);
+        listViewContacts.setTextFilterEnabled(true);
 
         try {
             if (SkyGoDialer.mobileArray == null) {
@@ -55,10 +63,11 @@ public class Fragment_contacts extends Fragment implements Serializable {
                     }
                     mHandler.postDelayed(() -> {
                         try {
+                            ContactSearch.setVisibility(View.VISIBLE);
                             listViewContacts.setVisibility(View.VISIBLE);
                             voip_progressBar.setVisibility(View.GONE);
                             progress_bar_message.setVisibility(View.GONE);
-                            ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
+                            adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
                             listViewContacts.setAdapter(adapter);
                             listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -70,10 +79,11 @@ public class Fragment_contacts extends Fragment implements Serializable {
 
 
             } else {
+                ContactSearch.setVisibility(View.VISIBLE);
                 listViewContacts.setVisibility(View.VISIBLE);
                 voip_progressBar.setVisibility(View.GONE);
                 progress_bar_message.setVisibility(View.GONE);
-                ContactsArrayAdapter adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
+                adapter = new ContactsArrayAdapter(getContext(), R.layout.contacts_listview, SkyGoDialer.mobileArray);
                 listViewContacts.setAdapter(adapter);
                 listViewContacts.setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -99,7 +109,28 @@ public class Fragment_contacts extends Fragment implements Serializable {
             }
 
         });
+
+        ContactSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s.toString(), count1 -> {
+                    Log.d("FILTER --> ", "filter complete! count: " + count1);
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return view;
     }
+
 }
 

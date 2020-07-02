@@ -22,7 +22,6 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-
     /**
      * Called when message is received.
      *

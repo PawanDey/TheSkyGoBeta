@@ -186,14 +186,12 @@ public class LoginActivity extends BaseActivity {
             case "CreateVoipAccount": {
                 try {
                     obj = (LoginResponse) response;
-
                     String VoIpName = "SkyGo:" + obj.getUserID().trim();
                     //set in share prefence
                     userDetails.setUserId(obj.getUserID());
                     userDetails.setVoipCredentailuserName(obj.getVoIPUserName());
                     userDetails.setVoipCredentailPassword(obj.getVoIPPassword());
                     userDetails.setVoipUserName(VoIpName);
-
                     //set data for create a customer in skygo database
                     createVoipCustomerSkyGo.setmTokenID(obj.getTokenID());
                     createVoipCustomerSkyGo.setmVoIPId_SIPId("");
@@ -275,9 +273,7 @@ public class LoginActivity extends BaseActivity {
                 try {
                     VoipCreateCustomerAndSubscriberError obj = (VoipCreateCustomerAndSubscriberError) response;
                     showToast("VoiP CreateCustomerAndSubscriberError: " + obj.getCreateCustomerAndSubscriberError().getContent());
-
                     authenticationPresenter.CreateVoipCustomerSkyGo(createVoipCustomerSkyGo);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     showToast("onSuccess CreateCustomerAndSubscriberError Error: " + e.getMessage());
@@ -287,7 +283,6 @@ public class LoginActivity extends BaseActivity {
             case "CreateCustomerAndSubscriberGood": {
                 try {
                     VoipCreateCustomerAndSubscriberGood obj = (VoipCreateCustomerAndSubscriberGood) response;
-
                     //add pendnig 3 parametre for create voip customer skygo (in case success)
                     createVoipCustomerSkyGo.setmCustomer_id(obj.getCreateCustomerAndSubscriberResponse().getCustomer().getId());
                     createVoipCustomerSkyGo.setmSubscriber_id(obj.getCreateCustomerAndSubscriberResponse().getSubscriber().getId());

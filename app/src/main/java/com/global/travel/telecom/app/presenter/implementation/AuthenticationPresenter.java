@@ -82,7 +82,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         String respondeMessage = table.getString("ResponseMessage");
                         VoipCreated = table1.getInt("VoipCreated");
                         if (respondeCode == 0) {
-
                             LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
                             if (VoipCreated == 0) {
                                 baseView.onSuccess("CreateVoipAccount", result);
@@ -91,8 +90,6 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 baseView.onSuccess("loginUser", result);
                                 baseView.hideProgressBar();
                             }, 2000);
-
-
                         } else {
                             baseView.hideProgressBar();
                             baseView.onServerError("loginUser", respondeMessage);
@@ -676,11 +673,13 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     assert mMessage != null;
                     XmlToJson jsonObject = new XmlToJson.Builder(mMessage).build();
                     switch (requestApiName) {
+
                         case "getCurrentBalance": {
                             CurrentBalance result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), CurrentBalance.class);
                             baseView.onSuccess("CurrentBalance", result);
                             break;
                         }
+
                         case "createCustomerAndSubscriber": {
                             if (mMessage.contains("create-customer-and-subscriber-error")) {    //here is code for error form API response
                                 VoipCreateCustomerAndSubscriberError result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), VoipCreateCustomerAndSubscriberError.class);
@@ -759,6 +758,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                     GetActivePromotions result1 = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), GetActivePromotions.class);
                                     baseView.onSuccess("getActivePromotion", result1);
                                 } catch (Exception e) {
+                                    baseView.onSuccess("PromotionNotApplied", "");
                                     e.printStackTrace();
                                 }
                             } else {

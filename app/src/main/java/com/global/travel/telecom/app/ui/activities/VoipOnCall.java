@@ -56,7 +56,6 @@ public class VoipOnCall extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voip_on_call);
         Intent intent = getIntent();
-        UserDetails userDetails = new UserDetails(this);
         CallingNumber = Objects.requireNonNull(intent.getStringExtra("CallingNumber")).replace(" ", "");
         CallingName = intent.getStringExtra("CallingName");
 
@@ -91,42 +90,43 @@ public class VoipOnCall extends AppCompatActivity {
         }
         firstChar.setText(firstCharector);
         phoneNumber.setText(getResources().getString(R.string.textMobile) + " " + CallingNumber);
-//        String demoparameter = "serveraddress=sip.s.im\r\nusername=SkyGo:246\r\npassword=246\r\nloglevel=5";
-        String demoparameter = "serveraddress=sip.s.im\r\nusername=" + userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
-        mStatus = mStatus + "       " + demoparameter;
+        String demoparameter = "serveraddress=sip.s.im\r\nusername=447624045000\r\npassword=0000\r\nloglevel=5";
+//        String demoparameter = "serveraddress=sip.s.im\r\nusername=" + userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
+        mStatus = mStatus + "__" + demoparameter;
         try {
             // start SipStack if it's not already running
-            if (mysipclient == null) {
-                DisplayLogs("Start SipStack");
+            DisplayLogs("Start SipStack");
+            //initialize the SIP engine
+            mysipclient = new SipStack();
+            mysipclient.Init(ctx);
+//            mysipclient.SetParameter("use_fast_stun", 2);
+//            mysipclient.SetParameter("use_fast_ice", 0);
+            mysipclient.SetParameters(demoparameter.trim());
+            notifThread = new GetNotificationsThread();
+            notifThread.start();
 
-                //initialize the SIP engine
-                mysipclient = new SipStack();
-                mysipclient.Init(ctx);
-                mysipclient.SetParameters(demoparameter.trim());
+            //start the SIP engine
+            mysipclient.Start();
+            mysipclient.Register();
+//                mysipclient.SetLogLevel(5);
 
-                //start my event listener thread
-                notifThread = new GetNotificationsThread();
-                notifThread.start();
-
-                //start the SIP engine
-                mysipclient.Start();
-                mysipclient.Register();
-
-            } else {
-                DisplayLogs("SipStack already started");
-            }
         } catch (Exception e) {
+            Toast.makeText(this,"Sip Register Failed:"+ e.getMessage(), Toast.LENGTH_LONG).show();
             DisplayLogs("ERROR, StartSipStack");
+            finish();
         }
 
-        if (CallingNumber.length() < 1) {
-            DisplayStatus("ERROR, Invalid destination number");
-            return;
-        }
         if (mysipclient == null) {
+            finish();
+            Toast.makeText(this, "ERROR, cannot initiate call because SipStack is not started", Toast.LENGTH_SHORT).show();
             DisplayStatus("ERROR, cannot initiate call because SipStack is not started");
         } else {
             timeOnCall.setVisibility(View.VISIBLE);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             mysipclient.Call(-1, CallingNumber);
             checkTimeOnCall = true;
         }
@@ -307,7 +307,6 @@ public class VoipOnCall extends AppCompatActivity {
         if (line == null || line.length() < 1) return;
         // we can receive multiple notifications at once, so we split them by CRLF or with ",NEOL \r\n" and we end up with a
 //        String array of notifications
-        mysipclient.GetLogs();
         mStatus = mStatus + "         " + line;
         String[] notarray = line.split(",NEOL \n");
         String notifywordcontent;
@@ -399,7 +398,6 @@ public class VoipOnCall extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void DisplayStatus(String stat) {

@@ -2,7 +2,6 @@ package com.global.travel.telecom.app.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -318,13 +317,11 @@ public class Fragment_menu extends Fragment {
             cancle.setOnClickListener(v12 -> progressDialog.dismiss());
 
         });
-        Drawable drawable = getResources().getDrawable(R.drawable.ring_plan_min_balance);
 
         if (Integer.parseInt(InitialQuantity) != 0) {
             planDeatailsLeft.setVisibility(View.VISIBLE);
             mProgress.setSecondaryProgress(Integer.parseInt(InitialQuantity)); // Secondary Progress
             mProgress.setMax(Integer.parseInt(InitialQuantity)); // Maximum Progress
-            mProgress.setProgressDrawable(drawable);
             percentageMin.setText(RemainingQuantity + " min Left");
             mProgress.setProgress(Integer.parseInt(RemainingQuantity));
         }
@@ -332,7 +329,6 @@ public class Fragment_menu extends Fragment {
         if (Integer.parseInt(totalValidityday) != 0) {
             menu_ValiditydaysLeftProgressBar.setMax(Integer.parseInt(totalValidityday));// Maximum Progress
             menu_ValiditydaysLeftProgressBar.setSecondaryProgress(Integer.parseInt(totalValidityday)); // Secondary Progress
-            menu_ValiditydaysLeftProgressBar.setProgressDrawable(drawable);
             menu_ValiditydaysLeft.setText(leftValidityday + " Day Left");
             menu_ValiditydaysLeftProgressBar.setProgress(Integer.parseInt(leftValidityday));
         }
