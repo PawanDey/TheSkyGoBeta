@@ -91,7 +91,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
     RelativeLayout proceedRelativeLayout, payRelativeLayout;
     UserDetails userDetails;
     Bundle extras;
-
+    String token = "";
     AuthenticationPresenter authenticationPresenter;
     AddFundsApp addFundsApp;
     NewActivationRequest newActivationRequest;
@@ -132,6 +132,13 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_m_payment);
         userDetails = new UserDetails(this);
+        if (Dashboard.ServerName.equals("VoiceServer")) {
+            token = userDetails.getTokenID();
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            token = userDetails.getTokenIDDataServer();
+        } else {
+            showToast("No server set Payment Actitvity");
+        }
         permissionStatus = PreferenceManager.getDefaultSharedPreferences(this);
         extras = getIntent().getExtras();
         Date now = new Date();
@@ -170,7 +177,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         payRelativeLayout = findViewById(R.id.payRelativeLayout);
         fromDate = findViewById(R.id.fromDate);
 
-        AppPaymentType = extras.getString("AppPaymentType");   //1 =activation    2= extension     3= voip
+        AppPaymentType = extras.getString("AppPaymentType");   //1 =activation for both server    2= extension for both server    3= voip
 
         CartAmount.setText("$ " + extras.getString("AmountCharged"));
         AmountPayabale.setText("$ " + extras.getString("AmountCharged"));
@@ -178,6 +185,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         ActivationDate.setText(extras.getString("RequestedForDtTm"));
 
         assert AppPaymentType != null;
+
         switch (AppPaymentType) {
             case "1":
                 misidn_serial_voip_text.setText(getResources().getString(R.string.textSIMSerialNo));
@@ -369,7 +377,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
                 addFundsApp.setRequestedIP(IPaddress);
                 addFundsApp.setRequestedOS("Android | " + userDetails.getLanguageSelect());
                 addFundsApp.setServiceCharge("0");
-                addFundsApp.setTokenID(userDetails.getTokenID());
+                addFundsApp.setTokenID(token);
                 addFundsApp.setTransactionReferenceID(sessionTxnID);
                 addFundsApp.setTransactionType("0");
                 authenticationPresenter.AddFundsAPI(addFundsApp);
@@ -636,7 +644,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newActivationRequest.setSerialNumber(extras.getString("Number"));
         newActivationRequest.setAmountCharged(extras.getString("AmountCharged"));
         newActivationRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-        newActivationRequest.setToken(userDetails.getTokenID());
+        newActivationRequest.setToken(token);
         newActivationRequest.setRefNo(sessionTxnID);
         newActivationRequest.setRequestedDevice(getDeviceName());
         newActivationRequest.setRequestedIP(IPaddress);
@@ -651,7 +659,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         newExtensionRequest.setMSISDN(extras.getString("Number"));
         newExtensionRequest.setAmountCharged(extras.getString("AmountCharged"));
         newExtensionRequest.setRequestedForDtTm(extras.getString("RequestedForDtTm"));
-        newExtensionRequest.setToken(userDetails.getTokenID());
+        newExtensionRequest.setToken(token);
         newExtensionRequest.setRefNo(sessionTxnID);
         newExtensionRequest.setRequestedDevice(getDeviceName());
         newExtensionRequest.setRequestedIP(IPaddress);
@@ -888,7 +896,7 @@ public class mPayment extends BaseActivity implements ConnectionCallbacks, OnCon
         updateFundReq.setPaypalReferenceID(PaypalReferanceID);
         updateFundReq.setPayPalResponse(PaypalResponse);
         updateFundReq.setRequestStatusID(RequestStatusID);
-        updateFundReq.setTokenID(userDetails.getTokenID());
+        updateFundReq.setTokenID(token);
         updateFundReq.setTransactionReferenceID(sessionTxnID);
         authenticationPresenter.UpdateFundsMethod(updateFundReq);
     }

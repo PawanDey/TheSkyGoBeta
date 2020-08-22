@@ -74,6 +74,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <activity android:name=".ui.activities.ExtensionSimDataServer"></activity>
+        <activity android:name=".ui.activities.ActivateSimDataServer" />
         <activity
             android:name=".ui.activities.TransactionDetails"
             android:screenOrientation="locked" />
@@ -116,7 +118,7 @@
             android:name=".ui.activities.Dashboard"
             android:screenOrientation="locked" />
         <activity
-            android:name=".ui.activities.Recharge"
+            android:name=".ui.activities.ExtensionSim"
             android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.ActivateSim"

@@ -8,19 +8,69 @@ public class UserDetails {
     Context context;
     SharedPreferences sharedPreferences;
     private int RechargeStatus;
+    private int RechargeStatusDataServer;
     private String ActivationDate;
+    private String ActivationDateDataServer;
     private String LanguageSelect;
     private String MacAddress;
     private String MSISDN;
+    private String MSISDNDataServer;
     private String PaypalTransactionFee;
     private String TxnSeriesPrefix;
     private String UserName;
     private String TokenID;
+    private String TokenIDDataServer;
     private String VoipSubcriberID;
     private String UserId;
+    private String UserIdDataServer;
     private String VoipCredentailuserName;
     private String VoipCredentailPassword;
     private String VoipUserName;
+
+    public int getRechargeStatusDataServer() {
+        RechargeStatusDataServer = sharedPreferences.getInt("RechargeStatusDataServer", 1);
+        return RechargeStatusDataServer;
+    }
+
+    public void setRechargeStatusDataServer(int RechargeStatusDataServer) {
+        sharedPreferences.edit().putInt("RechargeStatusDataServer", RechargeStatusDataServer).commit();
+    }
+
+    public String getActivationDateDataServer() {
+        ActivationDateDataServer = sharedPreferences.getString("SIMActivationDateDataServer", "");
+        return ActivationDateDataServer;
+    }
+
+    public void setActivationDateDataServer(String ActivationDateDataServer) {
+        sharedPreferences.edit().putString("SIMActivationDateDataServer", ActivationDateDataServer).commit();
+    }
+
+    public String getMSISDNDataServer() {
+        MSISDNDataServer = sharedPreferences.getString("MSISDNDataServer", "");
+        return MSISDNDataServer;
+    }
+
+    public void setMSISDNDataServer(String MSISDNDataServer) {
+        sharedPreferences.edit().putString("MSISDNDataServer", MSISDNDataServer).commit();
+    }
+
+    public String getTokenIDDataServer() {
+        TokenIDDataServer = sharedPreferences.getString("TokenIDDataServer", "");
+        return TokenIDDataServer;
+    }
+
+    public void setTokenIDDataServer(String TokenIDDataServer) {
+        sharedPreferences.edit().putString("TokenIDDataServer", TokenIDDataServer).commit();
+    }
+
+    public String getUserIdDataServer() {
+        UserIdDataServer = sharedPreferences.getString("UserIdDataServer", "");
+        return UserIdDataServer;
+    }
+
+    public void setUserIdDataServer(String userIdDataServer) {
+        sharedPreferences.edit().putString("UserIdDataServer", UserIdDataServer).commit();
+    }
 
     public String getVoipUserName() {
         VoipUserName = sharedPreferences.getString("VoipUserName", "");

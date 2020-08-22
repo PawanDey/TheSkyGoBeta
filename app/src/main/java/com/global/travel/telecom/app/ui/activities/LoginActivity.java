@@ -86,6 +86,7 @@ public class LoginActivity extends BaseActivity {
     CreateVoipCustomerSkyGo createVoipCustomerSkyGo = new CreateVoipCustomerSkyGo();
     String getUserCountryCode, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, paraName, paraEmailID, paraPhoneNumber;
     String countryCodeValue = "";
+    int isEmailVerify = 0;
 
     @Override
     protected int getLayout() {
@@ -172,11 +173,7 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(LoginActivity.this, getResources().getString(R.string.textLoginSuccessful), LENGTH_LONG).show();
                 obj = (LoginResponse) response;
                 UserDetails userDetails = new UserDetails(LoginActivity.this);
-                userDetails.setTokenID(obj.getTokenID());
-                userDetails.setUserId(obj.getUserID());
-                userDetails.setUserName(obj.getUserName());
-                userDetails.setPaypalTransactionFee(obj.getTxnSeriesPrefix());
-                userDetails.setTxnSeriesPrefix("SKYGO");
+                userDetails.setTokenIDDataServer(obj.getTokenID());
                 Intent intent = new Intent(LoginActivity.this, Dashboard.class);
                 intent.putExtra("TokenID", userDetails.getTokenID());
                 startActivity(intent);
@@ -318,6 +315,21 @@ public class LoginActivity extends BaseActivity {
                 showToast(getResources().getString(R.string.textVoipAccountCreated));
                 break;
             }
+            case "loginUserDataServer": {
+                obj = (LoginResponse) response;
+                UserDetails userDetails = new UserDetails(LoginActivity.this);
+                userDetails.setTokenID(obj.getTokenID());
+                userDetails.setUserId(obj.getUserID());
+                userDetails.setUserName(obj.getUserName());
+                userDetails.setPaypalTransactionFee(obj.getTxnSeriesPrefix());
+                userDetails.setTxnSeriesPrefix("SKYGO");
+                try {
+                    authenticationPresenter.loginUserDataServer(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, isEmailVerify);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
         }
     }
 
@@ -382,7 +394,6 @@ public class LoginActivity extends BaseActivity {
                                 return;
                             }
                             String token = Objects.requireNonNull(task.getResult()).getToken();
-                            int isEmailVerify = 0;
                             if (!facebookGetEmail.isEmpty()) {
                                 isEmailVerify = 1;
                             }
@@ -736,7 +747,11 @@ public class LoginActivity extends BaseActivity {
             paraName = login_ff_name.getText().toString().trim();
             paraEmailID = login_ff_emailid.getText().toString().trim();
             paraPhoneNumber = login_ff_phonenumber.getText().toString().trim();
-            authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, isEmailVerify);
+            try {
+                authenticationPresenter.loginUser(paraName, paraEmailID, paraPhoneNumber, getUserCountryName, parareqTypeID, ParaUsername, paraGcmKey, isEmailVerify);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
     }

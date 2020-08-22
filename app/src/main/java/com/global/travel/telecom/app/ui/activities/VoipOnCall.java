@@ -55,6 +55,7 @@ public class VoipOnCall extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voip_on_call);
+        UserDetails userDetails = new UserDetails(this);
         Intent intent = getIntent();
         CallingNumber = Objects.requireNonNull(intent.getStringExtra("CallingNumber")).replace(" ", "");
         CallingName = intent.getStringExtra("CallingName");
@@ -90,8 +91,8 @@ public class VoipOnCall extends AppCompatActivity {
         }
         firstChar.setText(firstCharector);
         phoneNumber.setText(getResources().getString(R.string.textMobile) + " " + CallingNumber);
-        String demoparameter = "serveraddress=sip.s.im\r\nusername=447624045000\r\npassword=0000\r\nloglevel=5";
-//        String demoparameter = "serveraddress=sip.s.im\r\nusername=" + userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
+//        String demoparameter = "serveraddress=sip.s.im\r\nusername=447624090668\r\npassword=0000\r\nloglevel=5";
+        String demoparameter = "serveraddress=sip.s.im\r\nusername=" + userDetails.getVoipUserName() + "\r\npassword=" + userDetails.getUserId() + "\r\nloglevel=5";
         mStatus = mStatus + "__" + demoparameter;
         try {
             // start SipStack if it's not already running
@@ -99,8 +100,6 @@ public class VoipOnCall extends AppCompatActivity {
             //initialize the SIP engine
             mysipclient = new SipStack();
             mysipclient.Init(ctx);
-//            mysipclient.SetParameter("use_fast_stun", 2);
-//            mysipclient.SetParameter("use_fast_ice", 0);
             mysipclient.SetParameters(demoparameter.trim());
             notifThread = new GetNotificationsThread();
             notifThread.start();
@@ -111,7 +110,7 @@ public class VoipOnCall extends AppCompatActivity {
 //                mysipclient.SetLogLevel(5);
 
         } catch (Exception e) {
-            Toast.makeText(this,"Sip Register Failed:"+ e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sip Register Failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
             DisplayLogs("ERROR, StartSipStack");
             finish();
         }
@@ -351,6 +350,12 @@ public class VoipOnCall extends AppCompatActivity {
             else if (notifyword1.equals("STATUS")) {
                 //ignore line number. we are not handling it for now
                 pos = notifywordcontent.indexOf(",");
+                if (pos == 2) //incoming call
+                {
+                    Toast.makeText(this, "Incoming call from " + notifywordcontent, Toast.LENGTH_SHORT).show();
+                    DisplayStatus("Incoming call from " + notifywordcontent);
+//                    mysipclient.Accept(-1);  //auto accept incoming call. you might disaplay ACCEPT / REJECT buttons instead
+                }
                 if (pos > 0)
                     notifywordcontent = notifywordcontent.substring(pos + 1, notifywordcontent.length()).trim();
                 pos = notifywordcontent.indexOf(",");

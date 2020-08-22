@@ -32,8 +32,7 @@
                     android:layout_marginEnd="5dp"
                     android:onClick="threeLines"
                     android:padding="10dp"
-                    android:src="@drawable/threeline"
-                    android:visibility="gone" />
+                    android:src="@drawable/threeline"/>
 
                 <TextView
                     android:id="@+id/textView4"
@@ -304,6 +303,180 @@
 
                             <TextView
                                 android:id="@+id/validityDateOnDeshboard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginStart="42dp"
+                                android:layout_marginBottom="8dp"
+                                android:text=" "
+                                android:textColor="#A6FFFFFF"
+                                android:textSize="9dp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <!--Activate Sim DataServer-->
+                    <LinearLayout
+                        android:id="@+id/ActivateSimLayoutDataServer"
+                        android:layout_width="match_parent"
+                        android:layout_height="135dp"
+                        android:layout_marginTop="17dp"
+                        android:background="@drawable/dashboardgredient2"
+                        android:onClick="btnActivateSIMClickDataServer"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/activateSimThreeDotDataServer"
+                                android:layout_width="12dp"
+                                android:layout_height="24dp"
+                                android:layout_alignEnd="@+id/hideActivationtextDataServer"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginTop="17dp"
+                                android:layout_marginEnd="-8dp"
+                                android:src="@drawable/threedot" />
+
+
+                            <ImageView
+                                android:id="@+id/activateSimLogoDataServer"
+                                android:layout_width="68dp"
+                                android:layout_height="71dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="30dp"
+                                android:background="@drawable/activatesim"
+                                android:padding="20dp" />
+
+                            <TextView
+                                android:id="@+id/activateSimDataServer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/activateSimThreeDotDataServer"
+                                android:layout_alignEnd="@+id/hideActivationtextDataServer"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="0dp"
+                                android:fontFamily="@font/sf_old_republic_font"
+                                android:gravity="right"
+                                android:text="Activate Data SIM "
+                                android:textColor="#ffffff"
+                                android:textSize="27dp" />
+
+                            <TextView
+                                android:id="@+id/hideActivationtextDataServer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/activateSimThreeDotDataServer"
+                                android:layout_alignBottom="@+id/activateSimLogoDataServer"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginEnd="27dp"
+                                android:fontFamily="@font/sf_old_republic_font"
+                                android:text="Activate your Data SIM"
+                                android:textColor="#ffffff"
+                                android:textSize="18dp"
+                                android:textStyle="bold"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/txtProcessPendingStatusDataServer"
+                                android:layout_width="103dp"
+                                android:layout_height="17dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginTop="31dp"
+                                android:layout_marginEnd="50dp"
+                                android:background="@drawable/pending"
+                                android:text="@string/textProcessPending"
+                                android:textAlignment="center"
+                                android:textColor="#FFFFFF"
+                                android:textSize="10dp"
+                                tools:visibility="invisible" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!--Recent Activation DataServer-->
+                    <LinearLayout
+                        android:id="@+id/RecentActivateOnMobileDataServer"
+                        android:layout_width="match_parent"
+                        android:layout_height="135dp"
+                        android:layout_marginTop="17dp"
+                        android:background="@drawable/dashboardgredient2"
+                        android:onClick="btnExtendMSISDNClickDataServer"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+
+                            <TextView
+                                android:id="@+id/textView12DataServer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginStart="30dp"
+                                android:layout_marginTop="19dp"
+                                android:fontFamily="@font/segoe_bold"
+                                android:text="@string/textyourmobilenumber"
+                                android:textColor="#A6FFFFFF"
+                                android:textSize="15dp" />
+
+                            <ImageView
+                                android:id="@+id/imageView5DataServer"
+                                android:layout_width="20dp"
+                                android:layout_height="32dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginStart="35dp"
+                                android:layout_marginTop="54dp"
+                                android:background="@drawable/phone" />
+
+                            <TextView
+                                android:id="@+id/txtMSISDNDataServer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginStart="68dp"
+                                android:layout_marginTop="58dp"
+                                android:fontFamily="@font/sf_old_republic_font"
+                                android:text=" "
+                                android:textColor="#FFFFFF"
+                                android:textSize="20dp" />
+
+                            <TextView
+                                android:id="@+id/txtValidityLeftDataServer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginStart="68dp"
+                                android:layout_marginBottom="40dp"
+                                android:fontFamily="@font/segoe_font_family"
+                                android:text=" "
+                                android:textColor="#A6FFFFFF"
+                                android:textSize="14dp" />
+
+                            <ImageView
+                                android:id="@+id/imageView6DataServer"
+                                android:layout_width="10dp"
+                                android:layout_height="18dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="28dp"
+                                android:layout_marginBottom="52dp"
+                                app:srcCompat="@drawable/arrow" />
+
+                            <TextView
+                                android:id="@+id/validityDateOnDeshboardDataServer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
@@ -740,5 +913,14 @@
 
 
     </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/dashboard_nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

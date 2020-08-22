@@ -12,6 +12,8 @@ import com.global.travel.telecom.app.model.UpdateFundReq;
 public interface AuthenticationPresenterInterface {
     void loginUser(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey, int isEmailVerify);
 
+    void loginUserDataServer(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey, int isEmailVerify);
+
     void activateSim(NewActivationRequest newActivationRequest);
 
     void AddFundsAPI(AddFundsApp addFundsApp);
@@ -23,6 +25,8 @@ public interface AuthenticationPresenterInterface {
     void validateMSISDN(String MSISDN, String Token);
 
     void GetSubscriber(String Token);
+
+    void GetSubscriberDataServer(String Token);
 
     void UpdateFundsMethod(UpdateFundReq updateFundReq);
 

@@ -87,7 +87,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 baseView.onSuccess("CreateVoipAccount", result);
                             }
                             mHandler.postDelayed(() -> {
-                                baseView.onSuccess("loginUser", result);
+                                baseView.onSuccess("loginUserDataServer", result);
                                 baseView.hideProgressBar();
                             }, 2000);
                         } else {
@@ -100,7 +100,49 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                     }
                 } else {
                     baseView.hideProgressBar();
-                    baseView.onServerError("loginUser", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("loginUser", String.valueOf(R.string.textSorrySomethingwentwrong));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                baseView.hideProgressBar();
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void loginUserDataServer(String Name, String Email, String Mobile, String HomeCountry, String RegTypeID, String Username, String GCMKey, int isEmailVerify) {
+        baseView.showProgressBar();
+        Call<ResponseBody> call = APIClient.getApiServiceDataServer().signUp(Name, Email, Mobile, HomeCountry, RegTypeID, Username, GCMKey, isEmailVerify);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        assert body != null;
+                        JSONObject responseBody = new JSONObject(body.string());
+                        JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                        JSONObject table1 = (JSONObject) responseBody.getJSONArray("Table1").get(0);
+                        int respondeCode = table.getInt("ResponseCode");
+                        String respondeMessage = table.getString("ResponseMessage");
+                        if (respondeCode == 0) {
+                            LoginResponse result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), LoginResponse.class);
+                            baseView.onSuccess("loginUser", result);
+                            baseView.hideProgressBar();
+                        } else {
+                            baseView.hideProgressBar();
+                            baseView.onServerError("loginUser", respondeMessage);
+                        }
+                    } catch (Exception e) {
+                        baseView.hideProgressBar();
+                        baseView.onServerError("loginUser", e.toString());
+                    }
+                } else {
+                    baseView.hideProgressBar();
+                    baseView.onServerError("loginUser", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -115,7 +157,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void extensionRequest(NewExtensionRequest newExtensionRequest) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().extensionRequest(newExtensionRequest);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer")) {
+            call = APIClient.getApiService().extensionRequest(newExtensionRequest);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().extensionRequest(newExtensionRequest);
+        } else {
+            showToast("No server set in activateSim api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -135,10 +185,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("ActivationExtensionRequest", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("ActivationExtensionRequest", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("ActivationExtensionRequest", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("ActivationExtensionRequest", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("ActivationExtensionRequest", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -153,7 +203,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void AddFundsAPI(AddFundsApp addFundsApp) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().AddFundsViaAPP(addFundsApp);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer") || Dashboard.ServerName.equals("VoIPServer")) {
+            call = APIClient.getApiService().AddFundsViaAPP(addFundsApp);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().AddFundsViaAPP(addFundsApp);
+        } else {
+            showToast("No server set in addFunds api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -172,10 +230,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("AddFundsViaAPP", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("AddFundsViaAPP", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("AddFundsViaAPP", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("AddFundsViaAPP", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
                 try {
                     baseView.hideProgressBar();
@@ -196,7 +254,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void UpdateFundsMethod(UpdateFundReq updateFundReq) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().UpdateFundsMethod(updateFundReq);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer") || Dashboard.ServerName.equals("VoIPServer")) {
+            call = APIClient.getApiService().UpdateFundsMethod(updateFundReq);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().UpdateFundsMethod(updateFundReq);
+        } else {
+            showToast("No server set in UpdateFund api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -217,10 +283,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         }
                         baseView.hideProgressBar();
                     } catch (Exception e) {
-                        baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("UpdateFunds", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("UpdateFunds", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("UpdateFunds", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -235,7 +301,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void activateSim(NewActivationRequest newActivationRequest) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().activationRequest(newActivationRequest);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer")) {
+            call = APIClient.getApiService().activationRequest(newActivationRequest);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().activationRequest(newActivationRequest);
+        } else {
+            showToast("No server set in activateSim api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -255,10 +329,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("ActivationExtensionRequest", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("ActivationExtensionRequest", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("ActivationExtensionRequest", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("ActivationExtensionRequest", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("ActivationExtensionRequest", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -301,10 +375,53 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("GetSubscriber", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("GetSubscriber", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("GetSubscriber", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("GetSubscriber", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("GetSubscriber", String.valueOf(R.string.textSorrySomethingwentwrong));
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+//                baseView.hideProgressBar();
+                baseView.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void GetSubscriberDataServer(String Token) {
+        Call<ResponseBody> call = APIClient.getApiServiceDataServer().GetSubscriber(Token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        assert body != null;
+                        JSONObject responseBody = new JSONObject(body.string());
+                        JSONObject table = (JSONObject) responseBody.getJSONArray("Table").get(0);
+                        int respondeCode = table.getInt("ResponseCode");
+                        String respondeMessage = table.getString("ResponseMessage");
+                        if (respondeCode == 0) {
+                            JSONObject table1 = (JSONObject) responseBody.getJSONArray("Table1").get(0);
+                            String mValue = table1.getString("Value");
+                            GetSIMStatus result = new Gson().fromJson(responseBody.getJSONArray("Table1").get(0).toString(), GetSIMStatus.class);
+                            if (mValue.equals("3")) {
+                                GetSubscriberResponse result2 = new Gson().fromJson(responseBody.getJSONArray("Table2").get(0).toString(), GetSubscriberResponse.class);
+                                baseView.onSuccess("GetSubscriber2DataServer", result2);
+                            } else
+                                baseView.onSuccess("GetSubscriberDataServer", result);
+                        } else if (respondeCode == 1 || respondeCode == 3) {
+                            baseView.onServerError("GetSubscriber", respondeMessage);
+                        }
+                    } catch (Exception e) {
+                        baseView.onServerError("GetSubscriber", String.valueOf(R.string.textSorrySomethingwentwrong));
+                    }
+                } else {
+                    baseView.onServerError("GetSubscriber", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -320,7 +437,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void validateSim(String SerialNumber, String Token) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().validateSim(SerialNumber, Token);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer") || Dashboard.ServerName.equals("VoIPServer")) {
+            call = APIClient.getApiService().validateSim(SerialNumber, Token);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().validateSim(SerialNumber, Token);
+        } else {
+            showToast("No server set in UpdateFund api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -340,10 +465,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("simvalidated", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("simvalidated", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("simvalidated", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("simvalidated", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("simvalidated", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -359,7 +484,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void GetRateForPaymentPlan(String SerialNumber, int NoOfDay, int type, String MSISDN) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer") || Dashboard.ServerName.equals("VoIPServer")) {
+            call = APIClient.getApiService().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().GetRateForPaymentPlan(SerialNumber, NoOfDay, type, MSISDN);
+        } else {
+            showToast("No server set in UpdateFund api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -387,12 +520,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         }
 
                     } catch (Exception e) {
-                        baseView.onServerError("GetRateForPaymentPlan", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("GetRateForPaymentPlan", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
 
 
                 } else {
-                    baseView.onServerError("GetRateForPaymentPlan", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("GetRateForPaymentPlan", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -408,7 +541,15 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
     @Override
     public void validateMSISDN(String MSISDN, String Token) {
         baseView.showProgressBar();
-        Call<ResponseBody> call = APIClient.getApiService().validateMSISDN(MSISDN, Token);
+        Call<ResponseBody> call = null;
+        if (Dashboard.ServerName.equals("VoiceServer") || Dashboard.ServerName.equals("VoIPServer")) {
+            call = APIClient.getApiService().validateMSISDN(MSISDN, Token);
+        } else if (Dashboard.ServerName.equals("DataServer")) {
+            call = APIClient.getApiServiceDataServer().validateMSISDN(MSISDN, Token);
+        } else {
+            showToast("No server set in UpdateFund api");
+        }
+        assert call != null;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -433,12 +574,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("rechargeMSISDN", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("rechargeMSISDN", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("rechargeMSISDN", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
 
 
                 } else {
-                    baseView.onServerError("rechargeMSISDN", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("rechargeMSISDN", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -490,7 +631,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
 
                 } else {
                     baseView.hideProgressBar();
-                    baseView.onServerError("notification", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("notification", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
             }
 
@@ -523,7 +664,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("CreateVoipCustomerSkyGo", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("CreateVoipCustomerSkyGo", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("CreateVoipCustomerSkyGo", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
                     baseView.onServerError("CreateVoipCustomerSkyGo", response.message());
@@ -557,11 +698,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                                 baseView.onSuccess("translateAPI", body);
                             } catch (Exception e) {
                                 baseView.hideProgressBar();
-                                baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
+                                baseView.onServerError("translateAPI", String.valueOf(R.string.textSorrySomethingwentwrong));
                             }
                         } else {
                             baseView.hideProgressBar();
-                            baseView.onServerError("translateAPI", getResources().getString(R.string.textSorrySomethingwentwrong));
+                            baseView.onServerError("translateAPI", String.valueOf(R.string.textSorrySomethingwentwrong));
                         }
                     }
 
@@ -602,7 +743,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         baseView.onServerError("GetVoipPlanList", e.getMessage());
                     }
                 } else {
-                    baseView.onServerError("GetVoipPlanList", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("GetVoipPlanList", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }
@@ -637,7 +778,7 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("GetVoipRateList", e.getMessage());
                         }
                     } else {
-                        baseView.onServerError("GetVoipRateList", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("GetVoipRateList", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                     baseView.hideProgressBar();
 
@@ -771,7 +912,11 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             break;
                         }
                     }
-                    baseView.hideProgressBar();
+                    try {
+                        baseView.hideProgressBar();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -903,10 +1048,10 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                             baseView.onServerError("UpdateUserProfileData", respondeMessage);
                         }
                     } catch (Exception e) {
-                        baseView.onServerError("UpdateUserProfileData Error :", getResources().getString(R.string.textSorrySomethingwentwrong));
+                        baseView.onServerError("UpdateUserProfileData Error :", String.valueOf(R.string.textSorrySomethingwentwrong));
                     }
                 } else {
-                    baseView.onServerError("UpdateUserProfileData", getResources().getString(R.string.textSorrySomethingwentwrong));
+                    baseView.onServerError("UpdateUserProfileData", String.valueOf(R.string.textSorrySomethingwentwrong));
                 }
 
             }

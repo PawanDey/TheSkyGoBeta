@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -58,9 +59,10 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
     public ImageView setImageOnHotspot, skygoDialerLogo;
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
-//    NavigationView navigationView;
+    NavigationView navigationView;
     DrawerLayout drawer;
     private androidx.appcompat.app.AlertDialog progressDialog;
+    public static String ServerName = "";  //{VoiceServer ,DataServer,VoIPServer} These are 3 type of serverName
 
     @Override
     protected int getLayout() {
@@ -87,29 +89,39 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         } catch (Exception e) {
             Toast.makeText(Dashboard.this, getResources().getString(R.string.textPleaseCheckYourInternetConnection), Toast.LENGTH_LONG).show();
         }
-        try{
-        getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
-                "<authentication>\n" +
-                "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
-                "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
-                "</authentication>\n" +
-                "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
-                "</get-customer-balance>";
-        authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");}
-        catch (Exception e){
+
+        try {
+            authenticationPresenter.GetSubscriberDataServer(userDetails.getTokenIDDataServer());
+        } catch (Exception e) {
+            Toast.makeText(Dashboard.this, getResources().getString(R.string.textPleaseCheckYourInternetConnection), Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            getCurrentBalance = "<get-customer-balance version=\"1\">\n" +
+                    "<authentication>\n" +
+                    "<username>" + userDetails.getVoipCredentailuserName().trim() + "</username>\n" +
+                    "<password>" + userDetails.getVoipCredentailPassword().trim() + "</password>\n" +
+                    "</authentication>\n" +
+                    "<subscriberid>" + userDetails.getVoipSubcriberID() + "</subscriberid>\n" +
+                    "</get-customer-balance>";
+            authenticationPresenter.VoIPAPICall(getCurrentBalance, "getCurrentBalance");
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         TextView SimStatus = findViewById(R.id.txtProcessPendingStatus);
+        TextView SimStatusDataServer = findViewById(R.id.txtProcessPendingStatusDataServer);
         SimStatus.setVisibility(View.INVISIBLE);
+        SimStatusDataServer.setVisibility(View.INVISIBLE);
         LinearLayout ActivationLayout = findViewById(R.id.ActivateSimLayout);
         LinearLayout RecentExtensionLayout = findViewById(R.id.RecentActivateOnMobile);
         TextView MSISDN = findViewById(R.id.txtMSISDN);
         TextView validityLeft = findViewById(R.id.txtValidityLeft);
         validity = findViewById(R.id.validityDateOnDeshboard);
-//        navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer);
-//        navigationView.setNavigationItemSelectedListener(this);
-//        navigationView.setItemIconTintList(null);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
         try {
             currentLocation = findViewById(R.id.hereIsLocation);
@@ -132,11 +144,13 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         }
 
         try {
-            if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
-                MSISDN.setText(userDetails.getMSISDN());
-                validityLeft.setText(userDetails.getActivationDate());
-                ActivationLayout.setVisibility(View.GONE);
-                RecentExtensionLayout.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                if (!userDetails.getMSISDN().isEmpty() || !userDetails.getActivationDate().isEmpty()) {
+                    MSISDN.setText(userDetails.getMSISDN());
+                    validityLeft.setText(userDetails.getActivationDate());
+                    ActivationLayout.setVisibility(View.GONE);
+                    RecentExtensionLayout.setVisibility(View.VISIBLE);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,7 +175,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
 
     @Override
     public void onServerError(String method2, String errorMessage) {
-        if ("GetSubscriber" .equals(method2)) {
+        if ("GetSubscriber".equals(method2)) {
             if (errorMessage.contains("Token Authentication Failed") || errorMessage.contains("User Authentication Failed")) {
                 Toast.makeText(Dashboard.this, getResources().getString(R.string.textSorrySomethingwentwrong), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Dashboard.this, LoginActivity.class);
@@ -173,7 +187,6 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onSuccess(String method2, Object response) {
         switch (method2) {
@@ -223,6 +236,41 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
                 break;
 
             }
+            case "GetSubscriberDataServer": {
+                GetSIMStatus obj = (GetSIMStatus) response;
+                userDetails = new UserDetails(this);
+                TextView SimStatusDataServer = findViewById(R.id.activateSimDataServer);
+                TextView SIMSerialNumberDataServer = findViewById(R.id.hideActivationtextDataServer);
+
+                switch (obj.getmValue()) {
+                    case "1": {
+                        SimStatusDataServer.setText(getResources().getString(R.string.textStatusPending));
+                        SimStatusDataServer.setVisibility(View.VISIBLE);
+                        SIMSerialNumberDataServer.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
+                        userDetails.setRechargeStatusDataServer(0);
+                        break;
+                    }
+                    case "2": {
+                        SimStatusDataServer.setText(getResources().getString(R.string.textStatusUnderProcessing));
+                        SimStatusDataServer.setVisibility(View.VISIBLE);
+                        SIMSerialNumberDataServer.setText(getResources().getString(R.string.textFor) + " " + obj.getmSerialNumber());
+                        userDetails.setRechargeStatusDataServer(0);
+                        break;
+                    }
+                    case "No Request Raised": {
+                        LinearLayout ActivationLayoutDataServer = findViewById(R.id.ActivateSimLayoutDataServer);
+                        LinearLayout RecentExtensionLayoutDataServer = findViewById(R.id.RecentActivateOnMobileDataServer);
+                        ActivationLayoutDataServer.setVisibility(View.VISIBLE);
+                        RecentExtensionLayoutDataServer.setVisibility(View.GONE);
+                        userDetails.setMSISDNDataServer("");
+                        userDetails.setActivationDateDataServer("");
+                        userDetails.setRechargeStatusDataServer(1);
+                        break;
+                    }
+                }
+                break;
+
+            }
             case "GetSubscriber2": {
                 userDetails = new UserDetails(this);
                 GetSubscriberResponse obj = (GetSubscriberResponse) response;
@@ -237,6 +285,22 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
                 MSISDN.setText(obj.getMSISDN());
                 String[] gud = obj.getGoodUntil().trim().split("T");
                 validityLeft.setText("Expiry Date: " + gud[0]);
+                break;
+            }
+            case "GetSubscriber2DataServer": {
+                userDetails = new UserDetails(this);
+                GetSubscriberResponse obj = (GetSubscriberResponse) response;
+                userDetails.setMSISDNDataServer(obj.getMSISDN());
+                userDetails.setActivationDateDataServer(obj.getActDate());
+                LinearLayout ActivationLayoutDataServer = findViewById(R.id.ActivateSimLayoutDataServer);
+                LinearLayout RecentExtensionLayoutDataServer = findViewById(R.id.RecentActivateOnMobileDataServer);
+                TextView MSISDNDataServer = findViewById(R.id.txtMSISDNDataServer);
+                TextView validityLeftDataServer = findViewById(R.id.txtValidityLeftDataServer);
+                ActivationLayoutDataServer.setVisibility(View.GONE);
+                RecentExtensionLayoutDataServer.setVisibility(View.VISIBLE);
+                MSISDNDataServer.setText(obj.getMSISDN());
+                String[] gud = obj.getGoodUntil().trim().split("T");
+                validityLeftDataServer.setText("Expiry Date: " + gud[0]);
                 break;
             }
             case "CurrentBalance": {
@@ -265,152 +329,6 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
             Toast.makeText(this, getResources().getString(R.string.textClickBACKagaintoExit), Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         }
-    }
-
-    private void log_func() {
-        try {
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, logitude, 1);
-            adress5 = addresses.get(0).getAddressLine(0);
-            currentLocation.setText(adress5);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void hotspotButton(View view) {
-
-    }
-
-    public void SelectLoginImage() {
-        userDetails = new UserDetails(this);
-        try {
-            Locale locale = new Locale(userDetails.getLanguageSelect());
-            Locale.setDefault(locale);
-            Configuration config = new Configuration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String languageCode = userDetails.getLanguageSelect();
-        switch (languageCode) {
-            case "en":
-
-                break;
-            case "zh":
-                try {
-                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_che);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case "ja":
-                try {
-                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_jep);
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-                break;
-            case "ko":
-                try {
-                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_kor);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case "es":
-                try {
-                    skygoDialerLogo.setImageResource(R.drawable.skygo_es);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-    }
-
-    public void googleMapOpen(View view) {
-        //here is google map api call
-        Intent intent = new Intent(Dashboard.this, GoogleMapActivity.class);
-        intent.putExtra("logitude", logitude);
-        intent.putExtra("latitude", latitude);
-        startActivity(intent);
-    }
-
-    public void clickOnTicketMaster(View view) {
-        setURL("https://www.ticketmaster.com");
-    }
-
-    public void clickOnLyft(View view) {
-        setURL("https://www.lyft.com/rider");
-    }
-
-    public void clickOnGrubHub(View view) {
-        setURL("https://www.grubhub.com");
-    }
-
-    public void clickOnExpedia(View view) {
-        setURL("https://www.expedia.com");
-    }
-
-    public void clickOncurrencyexchange(View view) {
-        setURL("https://www.iceplc.com");
-    }
-
-    public void clickOnESimActivation(View view) {
-        setURL("https://www.skygo.celitech.app");
-    }
-
-    public void clickOnYelp(View view) {
-        setURL("https://www.yelp.com");
-    }
-
-    public void clickOnGolfnow(View view) {
-        setURL("https://www.golfnow.com");
-    }
-
-    private void setURL(String getURL) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
-        startActivity(browserIntent);
-    }
-
-    public void allTypeOfBookingSoonFunction(View view) {
-//        Intent i = new Intent(Dashboard.this, VoipLogin.class);
-//        startActivity(i);
-    }
-
-    private void onLocationCahange(Location location) {
-        logitude = location.getLongitude();
-        latitude = location.getLatitude();
-    }
-
-    public void btnExtendMSISDNClick(View view) {
-        Intent intent = new Intent(Dashboard.this, Recharge.class);
-        startActivity(intent);
-    }
-
-    public void btnActivateSIMClick(View view) {
-        userDetails = new UserDetails(this);
-        if (userDetails.getRechargeStatus() == 1) {
-            Intent intent = new Intent(Dashboard.this, ActivateSim.class);
-            intent.putExtra("Token", token);
-            startActivity(intent);
-        }
-    }
-
-    public void notificationButton(View view) {
-        Intent i = new Intent(Dashboard.this, Notification.class);
-        startActivity(i);
-    }
-
-    public void skyGoDailer(View view) {
-        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
-        intent.putExtra("Token", token);
-        startActivity(intent);
-//        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -451,7 +369,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
                         setLanguage("ko");
                     } else if (SelectSPANISH.isChecked()) {
                         setLanguage("es");
-                    }else{
+                    } else {
                         showToast(getResources().getString(R.string.textSelectYourAppLanguage));
                     }
                 });
@@ -512,8 +430,102 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         return true;
     }
 
+    public void hotspotButton(View view) {
+
+    }
+
+    public void googleMapOpen(View view) {
+        //here is google map api call
+        Intent intent = new Intent(Dashboard.this, GoogleMapActivity.class);
+        intent.putExtra("logitude", logitude);
+        intent.putExtra("latitude", latitude);
+        startActivity(intent);
+    }
+
+    public void clickOnTicketMaster(View view) {
+        setURL("https://www.ticketmaster.com");
+    }
+
+    public void clickOnLyft(View view) {
+        setURL("https://www.lyft.com/rider");
+    }
+
+    public void clickOnGrubHub(View view) {
+        setURL("https://www.grubhub.com");
+    }
+
+    public void clickOnExpedia(View view) {
+        setURL("https://www.expedia.com");
+    }
+
+    public void clickOncurrencyexchange(View view) {
+        setURL("https://www.iceplc.com");
+    }
+
+    public void clickOnESimActivation(View view) {
+        setURL("https://www.skygo.celitech.app");
+    }
+
+    public void clickOnYelp(View view) {
+        setURL("https://www.yelp.com");
+    }
+
+    public void clickOnGolfnow(View view) {
+        setURL("https://www.golfnow.com");
+    }
+
+    public void allTypeOfBookingSoonFunction(View view) {
+//        Intent i = new Intent(Dashboard.this, VoipLogin.class);
+//        startActivity(i);
+    }
+
+    public void btnExtendMSISDNClick(View view) {
+        ServerName = "VoiceServer";
+        Intent intent = new Intent(Dashboard.this, ExtensionSim.class);
+        startActivity(intent);
+    }
+
+    public void btnActivateSIMClick(View view) {
+        userDetails = new UserDetails(this);
+        if (userDetails.getRechargeStatus() == 1) {
+            ServerName = "VoiceServer";
+            Intent intent = new Intent(Dashboard.this, ActivateSim.class);
+            intent.putExtra("Token", token);
+            startActivity(intent);
+        }
+    }
+
+    public void notificationButton(View view) {
+        Intent i = new Intent(Dashboard.this, Notification.class);
+        startActivity(i);
+    }
+
+    public void skyGoDailer(View view) {
+        ServerName = "VoIPServer";
+        Intent intent = new Intent(Dashboard.this, SkyGoDialer.class);
+        intent.putExtra("Token", token);
+        startActivity(intent);
+//        Toast.makeText(this, getResources().getString(R.string.textComingSoon), Toast.LENGTH_LONG).show();
+    }
+
     public void threeLines(View view) {
         drawer.openDrawer(GravityCompat.START);
+    }
+
+    public void btnActivateSIMClickDataServer(View view) {
+        userDetails = new UserDetails(this);
+        if (userDetails.getRechargeStatusDataServer() == 1) {
+            ServerName = "DataServer";
+            Intent intent = new Intent(Dashboard.this, ActivateSimDataServer.class);
+            intent.putExtra("Token", userDetails.getTokenIDDataServer());
+            startActivity(intent);
+        }
+    }
+
+    public void btnExtendMSISDNClickDataServer(View view) {
+        ServerName = "DataServer";
+        Intent intent = new Intent(Dashboard.this, ExtensionSimDataServer.class);
+        startActivity(intent);
     }
 
     private void setLanguage(String Locate) {
@@ -525,9 +537,80 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
         configuration.locale = locale;
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
         progressDialog.dismiss();
-        Intent intent=new Intent(this,Dashboard.class);
+        Intent intent = new Intent(this, Dashboard.class);
         startActivity(intent);
         finish();
+    }
+
+    private void onLocationCahange(Location location) {
+        logitude = location.getLongitude();
+        latitude = location.getLatitude();
+    }
+
+    private void setURL(String getURL) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL));
+        startActivity(browserIntent);
+    }
+
+    private void SelectLoginImage() {
+        userDetails = new UserDetails(this);
+        try {
+            Locale locale = new Locale(userDetails.getLanguageSelect());
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String languageCode = userDetails.getLanguageSelect();
+        switch (languageCode) {
+            case "en":
+
+                break;
+            case "zh":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_che);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "ja":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_jep);
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+                break;
+            case "ko":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygodialer_kor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "es":
+                try {
+                    skygoDialerLogo.setImageResource(R.drawable.skygo_es);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
+    private void log_func() {
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, logitude, 1);
+            adress5 = addresses.get(0).getAddressLine(0);
+            currentLocation.setText(adress5);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

@@ -34,7 +34,7 @@ import static android.widget.Toast.LENGTH_LONG;
 
 //import android.icu.text.SimpleDateFormat;
 
-public class Recharge extends BaseActivity {
+public class ExtensionSim extends BaseActivity {
 
     AuthenticationPresenter authenticationPresenter;
     EditText edtTextMSISDN;
@@ -55,7 +55,7 @@ public class Recharge extends BaseActivity {
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_recharge;
+        return R.layout.activity_extension_sim;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Recharge extends BaseActivity {
         authenticationPresenter = new AuthenticationPresenter(this);
         todayDate = (TextView) findViewById(R.id.datePickerRecharge);
         totalAmountRecharge = findViewById(R.id.totalAmountRecharge);
-        final UserDetails userDetails = new UserDetails(Recharge.this);
+        final UserDetails userDetails = new UserDetails(ExtensionSim.this);
         token = userDetails.getTokenID();
         edtTextMSISDN = findViewById(R.id.edtMSISDN);
         edtTextMSISDN.setText(userDetails.getMSISDN());
@@ -114,11 +114,11 @@ public class Recharge extends BaseActivity {
                         totalAmountRecharge.setText("");
                         GoodUntil.setText("");
                         totalAmountRecharge.setText("");
-                        Toast.makeText(Recharge.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
+                        Toast.makeText(ExtensionSim.this, getResources().getString(R.string.textSorrySomethingwentwrong), LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     if (numberOfDaysRecharge.getText().toString().isEmpty()) {
-                        Toast.makeText(Recharge.this, getResources().getString(R.string.textPleaseEnterValidNumberOfDays), LENGTH_LONG).show();
+                        Toast.makeText(ExtensionSim.this, getResources().getString(R.string.textPleaseEnterValidNumberOfDays), LENGTH_LONG).show();
                         totalAmountRecharge.setText("$ 0.0");
                     }
                 }
@@ -237,7 +237,7 @@ public class Recharge extends BaseActivity {
             } else if (SimValidAPIStatus) {
                 Days = numberOfDaysRecharge.getText().toString();
                 MSISDN = edtTextMSISDN.getText().toString();
-                Intent paymnetSummaryR = new Intent(Recharge.this, mPayment.class);
+                Intent paymnetSummaryR = new Intent(ExtensionSim.this, mPayment.class);
                 paymnetSummaryR.putExtra("Number", MSISDN);
                 paymnetSummaryR.putExtra("NumberOfDays", Days);
                 paymnetSummaryR.putExtra("AmountCharged", TotalAmount);

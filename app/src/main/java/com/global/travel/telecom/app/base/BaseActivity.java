@@ -69,7 +69,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override
     public void hideProgressBar() {
-        progressDialog.dismiss();
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
     }
 
     private void connectToFirebaseToCheckMaintenaceStatus() {

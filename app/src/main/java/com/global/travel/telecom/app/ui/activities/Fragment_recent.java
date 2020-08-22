@@ -117,9 +117,13 @@ public class Fragment_recent extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s.toString(), count1 -> {
-                    Log.d("FILTER --> ", "filter complete! count: " + count1);
-                });
+                try {
+                    adapter.getFilter().filter(s.toString(), count1 -> {
+                        Log.d("FILTER --> ", "filter complete! count: " + count1);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

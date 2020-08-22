@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".ui.activities.ActivateSimDataServer">
+
+    <!--Activate SIM DataServer-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/shadow"
+        android:weightSum="12">
+
+        <ImageView
+            android:id="@+id/button12DataServer"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:onClick="backToDashboardButtonDataServer"
+            android:padding="16dp"
+            android:src="@drawable/arrowwhite" />
+
+        <TextView
+            android:id="@+id/textView4DataServer"
+            android:layout_width="145dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="10"
+            android:fontFamily="@font/segoe_bold"
+            android:gravity="center"
+            android:text="Activate Data SIM"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/notificationButtonDataServer"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:onClick="notificationButtonDataServer"
+            android:padding="1dp"
+            android:src="@drawable/notification1" />
+
+
+
+    </LinearLayout>
+
+    <!--others-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--other-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="310dp"
+                    android:background="@drawable/dashboarddgredient5">
+
+
+                    <Button
+                        android:id="@+id/calenderDateDataServer"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignStart="@+id/editSerialDataServer"
+                        android:layout_alignBottom="@+id/datePickerActivateSimDataServer"
+                        android:layout_marginStart="190dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/calender"
+                        android:gravity="center"
+                        android:onClick="calenderButtonDataServer" />
+
+
+                    <Button
+                        android:id="@+id/btnActivateSIMDataServer"
+                        android:layout_width="174dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="216dp"
+                        android:layout_marginRight="25dp"
+                        android:background="@drawable/gredientmodify"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="center"
+                        android:onClick="btnBuyNowClickDataServer"
+                        android:text="@string/textBuyNow"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17dp" />
+
+                    <Button
+                        android:id="@+id/scannerDataServer"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="47dp"
+                        android:background="@drawable/barcode_dark"
+                        android:gravity="center"
+                        android:onClick="scnnerafumctionDataServer" />
+
+
+                    <EditText
+                        android:id="@+id/editSerialDataServer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="31dp"
+                        android:layout_marginEnd="33dp"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/texthintSIMNumber"
+                        android:inputType="textPersonName"
+                        android:maxLength="20"
+                        android:textColor="#888888" />
+
+                    <EditText
+                        android:id="@+id/datePickerActivateSimDataServer"
+                        android:layout_width="232dp"
+                        android:layout_height="50dp"
+                        android:layout_alignStart="@+id/editSerialDataServer"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="120dp"
+                        android:focusable="false"
+                        android:fontFamily="@font/roboto"
+                        android:inputType="date"
+                        android:onClick="getCurretDatePickerDataServer"
+                        android:textSize="14dp" />
+
+                    <EditText
+                        android:id="@+id/txtnoOfDaysActivateSimDataServer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_alignTop="@+id/datePickerActivateSimDataServer"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="-22dp"
+                        android:layout_marginEnd="33dp"
+                        android:fontFamily="@font/sf_old_republic_font"
+                        android:gravity="center"
+                        android:hint="00"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textColor="#FC3E52"
+                        android:textSize="50dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDataServer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="17dp"
+                        android:layout_alignStart="@+id/editSerialDataServer"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="229dp"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/textCurrentAmnt"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/totalAmountActivateDataServer"
+                        android:layout_width="159dp"
+                        android:layout_height="19dp"
+                        android:layout_alignStart="@+id/editSerialDataServer"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="246dp"
+                        android:hint="$ 0.00"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView2DataServer"
+                        android:layout_width="154dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/textSIMSerialNo" />
+
+                    <TextView
+                        android:id="@+id/textDateDataServer"
+                        android:layout_width="103dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="89dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/textDate"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/textNoOfDaysASDataServer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="87dp"
+                        android:layout_marginEnd="26dp"
+                        android:text="@string/textNoOfDays" />
+
+                    <TextView
+                        android:id="@+id/validDateLeftASDataServer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_alignBottom="@+id/btnActivateSIMDataServer"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="39dp"
+                        android:layout_marginBottom="-23dp"
+                        android:fontFamily="@font/segoe"
+                        android:gravity="right"
+                        android:text="  "
+                        android:textColor="#414141"
+                        android:textSize="11dp" />
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageAddDataServer"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:padding="4dp"
+                android:onClick="addOnDataServer"
+                android:scaleType="fitCenter"
+                android:src="@drawable/add" />
+
+            <!--booking avaible soon scrren-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView1111DataServer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center|left"
+                    android:text="@string/textDisclaimerDisclaimerOnlyavailabletopickdropatLAXIceCurrencyLocations"
+                    android:textColor="#333232"
+                    android:textSize="12dp"
+                    android:padding="10dp"
+                    android:textStyle="normal" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
