@@ -6,6 +6,26 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/callingIndicator"
+        android:layout_toLeftOf="@+id/txtstatus"
+        android:layout_marginTop="10dp"></ImageView>
+
+    <TextView
+        android:id="@+id/txtstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:fontFamily="@font/sf_old_republic_font"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="12dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,8 +59,8 @@
                 android:id="@+id/callStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_old_republic_font"
                 android:layout_gravity="center"
+                android:fontFamily="@font/sf_old_republic_font"
                 android:gravity="center"
                 android:text="" />
 
@@ -91,8 +111,8 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="" />
 
                     </LinearLayout>
@@ -120,8 +140,8 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="ABC" />
 
                     </LinearLayout>
@@ -148,9 +168,9 @@
                             android:src="@drawable/three" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="DEF" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -177,8 +197,8 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="GHI" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -204,9 +224,9 @@
                             android:src="@drawable/five" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="JKL" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -232,9 +252,9 @@
                             android:src="@drawable/six" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="MNO" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -260,9 +280,9 @@
                             android:src="@drawable/seven" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="PQRS" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -288,9 +308,9 @@
                             android:src="@drawable/eight" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="TUV" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -316,9 +336,9 @@
                             android:src="@drawable/nine" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="WXYZ" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -344,9 +364,9 @@
                             android:src="@drawable/plus" />
 
                         <TextView
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="*" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -373,8 +393,8 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:fontFamily="@font/sf_old_republic_font"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/sf_old_republic_font"
                             android:text="" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

@@ -863,8 +863,12 @@ public class AuthenticationPresenter extends Dashboard implements Authentication
                         case "getRecentCallHistory": {
                             try {
                                 if (mMessage.contains("get-subscriber-call-history-response")) {
-                                    RecentCallHistoryModel result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), RecentCallHistoryModel.class);
-                                    baseView.onSuccess("getRecentCallHistory", result);
+                                    try {
+                                        RecentCallHistoryModel result = new Gson().fromJson(Objects.requireNonNull(jsonObject.toJson()).toString(), RecentCallHistoryModel.class);
+                                        baseView.onSuccess("getRecentCallHistory", result);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (mMessage.contains("get-subscriber-call-history-error")) {
                                     baseView.onServerError("getRecentCallHistory", "getRecentCallHistory API Error:");
                                 }

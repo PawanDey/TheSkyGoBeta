@@ -13,8 +13,8 @@ public class APIClient {
     private static String BASE_URL_DataServer = "http://35.236.120.255/GTTTESTDATAAPI/api/applicationuser/";
 
     private static String TranslateAPI_url = "http://sirrat.com/translator/";
-    //    public static String BACKEND_URL = "https://www.sirrat.com/Stripe/";  //live  url for stripe
-    public static String BACKEND_URL = "https://www.sirrat.com/Stripe_test/";  //test url for stripe
+        public static String BACKEND_URL = "https://www.sirrat.com/Stripe/";  //live  url for stripe
+//    public static String BACKEND_URL = "https://www.sirrat.com/Stripe_test/";  //test url for stripe
 
     public static ApiService getApiService() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

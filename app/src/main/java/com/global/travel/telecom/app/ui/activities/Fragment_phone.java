@@ -1,6 +1,8 @@
 package com.global.travel.telecom.app.ui.activities;
 
-import android.content.Intent;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +14,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
 
-import java.util.Objects;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.CallingName;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.CallingNumber;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.PERMISSIONS_REQUEST_MICROPHONE;
 
 public class Fragment_phone extends Fragment {
-    private TextView phoneNumber;
+    TextView phoneNumber;
+    public static TextView txtstatus;
+    public static ImageView callingIndicator;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,6 +44,8 @@ public class Fragment_phone extends Fragment {
         LinearLayout delete = view.findViewById(R.id.delete);
         LinearLayout plus = view.findViewById(R.id.plus);
         phoneNumber = view.findViewById(R.id.editphoneNumber);
+        txtstatus = view.findViewById(R.id.txtstatus);
+        callingIndicator = view.findViewById(R.id.callingIndicator);
         ImageView clickToCallButton = view.findViewById(R.id.clickToCallButton);
 
         one.setOnClickListener(v -> phoneNumber.append("1"));
@@ -58,14 +67,23 @@ public class Fragment_phone extends Fragment {
         });
 
         clickToCallButton.setOnClickListener(v -> {
-            if (phoneNumber.length() <= 3) {
-                Toast.makeText(getContext(), getResources().getString(R.string.textEnterValidPhoneNumber), Toast.LENGTH_SHORT).show();
-                return;
+            try {
+                if (phoneNumber.length() <= 3) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.textEnterValidPhoneNumber), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.USE_SIP}, PERMISSIONS_REQUEST_MICROPHONE);
+                    } else {
+                        CallingNumber = phoneNumber.getText().toString().trim();
+                        CallingName = "";
+                        SkyGoDialer.service.makeCall(phoneNumber.getText().toString(), 1);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
-            intent.putExtra("CallingNumber", phoneNumber.getText().toString().trim());
-            intent.putExtra("CallingName", "");
-            startActivity(intent);
         });
         return view;
     }

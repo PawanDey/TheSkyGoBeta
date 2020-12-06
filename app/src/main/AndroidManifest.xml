@@ -39,7 +39,23 @@
     <uses-feature
         android:name="android.software.webview"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -58,10 +74,25 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.Manifest.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.CONFIGURE_SIP" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+
+    <permission
+        android:name="android.permission.USE_SIP"
+        android:description="@string/permdesc_useSip"
+        android:label="@string/permlab_useSip"
+        android:permissionGroup="android.permission-group.COST_MONEY"
+        android:protectionLevel="dangerous" />
 
     <application
         android:name=".MyApplication"
@@ -74,17 +105,31 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.activities.ExtensionSimDataServer"></activity>
-        <activity android:name=".ui.activities.ActivateSimDataServer" />
+        <activity
+            android:name=".ui.activities.ExtensionSimDataServer"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".ui.activities.ActivateSimDataServer"
+            android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.TransactionDetails"
             android:screenOrientation="locked" />
         <activity
             android:name=".ui.activities.UserProfile"
             android:screenOrientation="locked" />
-        <activity
-            android:name=".ui.activities.VoipOnCall"
-            android:screenOrientation="locked" />
+        <activity android:name=".ui.activities.VoipOnCall"
+            android:screenOrientation="portrait"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:permission="android.permission.USE_SIP">
+            <intent-filter android:priority="10" >
+                <action android:name="com.chatapp.sip.phone.action.INCALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activities.GoogleMapActivity"
             android:screenOrientation="locked"
@@ -176,6 +221,67 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!--voip work start-->
+
+        <provider
+            android:name="com.chatapp.sip.service.PreferenceProvider"
+            android:authorities="${applicationId}.prefs"
+            android:exported="false"
+            android:permission="android.permission.CONFIGURE_SIP" />
+        <provider
+            android:name="com.chatapp.sip.db.DBProvider"
+            android:authorities="${applicationId}.db"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack" />
+
+        <receiver android:name="com.chatapp.sip.service.HeadsetButtonReceiver" />
+        <receiver
+            android:name="com.chatapp.sip.plugins.codecs.ReceiverG729"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.chatapp.codecs.action.REGISTER_CODEC" />
+            </intent-filter>
+
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_codec_g729_init" />
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_g729_codec.so" />
+        </receiver>
+        <receiver
+            android:name="com.chatapp.sip.service.DeviceStateReceiver"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack">
+
+            <!-- Here filter for protected-broadcasts -->
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.chatapp.sip.accounts.activate" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+
+        <service
+            android:name="com.chatapp.sip.service.SipService"
+            android:exported="false"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack">
+            <intent-filter>
+                <action android:name="com.chatapp.sip.service.SipService" />
+                <action android:name="com.chatapp.sip.service.SipConfiguration" />
+            </intent-filter>
+        </service>
+
+        <!--voip work end-->
     </application>
 
 </manifest>

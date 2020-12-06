@@ -14,14 +14,14 @@ repositories {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.global.travel.telecom.app"
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 32
+        targetSdkVersion 30
+        versionCode 33
         multiDexEnabled true
-        versionName "1.32"
+        versionName "1.33"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -47,7 +47,6 @@ android {
 }
 
 dependencies {
-    implementation project(":AJVoIP")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

@@ -319,7 +319,7 @@ public class Fragment_menu extends Fragment {
         });
 
         if (Integer.parseInt(InitialQuantity) != 0) {
-            planDeatailsLeft.setVisibility(View.VISIBLE);
+//            planDeatailsLeft.setVisibility(View.VISIBLE);   //plan details show (min)
             mProgress.setSecondaryProgress(Integer.parseInt(InitialQuantity)); // Secondary Progress
             mProgress.setMax(Integer.parseInt(InitialQuantity)); // Maximum Progress
             percentageMin.setText(RemainingQuantity + " min Left");

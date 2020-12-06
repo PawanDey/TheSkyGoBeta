@@ -1,7 +1,9 @@
 package com.global.travel.telecom.app.ui.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,12 +21,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.model.RecentSetDataModel;
 
-import java.util.Objects;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.CallingName;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.CallingNumber;
+import static com.global.travel.telecom.app.ui.activities.SkyGoDialer.PERMISSIONS_REQUEST_MICROPHONE;
 
 public class Fragment_recent extends Fragment {
 
@@ -62,7 +67,7 @@ public class Fragment_recent extends Fragment {
                     }
                     mHandler.postDelayed(() -> {
                         try {
-                            RecentContactSearch.setVisibility(View.VISIBLE);
+//                            RecentContactSearch.setVisibility(View.VISIBLE);
                             ListViewRecentCallHistory.setVisibility(View.VISIBLE);
                             voip_progressBarRecent.setVisibility(View.GONE);
                             progress_bar_message.setVisibility(View.GONE);
@@ -78,7 +83,7 @@ public class Fragment_recent extends Fragment {
 
 
             } else {
-                RecentContactSearch.setVisibility(View.VISIBLE);
+//                RecentContactSearch.setVisibility(View.VISIBLE);
                 ListViewRecentCallHistory.setVisibility(View.VISIBLE);
                 voip_progressBarRecent.setVisibility(View.GONE);
                 progress_bar_message.setVisibility(View.GONE);
@@ -94,17 +99,22 @@ public class Fragment_recent extends Fragment {
         ListViewRecentCallHistory.setOnItemClickListener((adapterView, view1, i, l) -> {
             try {
                 RecentSetDataModel arrayList = (RecentSetDataModel) ListViewRecentCallHistory.getItemAtPosition(i);
-                String name = "";
                 String mobileNumbers = arrayList.getLeg2();
-                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getBaseContext(), VoipOnCall.class);
-                intent.putExtra("CallingNumber", mobileNumbers.trim());
-                intent.putExtra("CallingName", name.trim());
-                startActivity(intent);
 
+                if (mobileNumbers.length() <= 3) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.textEnterValidPhoneNumber), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.USE_SIP}, PERMISSIONS_REQUEST_MICROPHONE);
+                    } else {
+                        CallingNumber = mobileNumbers.trim();
+                        CallingName = "";
+                        SkyGoDialer.service.makeCall(mobileNumbers, 1);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getActivity(), "Fragment Contacts Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
 
         });

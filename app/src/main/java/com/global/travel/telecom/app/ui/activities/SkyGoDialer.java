@@ -1,13 +1,19 @@
 package com.global.travel.telecom.app.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.text.format.DateFormat;
@@ -18,6 +24,17 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 
+import com.chatapp.Settings;
+import com.chatapp.sip.api.ISipService;
+import com.chatapp.sip.api.SipManager;
+import com.chatapp.sip.api.SipProfile;
+import com.chatapp.sip.db.DBProvider;
+import com.chatapp.sip.models.Filter;
+import com.chatapp.sip.service.SipService;
+import com.chatapp.sip.utils.AccountListUtils;
+import com.chatapp.sip.utils.PreferencesWrapper;
+import com.chatapp.sip.wizards.WizardIface;
+import com.chatapp.sip.wizards.impl.Basic;
 import com.global.travel.telecom.app.R;
 import com.global.travel.telecom.app.base.BaseActivity;
 import com.global.travel.telecom.app.model.Call;
@@ -42,6 +59,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.currentBalanceMenu;
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.mProgress;
@@ -49,6 +68,7 @@ import static com.global.travel.telecom.app.ui.activities.Fragment_menu.menu_Val
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.menu_ValiditydaysLeftProgressBar;
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.percentageMin;
 import static com.global.travel.telecom.app.ui.activities.Fragment_menu.planDeatailsLeft;
+import static com.global.travel.telecom.app.ui.activities.Fragment_phone.callingIndicator;
 import static com.global.travel.telecom.app.ui.activities.Fragment_recent.ListViewRecentCallHistory;
 
 public class SkyGoDialer extends BaseActivity implements Serializable {
@@ -58,6 +78,8 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     AuthenticationPresenter authenticationPresenter;
     UserDetails userDetails;
     Context cotxt = this;
+
+    public static String CallingNumber, CallingName;
     public static String userBalance = "";
     public static ArrayList<ContactsModel> mobileArray = null;
     public static ArrayList<GetVoipPlanModel> VoipPlan = null;
@@ -76,6 +98,32 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
     private Handler handler = new Handler(Looper.getMainLooper());
     private Handler handler1 = new Handler(Looper.getMainLooper());
 
+    public static ISipService service;
+    public static SipProfile account;
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+            service = ISipService.Stub.asInterface(arg1);
+            /*
+             * timings.addSplit("Service connected"); if(configurationService !=
+             * null) { timings.dumpToLog(); }
+             */
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            service = null;
+        }
+    };
+
+    public static int PERMISSIONS_REQUEST_MICROPHONE = 200;
+    private WizardIface wizard = null;
+    private String wizardId;
+    AccountListUtils.AccountStatusDisplay accountStatusDisplay;
+    Timer timer;
+    TimerTask timerTask;
+    final Handler handler3 = new Handler();
 
     @Override
     protected int getLayout() {
@@ -114,6 +162,21 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
             Toast.makeText(this, "onCreate authenticationPresenter error" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+        setWizardId();
+        startSipService();
+        Settings.SIPPassword = userDetails.getUserId();
+        Settings.SIPUsername = userDetails.getVoipUserName();
+        Settings.SIPServer = "sip.s.im";
+        long accountId = 1;
+        account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION);
+        Intent serviceIntent = new Intent(SipManager.INTENT_SIP_SERVICE);
+        serviceIntent.setPackage(getPackageName());
+        this.bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        saveAccount(wizardId);
+
+        timer = new Timer();
+        initializeTimerTask();
+        timer.schedule(timerTask, 1000, 1000);
 
         voip_menu.setOnClickListener(v -> viewPager.setCurrentItem(0));
         voip_phone.setOnClickListener(v -> viewPager.setCurrentItem(1));
@@ -384,6 +447,7 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                         Cursor cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
                         assert cursorInfo != null;
+
                         if (cursorInfo != null) {
                             while (cursorInfo.moveToNext()) {
                                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
@@ -447,8 +511,6 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
                 recentList.add(info);
 
             }
-
-
         } catch (Exception e) {
             Toast.makeText(this, "getRecentCallHistory list error:" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -473,5 +535,122 @@ public class SkyGoDialer extends BaseActivity implements Serializable {
         }
         return voipRate;
     }
+
+    private void startSipService() {
+        Thread t = new Thread("StartSip") {
+            public void run() {
+                Intent serviceIntent = new Intent(SkyGoDialer.this, SipService.class);
+                serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, new ComponentName(SkyGoDialer.this, MainActivity.class));
+                try {
+                    startService(serviceIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+    }
+
+    private boolean setWizardId() {
+
+        try {
+            wizard = Basic.class.newInstance();
+        } catch (IllegalAccessException e) {
+
+            return false;
+        } catch (InstantiationException e) {
+
+            return false;
+        }
+
+        wizardId = "Basic";
+
+        return true;
+    }
+
+    private void saveAccount(String wizardId) {
+        boolean needRestart = false;
+
+        PreferencesWrapper prefs = new PreferencesWrapper(
+                getApplicationContext());
+        account = wizard.buildAccount(account);
+        account.wizard = wizardId;
+        if (account.id == SipProfile.INVALID_ID) {
+            // This account does not exists yet
+            prefs.startEditing();
+            wizard.setDefaultParams(prefs);
+            prefs.endEditing();
+            Uri uri = getContentResolver().insert(SipProfile.ACCOUNT_URI,
+                    account.getDbContentValues());
+
+            // After insert, add filters for this wizard
+            account.id = ContentUris.parseId(uri);
+            List<Filter> filters = wizard.getDefaultFilters(account);
+            if (filters != null) {
+                for (Filter filter : filters) {
+                    // Ensure the correct id if not done by the wizard
+                    filter.account = (int) account.id;
+                    getContentResolver().insert(SipManager.FILTER_URI,
+                            filter.getDbContentValues());
+                }
+            }
+            // Check if we have to restart
+            needRestart = wizard.needRestart();
+
+        } else {
+            // TODO : should not be done there but if not we should add an
+            // option to re-apply default params
+            prefs.startEditing();
+            wizard.setDefaultParams(prefs);
+            prefs.endEditing();
+            getContentResolver().update(
+                    ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE,
+                            account.id), account.getDbContentValues(), null,
+                    null);
+        }
+
+        // Mainly if global preferences were changed, we have to restart sip
+        // stack
+        if (needRestart) {
+            Intent intent = new Intent(SipManager.ACTION_SIP_REQUEST_RESTART);
+            sendBroadcast(intent);
+        }
+    }
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+            public void run() {
+                handler3.post(() -> {
+                    accountStatusDisplay = AccountListUtils.getAccountDisplay(getApplicationContext(), 1);
+                    updateStatus(accountStatusDisplay.statusLabel);
+                    if(accountStatusDisplay.availableForCalls){
+                        callingIndicator.setImageDrawable(getResources().getDrawable(R.drawable.circlegreen));
+                    }else{
+                        callingIndicator.setImageDrawable(getResources().getDrawable(R.drawable.circlered));
+                    }
+
+                });
+            }
+        };
+    }
+
+    private void updateStatus(final String status) {
+
+        runOnUiThread(() -> {
+
+            try {
+                if (status.equals(getResources().getString(R.string.acct_registered))) {
+                    Fragment_phone.txtstatus.setText(status + " (" + Settings.SIPUsername + ")");
+                } else {
+                    Fragment_phone.txtstatus.setText(status);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 
 }

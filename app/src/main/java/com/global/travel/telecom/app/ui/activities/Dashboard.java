@@ -260,7 +260,7 @@ public class Dashboard extends BaseActivity implements NavigationView.OnNavigati
                     case "No Request Raised": {
                         LinearLayout ActivationLayoutDataServer = findViewById(R.id.ActivateSimLayoutDataServer);
                         LinearLayout RecentExtensionLayoutDataServer = findViewById(R.id.RecentActivateOnMobileDataServer);
-                        ActivationLayoutDataServer.setVisibility(View.VISIBLE);
+//                        ActivationLayoutDataServer.setVisibility(View.VISIBLE);
                         RecentExtensionLayoutDataServer.setVisibility(View.GONE);
                         userDetails.setMSISDNDataServer("");
                         userDetails.setActivationDateDataServer("");
